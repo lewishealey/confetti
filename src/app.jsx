@@ -107,9 +107,12 @@ var App = React.createClass({
       } else {
         // Add data to table
         ref.child("users").child(userData.uid).set({
+          invited: false,
           email: this.refs.regEmail.getDOMNode().value,
           password: this.refs.regPassword.getDOMNode().value,
-          date_created: timeInMs
+          date_created: timeInMs,
+          sides: false,
+          events: false
         });
         console.log("Successfully created user account with uid:", userData.uid);
       }
@@ -120,7 +123,6 @@ var App = React.createClass({
     this.setState({loaded: true});
   },
   handleRegister: function(){
-    console.log("hello");
     this.setState({register: true});
   },
   handleLogout: function() {
