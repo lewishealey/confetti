@@ -7,7 +7,10 @@ var Guests = require('./guests');
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
-	return { users: {}, }
+	return { users: {},
+			eventChoices: [],
+			active: false
+		}
 	},
 	componentWillMount: function() {
 		// Get user data
@@ -18,11 +21,10 @@ module.exports = React.createClass({
 
 	},
 	render: function() { 
-	
 	if (this.state.users.events) {
 
 		var eventOptions = Object.keys(this.state.users.events).map(function (key, i) {
-			return <option key={i} value={this.state.users.events[key].name} >{this.state.users.events[key].name}</option>
+			return <option key={i} value={i} onClick={this.handleChoices.bind(this,this.state.users.events[key].name)} ref={"choice_" + i} value={this.state.users.events[key].name} className={this.state.active ? "btn btn-default active" : "btn btn-default" } >{this.state.users.events[key].name}</option>
 		}.bind(this));
 
 	}
@@ -36,9 +38,9 @@ module.exports = React.createClass({
 				<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
 				<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
 					
-					<select className="form-control">
-						{eventOptions}
-					</select>
+					<select multiple={true} ref="selectBox">
+				        {eventOptions}
+				      </select>
 
 				<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
 			</p>
@@ -56,18 +58,25 @@ module.exports = React.createClass({
 			<a href="#" onClick={this.props.onLogout}>Logout</a>
 		</div>
 	}, 
+	handleChoices: function(choice) {
+		var choices = this.state.eventChoices;
+		choices.push(choice);
+		this.setState({eventChoices: choices});
+		console.log(this.state.eventChoices);
+	},
 	handleGuest: function(e) {
-		console.log("few");
 		var timeInMs = Date.now();
 		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId);
 		e.preventDefault();
+		var choices = this.state.eventChoices;
 
 		// Save guest
 		firebaseRef.child("guests").push({
 			attending: false,
 			name: this.refs.guestName.getDOMNode().value,
         	email: this.refs.guestEmail.getDOMNode().value,
-        	date_created: timeInMs
+        	date_created: timeInMs,
+        	events: choices
         }, function(error) {
   			
   			// Error report guest
@@ -80,7 +89,6 @@ module.exports = React.createClass({
 		});
 	},
 	handleEvent: function(e) {
-		console.log("few");
 		var timeInMs = Date.now();
 		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId);
 		e.preventDefault();
