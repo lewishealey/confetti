@@ -2,6 +2,13 @@ var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
+
+// Router Shiz
+var Router = require('react-router').Router
+var Route = require('react-router').Route
+var Link = require('react-router').Link
+
+var View = require('./dashboard');
 var Dashboard = require('./dashboard');
 var ref = new Firebase(rootUrl);
 
@@ -133,4 +140,10 @@ var App = React.createClass({
 });
 
 var element = React.createElement(App, {});
-React.render(element, document.querySelector('.container'));
+
+React.render((
+  <Router>
+    <Route path="/" component={App}>
+    </Route>
+  </Router>
+), document.body);
