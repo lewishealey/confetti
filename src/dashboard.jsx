@@ -3,6 +3,7 @@ var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
+var Choice = require('./choice'); 
 
 module.exports = React.createClass({
 	mixins: [ReactFire],
@@ -24,11 +25,11 @@ module.exports = React.createClass({
 	if (this.state.users.events) {
 
 		var eventOptions = Object.keys(this.state.users.events).map(function (key, i) {
-			return <option key={i} value={i} onClick={this.handleChoices.bind(this,this.state.users.events[key].name)} ref={"choice_" + i} value={this.state.users.events[key].name} className={this.state.active ? "btn btn-default active" : "btn btn-default" } >{this.state.users.events[key].name}</option>
+			return <Choice key={key} value={i} name={this.state.users.events[key].name} handleChoice={this.handleChoice} />
 		}.bind(this));
 
 	}
-		return <div>
+		return <div> 
 			<h4>Hello {this.props.email}</h4>
 			<p>{this.props.userId} {this.state.users.email}</p>
 
@@ -38,9 +39,7 @@ module.exports = React.createClass({
 				<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
 				<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
 					
-					<select multiple={true} ref="selectBox">
 				        {eventOptions}
-				      </select>
 
 				<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
 			</p>
@@ -58,11 +57,25 @@ module.exports = React.createClass({
 			<a href="#" onClick={this.props.onLogout}>Logout</a>
 		</div>
 	}, 
-	handleChoices: function(choice) {
+	handleChoice: function(choice,truth) {
+		console.log(choice);
+		console.log(truth);
 		var choices = this.state.eventChoices;
-		choices.push(choice);
-		this.setState({eventChoices: choices});
-		console.log(this.state.eventChoices);
+
+		if(truth == true) {
+			choices.push(choice);
+			this.setState({eventChoices: choices});
+		} else {
+			//Loop through choices and remove one you want
+			var search_term = choice;
+			for (var i=choices.length-1; i>=0; i--) {
+			    if (choices[i] === choice) {
+			        choices.splice(i, 1);
+			    }
+			}
+			this.setState({eventChoices: choices});
+		}
+
 	},
 	handleGuest: function(e) {
 		var timeInMs = Date.now();
@@ -100,7 +113,6 @@ module.exports = React.createClass({
         	time: this.refs.eventTime.getDOMNode().value,
         	address: this.refs.eventAddress.getDOMNode().value
         }, function(error) {
-  			
   			// Error report guest
   			if (error) {
 				console.log("Event could not be saved" + error);
