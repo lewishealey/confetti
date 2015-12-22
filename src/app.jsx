@@ -4,11 +4,12 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 
 // Router Shiz
+var HashHistory = require('react-router/lib/hashhistory');
 var Router = require('react-router').Router
 var Route = require('react-router').Route
 var Link = require('react-router').Link
 
-var View = require('./dashboard');
+var View = require('./view');
 var Dashboard = require('./dashboard');
 var ref = new Firebase(rootUrl);
 
@@ -20,7 +21,6 @@ var App = React.createClass({
     }
   },
   componentWillMount: function() {
-    
     
     // Create a callback which logs the current auth state
     function authDataCallback(authData) {
@@ -139,11 +139,16 @@ var App = React.createClass({
 
 });
 
+var routes = (
+  <Router history={new HashHistory}>
+    <Route path="/" component={App}>
+        <Route path="/dashboard" component={Dashboard} />
+      </Route>
+    <Route path="/view/:userId/guest/:guestId" component={View} />
+
+  </Router>
+  )
+
 var element = React.createElement(App, {});
 
-React.render((
-  <Router>
-    <Route path="/" component={App}>
-    </Route>
-  </Router>
-), document.body);
+React.render(routes, document.body);

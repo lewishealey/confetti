@@ -5,6 +5,12 @@ var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
 var Choice = require('./choice'); 
 
+// Router Shiz
+var HashHistory = require('react-router/lib/hashhistory');
+var Router = require('react-router').Router
+var Route = require('react-router').Route
+var Link = require('react-router').Link
+
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
@@ -32,6 +38,7 @@ module.exports = React.createClass({
 		return <div> 
 			<h4>Hello {this.props.email}</h4>
 			<p>{this.props.userId} {this.state.users.email}</p>
+			<Link to={`/view/${this.props.userId}`}>{this.state.users.email}</Link>
 
 			<h4>Add Guest</h4>
 			<p>
