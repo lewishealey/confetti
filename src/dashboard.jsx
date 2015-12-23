@@ -42,7 +42,8 @@ module.exports = React.createClass({
 
 			<h4>Add Guest</h4>
 			<p>
-				<input type="text" className="form-control" placeholder="Enter guest name" ref="guestName" name="fname" /><br />
+				<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
+				<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
 				<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
 				<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
 					
@@ -68,31 +69,56 @@ module.exports = React.createClass({
 		var choices = this.state.eventChoices;
 
 		if(truth == true) {
-			choices.push({"id": id, 
-					"name": choice});
-			this.setState({eventChoices: choices});
+
+			choices[id] = true;
+			// choices.push({"event"+[id] : true});
+			// this.setState({eventChoices: choices});
 		} else {
 			//Loop through choices and remove one you want
-			var search_term = choice;
-			for (var i=choices.length-1; i>=0; i--) {
-			    if (choices[i] === choice) {
-			        choices.splice(i, 1);
-			    }
-			}
+			delete choices[id];
 			this.setState({eventChoices: choices});
 		}
 
+		console.log(this.state.eventChoices);
+
 	},
 	handleGuest: function(e) {
-		var timeInMs = Date.now();
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId);
 		e.preventDefault();
-		var choices = this.state.eventChoices;
+		var timeInMs = Date.now();
+		var guestRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/guests/");
+		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
-		// Save guest
-		firebaseRef.child("guests").push({
+		var choices = this.state.eventChoices;
+		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
+
+		this.state.eventChoices.map(function(event) {
+			console.log(event);
+		});
+
+		{Object.keys(this.state.eventChoices).map(function(key) {
+
+			var eventRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/events/" + key);
+
+	    	eventRef.child("guests").set({
+				[string] : true
+	        }, function(error) {
+	  			
+	  			// Error report guest
+	  			if (error) {
+					console.log("Event could not be saved" + error);
+				} else {
+					console.log(key + " event saved");
+				}
+
+			}.bind(this));
+
+		}.bind(this))}; 
+
+		// // Save guest
+		guestRef.child(string).set({
 			attending: false,
-			name: this.refs.guestName.getDOMNode().value,
+			fname: this.refs.fName.getDOMNode().value,
+			lname: this.refs.lName.getDOMNode().value,
         	email: this.refs.guestEmail.getDOMNode().value,
         	date_created: timeInMs,
         	events: choices
@@ -106,14 +132,19 @@ module.exports = React.createClass({
 			}
 
 		});
+
+
 	},
 	handleEvent: function(e) {
-		var timeInMs = Date.now();
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId);
 		e.preventDefault();
+		var timeInMs = Date.now();
+		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId +"/events");
+		var randomNo = Math.floor(Math.random() * 1000) + 1;
+
+		var string = (this.refs.eventName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
 
 		// Save guest
-		firebaseRef.child("events").push({
+		firebaseRef.child(string).set({
 			date_created: timeInMs,
 			name: this.refs.eventName.getDOMNode().value,
         	time: this.refs.eventTime.getDOMNode().value,
@@ -123,7 +154,7 @@ module.exports = React.createClass({
   			if (error) {
 				console.log("Event could not be saved" + error);
 			} else {
-				console.log("Event saved");
+				console.log(string + " event saved");
 			}
 
 		});
