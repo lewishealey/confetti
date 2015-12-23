@@ -61,6 +61,9 @@ var App = React.createClass({
         <label>Password</label>
         <input type="password" ref="regPassword" name="password"/>
 
+        <label>Username</label>
+        <input type="text" ref="regUser" name="username" />
+
         <button onClick={this.onRegisterSubmit}>Login</button>
         
         </div> 
@@ -113,15 +116,18 @@ var App = React.createClass({
         }
       } else {
         // Add data to table
-        ref.child("users").child(userData.uid).set({
+        ref.child("users").child(this.refs.regUser.getDOMNode().value).set({
           invited: false,
           email: this.refs.regEmail.getDOMNode().value,
           password: this.refs.regPassword.getDOMNode().value,
           date_created: timeInMs,
+          wedding_date: false,
           sides: false,
-          events: false
+          events: false,
+          guests: false,
+          views: false
         });
-        console.log("Successfully created user account with uid:", userData.uid);
+        console.log(this.refs.regUser.getDOMNode().value + "was created");
       }
     }.bind(this));
 

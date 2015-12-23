@@ -11,17 +11,17 @@ module.exports = React.createClass({
   componentWillMount: function() {
   },
   render: function() {
-    return <a className={"btn btn-default" + (this.state.active ? " active" : "")} onClick={this.handleClick.bind(this,this.props.name)}>
+    return <a className={"btn btn-default" + (this.state.active ? " active" : "")} onClick={this.handleClick.bind(this,this.props.name,this.props.id)}>
       {this.props.name}
       </a>
   },
-  handleClick: function(name) {
+  handleClick: function(name,id) {
     this.setState({ active: ! this.state.active });
 
     if(this.state.active == false) {
-      this.props.handleChoice(name,true);
+      this.props.handleChoice(name,id,true);
     } else {
-      this.props.handleChoice(name,false);
+      this.props.handleChoice(name,id,false);
     }
 
   }

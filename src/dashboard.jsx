@@ -31,7 +31,7 @@ module.exports = React.createClass({
 	if (this.state.users.events) {
 
 		var eventOptions = Object.keys(this.state.users.events).map(function (key, i) {
-			return <Choice key={key} value={i} name={this.state.users.events[key].name} handleChoice={this.handleChoice} />
+			return <Choice key={key} id={key} value={i} name={this.state.users.events[key].name} handleChoice={this.handleChoice} />
 		}.bind(this));
 
 	}
@@ -64,13 +64,12 @@ module.exports = React.createClass({
 			<a href="#" onClick={this.props.onLogout}>Logout</a>
 		</div>
 	}, 
-	handleChoice: function(choice,truth) {
-		console.log(choice);
-		console.log(truth);
+	handleChoice: function(choice,id,truth) {
 		var choices = this.state.eventChoices;
 
 		if(truth == true) {
-			choices.push(choice);
+			choices.push({"id": id, 
+					"name": choice});
 			this.setState({eventChoices: choices});
 		} else {
 			//Loop through choices and remove one you want

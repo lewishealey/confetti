@@ -13,13 +13,31 @@ module.exports = React.createClass({
   componentWillMount: function() {
     var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.params.userId + "/guests/" + this.props.params.guestId);
     this.bindAsObject(firebaseRef, 'guest');
+
   },
   render: function() {
-    return (
-      <div>
-        <h2>{this.state.guest.name}</h2>
-      </div>
-    )
+
+    if(this.state.guest) {
+      return (
+        <div>
+          <h2>{this.state.guest.name}</h2>
+
+            {this.state.guest.events.map(function (guestEvent, i) {
+              return <p key={i}>{guestEvent.name} {guestEvent.id}</p>
+            })}
+
+
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <h2>Loading</h2>
+        </div>
+      )
+    }
+
+
   }
 
 });
