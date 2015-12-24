@@ -11,8 +11,11 @@ var Link = require('react-router').Link
 
 var View = require('./view');
 var Dashboard = require('./dashboard');
+var Guests = require('./guests'); 
+var Login = require('./login');
+var Register = require('./register');
 var ref = new Firebase(rootUrl);
-
+ 
 var App = React.createClass({
   mixins: [ ReactFire ],
   getInitialState: function() {
@@ -37,39 +40,21 @@ var App = React.createClass({
   render: function() {
     var authData = ref.getAuth();
     
+    // If user is logged in show dashboard
     if (authData) {
       return <Dashboard userId={authData.uid} onLogout={this.handleLogout} />
     } else {
 
-      return <div><h4>Logged Out</h4>
-
-        <label>Email</label>
-        <input type="email" ref="email" name="email" />
- 
-        <label>Password</label>
-        <input type="password" ref="password" name="password"/>
-
-        <button onClick={this.onLoginSubmit}>Login</button>
-        <a href="#" onClick={this.handleLogout}>Logout</a>
-        <a href="#" onClick={this.handleRegister}>Register</a>
-
-        <h4>Register</h4>
-
-        <label>Email</label>
-        <input type="email" ref="regEmail" name="email" />
- 
-        <label>Password</label>
-        <input type="password" ref="regPassword" name="password"/>
-
-        <button onClick={this.onRegisterSubmit}>Login</button>
-        
-        </div> 
+    // Else show login or register form
+      return <div>
+              <Login login={this.onLoginSubmit} />
+              <Register register={this.onRegisterSubmit} />
+            </div> 
     }
 
   },
-  onLoginSubmit: function(e) {
+  onLoginSubmit: function(userEmail,userPassword) {
     var timeInMs = Date.now();
-    e.preventDefault();
 
     // Create a callback to handle the result of the authentication
     function authHandler(error, authData) {
@@ -82,8 +67,8 @@ var App = React.createClass({
 
     // Auth with email/password
     ref.authWithPassword({
-      email    : this.refs.email.getDOMNode().value,
-      password : this.refs.password.getDOMNode().value
+      email    : userEmail,
+      password : userPassword
     }, authHandler);
 
     // Set logged in state
@@ -92,12 +77,14 @@ var App = React.createClass({
     }.bind(this));
 
   },
-  onRegisterSubmit: function() {
+  onRegisterSubmit: function(regEmail,regPassword, regUser) {
     var timeInMs = Date.now();
+    var randomNo = Math.floor(Math.random() * 1000) + 1;
+    var string = regUser + randomNo;
 
     ref.createUser({
-      email: this.refs.regEmail.getDOMNode().value,
-      password: this.refs.regPassword.getDOMNode().value
+      email: regEmail,
+      password: regPassword
     }, function(error, userData) {
       // Check data
       if (error) {
@@ -114,12 +101,14 @@ var App = React.createClass({
       } else {
         // Add data to table
         ref.child("users").child(userData.uid).set({
+          username: string,
           invited: false,
-          email: this.refs.regEmail.getDOMNode().value,
-          password: this.refs.regPassword.getDOMNode().value,
+          email: regEmail,
+          password: regPassword,
           date_created: timeInMs,
           sides: false,
           events: false,
+          wdate: false
         });
         console.log("Successfully created user account with uid:", userData.uid);
       }
@@ -142,7 +131,9 @@ var App = React.createClass({
 var routes = (
   <Router history={new HashHistory}>
     <Route path="/" component={App}>
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/dashboard/:userId" component={Dashboard} >
+          <Route path="/dashboard/guests/:userId" component={Guests} />
+        </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />
 
@@ -151,4 +142,4 @@ var routes = (
 
 var element = React.createElement(App, {});
 
-React.render(routes, document.body);
+React.render(routes, document.getElementById("app"));

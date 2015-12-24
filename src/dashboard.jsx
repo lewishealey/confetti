@@ -91,16 +91,15 @@ module.exports = React.createClass({
 		var choices = this.state.eventChoices;
 		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
 
-		this.state.eventChoices.map(function(event) {
-			console.log(event);
-		});
-
+		var events = {}
 		{Object.keys(this.state.eventChoices).map(function(key) {
 
-			var eventRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/events/" + key);
+			var eventRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/events/" + key + "/guests/"); 
 
-	    	eventRef.child("guests").set({
-				[string] : true
+	    	eventRef.child(string).set({ 
+				[string] : true,
+				invited: "true",
+				attending: false
 	        }, function(error) {
 	  			
 	  			// Error report guest
