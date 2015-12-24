@@ -10,11 +10,6 @@ module.exports = React.createClass({
       guest: false
     })
   },
-  componentWillMount: function() {
-    var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.params.userId + "/guests/" + this.props.params.guestId);
-    this.bindAsObject(firebaseRef, 'guest');
-
-  },
   render: function() {
 
     return <div><h4>Logged Out</h4>
@@ -29,16 +24,18 @@ module.exports = React.createClass({
         <a href="#" onClick={this.handleLogout}>Logout</a>
         <a href="#" onClick={this.handleRegister}>Register</a>
 
-        <h4>Register</h4>
-
-        <label>Email</label>
-        <input type="email" ref="regEmail" name="email" />
- 
-        <label>Password</label>
-        <input type="password" ref="regPassword" name="password"/>
-
-        <button onClick={this.onRegisterSubmit}>Login</button>
-        
         </div> 
+
+        <form>
+          <div className="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" className="form-control" ref="email" name="email" />
+          </div>
+          <div className="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" className="form-control" ref="password" name="password"/>
+          </div>
+          <button type="submit" className="btn btn-default" onClick={this.props.login}>Submit</button>
+        </form>
 
 });
