@@ -12,6 +12,7 @@ var Link = require('react-router').Link
 var View = require('./view');
 var Dashboard = require('./dashboard');
 var Guests = require('./guests'); 
+var Events = require('./events'); 
 var Login = require('./login');
 var Register = require('./register');
 var ref = new Firebase(rootUrl);
@@ -41,8 +42,10 @@ var App = React.createClass({
     var authData = ref.getAuth();
     
     // If user is logged in show dashboard
-    if (authData) {
+    if (this.state.loggedIn || authData) {
+
       return <Dashboard userId={authData.uid} onLogout={this.handleLogout} />
+
     } else {
 
     // Else show login or register form
@@ -131,8 +134,9 @@ var App = React.createClass({
 var routes = (
   <Router history={new HashHistory}>
     <Route path="/" component={App}>
-        <Route path="/dashboard/:userId" component={Dashboard} >
-          <Route path="/dashboard/guests/:userId" component={Guests} />
+        <Route path="/dashboard" component={Dashboard} >
+          <Route path="/guests/:userId" component={Guests} />
+          <Route path="/events/:userId" component={Events} />
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />

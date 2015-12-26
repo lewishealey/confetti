@@ -35,10 +35,14 @@ module.exports = React.createClass({
 		}.bind(this));
 
 	}
-		return <div> 
+		return <div className="dashboard"> 
+					<div className="dashboard__header">
+						<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition">
+					</div>
+
 			<h4>Hello {this.props.email}</h4>
 			<p>{this.props.userId} {this.state.users.email}</p>
-			<Link to={`/view/${this.props.userId}`}>{this.state.users.email}</Link>
+			<Link to={`/dashboard/${this.props.userId}`}>Dashboard</Link>
 
 			<h4>Add Guest</h4>
 			<p>
@@ -63,6 +67,9 @@ module.exports = React.createClass({
 			<Guests userId={this.props.userId} guests={this.state.users.guests} />
 
 			<a href="#" onClick={this.props.onLogout}>Logout</a>
+
+			{this.props.children}
+
 		</div>
 	}, 
 	handleChoice: function(choice,id,truth) {
