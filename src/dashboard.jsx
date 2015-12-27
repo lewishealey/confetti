@@ -6,6 +6,7 @@ var Guests = require('./guests');
 var Choice = require('./choice'); 
 
 // Router Shiz
+var ref = new Firebase(rootUrl);
 var HashHistory = require('react-router/lib/hashhistory');
 var Router = require('react-router').Router
 var Route = require('react-router').Route
@@ -16,13 +17,19 @@ module.exports = React.createClass({
 	getInitialState: function() {
 	return { users: {},
 			eventChoices: [],
-			active: false
+			active: false,
+			addGuest: false,
+			addEvent: false,
+			authId: false
 		}
 	},
 	componentWillMount: function() {
 		// Get user data
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId);
+		var authData = ref.getAuth();
+		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
     	this.bindAsObject(firebaseRef, 'users');
+
+    	this.setState({ authId: authData.uid});
 	},
 	componentDidUpdate: function() {
 
@@ -45,9 +52,10 @@ module.exports = React.createClass({
 						<div className="dashboard-grid__column">
 							<div className="dashboard-grid--nest">
 								<h4>Hello </h4>
-								<p>{this.props.userId}</p>
+								<p>{this.state.authId}</p>
 								<p>{this.state.users.email}</p>
-								<Link to={`/dashboard/${this.props.userId}`}>Dashboard</Link>
+								<Link to={`/dashboard`}>Dashboard</Link>
+								<a href="#" onClick={this.props.onLogout}>Logout</a>
 							</div>
 						</div>
 
@@ -55,13 +63,36 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									Data
+									{this.state.addGuest &&
+									<div>
+										<h4>Add Guest</h4>
+										<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
+										<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
+										<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
+										<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
+											
+										        {eventOptions}
+
+										<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
+									</div>
+									}
+
+									{this.state.addEvent &&
+									<div>
+										<h4>Add Event</h4>
+										<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
+										<input type="text" className="form-control" placeholder="Enter event time" ref="eventTime" /><br />
+										<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
+										<a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a>
+									</div>
+									}
+
 								</div>
 							</div>
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									Data
+									<Link to={`/dashboard/guests/`}>Guests</Link>
 								</div>
 							</div>
 
@@ -86,32 +117,9 @@ module.exports = React.createClass({
 
 					</div>
 
-
-			<h4>Add Guest</h4>
-			<p>
-				<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
-				<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
-				<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
-				<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
-					
-				        {eventOptions}
-
-				<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
-			</p>
-
-			<h4>Add Event</h4>
-			<p>
-				<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
-				<input type="text" className="form-control" placeholder="Enter event time" ref="eventTime" /><br />
-				<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
-				<a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a>
-			</p>
-
-			<Guests userId={this.props.userId} guests={this.state.users.guests} />
-
-			<a href="#" onClick={this.props.onLogout}>Logout</a>
-
-			{this.props.children}
+					<div className="dashboard__content">
+						{this.props.children}
+					</div>
 
 		</div>
 	}, 
