@@ -1,22 +1,49 @@
 var React = require('react');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
+var ReactFire = require('reactfire');
 
 module.exports = React.createClass({
+  mixins: [ReactFire],
   getInitialState: function() {
-    return {
-      name: this.props.guest.name,
-      id: this.props.guest.key,
-      events: this.props.guest.events
+  return { 
+    events: false,
+    edit: false
     }
   },
   componentWillMount: function() {
-    this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.props.guest.key);
+      this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.props.guest.key);
+      var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/");
+      this.bindAsObject(eventRef, 'events'); 
   },
   render: function() {
-    return <div>{this.state.name} - {this.state.events} <a className="btn btn-default" target="_blank" href={("/#/view/" + this.props.userId + "/guest/" + this.state.id)}>View</a> <button className="btn btn-default" onClick={this.handleDeleteClick}>Delete</button> </div>
+    
+              return <div className="guest">
+                <div className="guest__column">
+                  {this.props.guest.fname + " " + this.props.guest.lname}
+                </div>
+                <div className="guest__column">
+
+                  {Object.keys(this.props.guest.events).map(function (event) {
+                    return <span> {this.state.events[event].name} </span>
+                  }.bind(this))}
+
+                </div>
+                <div className="guest__column">
+                  <a onClick={this.handleEditClick}>Edit</a> 
+                </div>
+                <div className="guest__column">
+                  <a onClick={this.handleDeleteClick}>Delete</a> 
+                </div>
+              </div>
+
+            
   },
-  handleDeleteClick: function() {
+  handleEditClick: function() {
+
+  },
+  handleDeleteClick: function(e) {
+    e.preventDefault();
     this.fb.remove();
   }
 });

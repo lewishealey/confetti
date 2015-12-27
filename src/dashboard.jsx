@@ -3,7 +3,6 @@ var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
-var Choice = require('./choice'); 
 
 // Router Shiz
 var ref = new Firebase(rootUrl);
@@ -35,16 +34,11 @@ module.exports = React.createClass({
 
 	},
 	render: function() { 
-	if (this.state.users.events) {
-
-		var eventOptions = Object.keys(this.state.users.events).map(function (key, i) {
-			return <Choice key={key} id={key} value={i} name={this.state.users.events[key].name} handleChoice={this.handleChoice} />
-		}.bind(this));
-
-	}
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
-						<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
+						<Link to={`/dashboard`}>
+							<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
+						</Link>
 					</div>
 
 					<div className="dashboard-grid">
@@ -63,19 +57,6 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									{this.state.addGuest &&
-									<div>
-										<h4>Add Guest</h4>
-										<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
-										<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
-										<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" /><br />
-										<input type="text" className="form-control" placeholder="Address" ref="guestAddress" name="address" /><br />
-											
-										        {eventOptions}
-
-										<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
-									</div>
-									}
 
 									{this.state.addEvent &&
 									<div>
@@ -118,80 +99,13 @@ module.exports = React.createClass({
 					</div>
 
 					<div className="dashboard__content">
-						{this.props.children}
+						<div className="dashboard-grid--nest">
+							{this.props.children}
+						</div>
 					</div>
 
 		</div>
 	}, 
-	handleChoice: function(choice,id,truth) {
-		var choices = this.state.eventChoices;
-
-		if(truth == true) {
-
-			choices[id] = true;
-			// choices.push({"event"+[id] : true});
-			// this.setState({eventChoices: choices});
-		} else {
-			//Loop through choices and remove one you want
-			delete choices[id];
-			this.setState({eventChoices: choices});
-		}
-
-		console.log(this.state.eventChoices);
-
-	},
-	handleGuest: function(e) {
-		e.preventDefault();
-		var timeInMs = Date.now();
-		var guestRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/guests/");
-		var randomNo = Math.floor(Math.random() * 1000) + 1;
-
-		var choices = this.state.eventChoices;
-		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
-
-		var events = {}
-		{Object.keys(this.state.eventChoices).map(function(key) {
-
-			var eventRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId + "/events/" + key + "/guests/"); 
-
-	    	eventRef.child(string).set({ 
-				[string] : true,
-				invited: "true",
-				attending: false
-	        }, function(error) {
-	  			
-	  			// Error report guest
-	  			if (error) {
-					console.log("Event could not be saved" + error);
-				} else {
-					console.log(key + " event saved");
-				}
-
-			}.bind(this));
-
-		}.bind(this))}; 
-
-		// // Save guest
-		guestRef.child(string).set({
-			attending: false,
-			fname: this.refs.fName.getDOMNode().value,
-			lname: this.refs.lName.getDOMNode().value,
-        	email: this.refs.guestEmail.getDOMNode().value,
-        	date_created: timeInMs,
-        	events: choices
-        }, function(error) {
-  			
-  			// Error report guest
-  			if (error) {
-				console.log("Guest could not be saved" + error);
-			} else {
-				console.log("Guest saved");
-			}
-
-		});
-
-
-	},
 	handleEvent: function(e) {
 		e.preventDefault();
 		var timeInMs = Date.now();
