@@ -37,12 +37,55 @@ module.exports = React.createClass({
 	}
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
-						<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition">
+						<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
 					</div>
 
-			<h4>Hello {this.props.email}</h4>
-			<p>{this.props.userId} {this.state.users.email}</p>
-			<Link to={`/dashboard/${this.props.userId}`}>Dashboard</Link>
+					<div className="dashboard-grid">
+
+						<div className="dashboard-grid__column">
+							<div className="dashboard-grid--nest">
+								<h4>Hello </h4>
+								<p>{this.props.userId}</p>
+								<p>{this.state.users.email}</p>
+								<Link to={`/dashboard/${this.props.userId}`}>Dashboard</Link>
+							</div>
+						</div>
+
+						<div className="dashboard-grid__column-grid">
+
+							<div className="dashboard-grid__column-half">
+								<div className="dashboard-grid--nest">
+									Data
+								</div>
+							</div>
+
+							<div className="dashboard-grid__column-half">
+								<div className="dashboard-grid--nest">
+									Data
+								</div>
+							</div>
+
+							<div className="dashboard-grid__column-half">
+								<div className="dashboard-grid--nest">
+									Data
+								</div>
+							</div>
+							<div className="dashboard-grid__column-half">
+								<div className="dashboard-grid--nest">
+									Data
+								</div>
+							</div>
+
+						</div>
+
+						<div className="dashboard-grid__column">
+							<div className="dashboard-grid--nest">
+								Data
+							</div>
+						</div>
+
+					</div>
+
 
 			<h4>Add Guest</h4>
 			<p>
