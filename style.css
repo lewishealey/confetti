@@ -52,5 +52,8 @@ body {
 .guest {
   display: flex; }
   .guest__column {
-    flex: 1;
+    flex: 1; }
+  .guest__container {
     display: flex; }
+  .guest--column {
+    flex-direction: column; }

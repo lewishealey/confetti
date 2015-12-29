@@ -83,7 +83,21 @@ body {
 
 	&__column {
 		flex: 1;
+	}
+
+	&__container {
 		display: flex;
 	}
+
+	&--column {
+		flex-direction: column;
+	}
 	
+}
+
+.row {
+	padding: 10px 20px;
+	border: 1px solid #EFEFEF:
+	border-left: none;
+	border-right: none;
 }

@@ -15,7 +15,7 @@ module.exports = React.createClass({
 			authId: false,
 			guests: false,
 			events: false,
-			addGuest: true,
+			addGuest: false,
 			eventChoices: []
 		}
 	},
@@ -45,9 +45,9 @@ module.exports = React.createClass({
 
 
 		// Add guest and guest list content - comes from this.props.children in router
-		return <div className="guest__list">
+		return <div className="guest">
 			{this.state.addGuest &&
-				<div>
+				<div className="guest__column">
 					<h4>Add Guest</h4>
 					<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
 					<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
@@ -60,7 +60,12 @@ module.exports = React.createClass({
 				</div>
 				}
 
-			{this.renderList()}
+			<div className="guest__column">
+				{this.renderList()}
+
+				<a onClick={this.onToggleAddGuest} className="btn btn-success">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a>
+			</div>
+
 		</div>
 	},
 	renderList: function() {
@@ -158,5 +163,9 @@ module.exports = React.createClass({
 		// DEV CHOICES
 		console.log(this.state.eventChoices);
 
+	},
+	onToggleAddGuest: function() {
+		this.setState({ addGuest: ! this.state.addGuest })
 	}
+
 });

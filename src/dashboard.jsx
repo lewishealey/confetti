@@ -15,7 +15,6 @@ module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
 	return { users: {},
-			eventChoices: [],
 			active: false,
 			addGuest: false,
 			addEvent: false,
@@ -57,17 +56,7 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-
-									{this.state.addEvent &&
-									<div>
-										<h4>Add Event</h4>
-										<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
-										<input type="text" className="form-control" placeholder="Enter event time" ref="eventTime" /><br />
-										<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
-										<a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a>
-									</div>
-									}
-
+									Data
 								</div>
 							</div>
 
@@ -79,7 +68,7 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									Data
+									<Link to={`/dashboard/events/`}>Events</Link>
 								</div>
 							</div>
 							<div className="dashboard-grid__column-half">
@@ -105,30 +94,6 @@ module.exports = React.createClass({
 					</div>
 
 		</div>
-	}, 
-	handleEvent: function(e) {
-		e.preventDefault();
-		var timeInMs = Date.now();
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.userId +"/events");
-		var randomNo = Math.floor(Math.random() * 1000) + 1;
-
-		var string = (this.refs.eventName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
-
-		// Save guest
-		firebaseRef.child(string).set({
-			date_created: timeInMs,
-			name: this.refs.eventName.getDOMNode().value,
-        	time: this.refs.eventTime.getDOMNode().value,
-        	address: this.refs.eventAddress.getDOMNode().value
-        }, function(error) {
-  			// Error report guest
-  			if (error) {
-				console.log("Event could not be saved" + error);
-			} else {
-				console.log(string + " event saved");
-			}
-
-		});
 	}
 
 })

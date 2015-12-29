@@ -6,7 +6,7 @@ var ReactFire = require('reactfire');
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
-  return { 
+  return {  
     events: false,
     edit: false
     }
@@ -18,7 +18,7 @@ module.exports = React.createClass({
   },
   render: function() {
     
-              return <div className="guest">
+              return <div className="guest__container">
                 <div className="guest__column">
                   {this.props.guest.fname + " " + this.props.guest.lname}
                 </div>
