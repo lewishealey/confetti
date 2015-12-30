@@ -24,9 +24,11 @@ module.exports = React.createClass({
                 </div>
                 <div className="guest__column">
 
-                  {Object.keys(this.props.guest.events).map(function (event) {
+                {this.state.events &&
+                  Object.keys(this.props.guest.events).map(function (event) {
                     return <span> {this.state.events[event].name} </span>
-                  }.bind(this))}
+                  }.bind(this))
+                }
 
                 </div>
                 <div className="guest__column">

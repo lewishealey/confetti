@@ -48,7 +48,7 @@ module.exports = React.createClass({
 								<p>{this.state.authId}</p>
 								<p>{this.state.users.email}</p>
 								<Link to={`/dashboard`}>Dashboard</Link>
-								<a href="#" onClick={this.props.onLogout}>Logout</a>
+								<button onClick={this.handleLogout}>Logout</button>
 							</div>
 						</div>
 
@@ -94,7 +94,11 @@ module.exports = React.createClass({
 					</div>
 
 		</div>
-	}
+	},
+	handleLogout: function() {
+    	ref.unauth();
+    	this.setState({ loggedIn: false });
+  	}
 
 })
 

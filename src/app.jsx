@@ -21,7 +21,8 @@ var App = React.createClass({
   mixins: [ ReactFire ],
   getInitialState: function() {
     return {
-      register: false
+      register: false,
+      loggedIn: false
     }
   },
   componentWillMount: function() {
@@ -42,7 +43,7 @@ var App = React.createClass({
     var authData = ref.getAuth();
     
     // If user is logged in show dashboard
-    if (this.state.loggedIn || authData) {
+    if (authData) {
 
       return <div>{this.props.children}</div>
 
@@ -123,12 +124,7 @@ var App = React.createClass({
   },
   handleRegister: function(){
     this.setState({register: true});
-  },
-  handleLogout: function() {
-    ref.unauth();
-    this.setState({ loggedIn: false });
   }
-
 });
 
 var routes = (

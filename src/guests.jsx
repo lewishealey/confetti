@@ -37,10 +37,14 @@ module.exports = React.createClass({
 	},
 	render: function() {
 
+		if(this.state.events) {
 			// Loop through event choices object for simple toggle
-		var eventOptions = Object.keys(this.state.events).map(function (key, i) {
-			return <Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} />
-		}.bind(this));
+			var eventOptions = Object.keys(this.state.events).map(function (key, i) {
+				return <Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} />
+			}.bind(this));
+		} else {
+			var eventOptions = "Not set";
+		}
 
 
 
@@ -95,12 +99,14 @@ module.exports = React.createClass({
 
 		// Get time
 		var timeInMs = Date.now();
+		var authData = ref.getAuth();
 
 		// Random no to attach to name
 		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
 		var choices = this.state.eventChoices;
 		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
+		var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
 
 		var events = {};
 
