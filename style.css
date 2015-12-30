@@ -57,3 +57,33 @@ body {
     display: flex; }
   .guest--column {
     flex-direction: column; }
+
+.view {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+  height: 100%; }
+  .view--white {
+    background-color: #FFFFFF; }
+
+.row {
+  padding: 10px 20px;
+  border: 1px solid #EFEFEF;
+  border-left: none;
+  border-right: none; }
+
+.column {
+  flex: 1; }
+  .column__half {
+    flex: 0.5; }
+  .column__double {
+    flex: 2; }
+  .column__flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; }
+  .column__flex-column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap; }

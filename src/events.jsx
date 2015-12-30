@@ -35,8 +35,21 @@ module.exports = React.createClass({
 				<div>
 					<h4>Add Event</h4>
 					<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
-					<input type="text" className="form-control" placeholder="Enter event time" ref="eventTime" /><br />
+					<p>
+						<label>From</label>
+						<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
+					</p>
+					<p>
+						<label>To</label>
+						<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
+					</p>
+
+					<label>Address</label>
 					<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
+
+					<label>Postcode</label>
+					<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
+					
 
 					<h5>Add meals</h5>
 					{this.state.meals &&
@@ -50,9 +63,14 @@ module.exports = React.createClass({
 				</div>
 
 				<div>
-					{Object.keys(this.state.events).map(function (key, i) {
-						return <div> {this.state.events[key].name} </div>
-					}.bind(this))}
+
+					{this.state.events &&
+
+						Object.keys(this.state.events).map(function (key, i) {
+							return <div> {this.state.events[key].name} </div>
+						}.bind(this))
+ 
+					}
 
 				</div>
 
@@ -65,40 +83,52 @@ module.exports = React.createClass({
 		var mealRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.state.authId + "/meals");
 		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
+		// Unique ID
 		var string = (this.refs.eventName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
 
-		// Meal loop
+		// Times - need a date 
+		var fromTime = this.refs.eventFTime.getDOMNode().value;
+		var toTime = this.refs.eventTTime.getDOMNode().value;
 
+		// Meal loop
 		var mealsArray = {};
 
-		this.state.meals.map(function(meal) {
-			var mealId = (meal + randomNo).toLowerCase()
-			mealsArray[mealId] = true;
+		// If meals then add, if not show false
+		if(this.state.meals.map) {
+			this.state.meals.map(function(meal) {
+				var mealId = (meal + randomNo).replace(/ /g,'').toLowerCase()
+				mealsArray[mealId] = true;
 
-			// Save meal
-			mealRef.child(mealId).set({
-				date_created: timeInMs,
-				name: meal,
-		    	event: string
-		    }, function(error) {
-					// Error report event
-					if (error) {
-					console.log("Meal could not be saved" + error);
-				} else {
-					console.log(mealId + " meal saved");
-				}
+				// Save meal
+				mealRef.child(mealId).set({
+					date_created: timeInMs,
+					name: meal,
+			    	event: string
+			    }, function(error) {
+						// Error report event
+						if (error) {
+						console.log("Meal could not be saved" + error);
+					} else {
+						console.log(mealId + " meal saved");
+					}
 
-			});
+				});
 
-		}.bind(this));
+			}.bind(this));
+
+		} else {
+			mealsArray = false;
+		}
 
 
 		// Save event
 		firebaseRef.child(string).set({
 			date_created: timeInMs,
 			name: this.refs.eventName.getDOMNode().value,
-	    	time: this.refs.eventTime.getDOMNode().value,
+	    	from: fromTime,
+	    	to: toTime,
 	    	address: this.refs.eventAddress.getDOMNode().value,
+	    	postcode: this.refs.eventPostcode.getDOMNode().value,
 	    	meals: mealsArray
 	    }, function(error) {
 				// Error report event

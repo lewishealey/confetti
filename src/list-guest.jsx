@@ -24,12 +24,15 @@ module.exports = React.createClass({
                 </div>
                 <div className="guest__column">
 
-                {this.state.events &&
+                {this.props.guest.events &&
                   Object.keys(this.props.guest.events).map(function (event) {
                     return <span> {this.state.events[event].name} </span>
                   }.bind(this))
                 }
 
+                </div>
+                <div className="guest__column">
+                  <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View page</a> 
                 </div>
                 <div className="guest__column">
                   <a onClick={this.handleEditClick}>Edit</a> 

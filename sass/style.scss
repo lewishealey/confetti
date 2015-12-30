@@ -95,9 +95,47 @@ body {
 	
 }
 
+.view {
+	display: flex;
+	justify-content: flex-start;
+	align-items: stretch;
+	align-content: stretch;
+	height: 100%;
+
+	&--white {
+		background-color: $white;
+	}
+
+}
+
 .row {
 	padding: 10px 20px;
-	border: 1px solid #EFEFEF:
+	border: 1px solid #EFEFEF;
 	border-left: none;
 	border-right: none;
+}
+
+.column {
+	flex: 1;
+
+	&__half {
+		flex: 0.5
+	}
+
+	&__double {
+		flex: 2;
+	}
+
+	&__flex-row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	&__flex-column {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+
+	}
 }
