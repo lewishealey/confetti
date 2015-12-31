@@ -7,7 +7,8 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
     return({
-      guest: false
+      guest: false,
+      loaded: false
     })
   },
   componentWillMount: function() {
@@ -20,11 +21,47 @@ module.exports = React.createClass({
     this.bindAsObject(firebaseRef, 'guest');
     this.bindAsObject(mealRef, 'meals');
 
+
   },
   componentDidUpdate: function() {
     console.log(this.state.guest);
   },
+  componentDidMount: function() {
+    this.setState({loaded: true });
+  },
   render: function() {
+
+    // If component is loaded
+    if(this.state.loaded && this.state.guest.events) {
+
+    var content = Object.keys(this.state.guest.events).map(function (key, i) {
+
+              return <div key={i} className="view__event"> 
+                  
+                <h4>{this.state.events[key].name}</h4>
+                <p>{this.state.events[key].address} {this.state.events[key].postcode}</p>
+
+                <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.events[key].postcode + "&zoom=16&size=500x500&markers=" + this.state.events[key].postcode + "&sensor=false"} width="200" height="200" />
+
+                {this.state.events[key].meals &&
+                  
+                  Object.keys(this.state.events[key].meals).map(function (mKey, i) {
+                    console.log(this.state.meals[mKey]);
+
+                    return <div key={i}>{this.state.meals[mKey].name}</div>
+
+                  }.bind(this))
+
+                }
+
+              </div>
+
+            }.bind(this));
+
+  } else {
+    var content = "Loading";
+  }
+
   
   return <div className="view">
 
@@ -36,36 +73,7 @@ module.exports = React.createClass({
         <h4>Welcome {this.state.guest.fname}</h4>
         <h5>Feel free to rsvp to the beautiful day</h5>
 
-        {this.state.guest.events &&
-
-            Object.keys(this.state.guest.events).map(function (key, i) {
-
-              return <div key={i} className="view__event"> 
-                  
-                <h4>{this.state.events[key].name}</h4>
-                <p>{this.state.events[key].address} {this.state.events[key].postcode}</p>
-
-                <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.events[key].postcode + "&zoom=16&size=500x500&markers=" + this.state.events[key].postcode + "&sensor=false"} width="200" height="200" />
-
-                {this.state.events[key].meals &&
-
-                  Object.keys(this.state.events[key].meals).map(function (mKey, i) {
-
-                      if(this.state.meals[mKey]) {
-
-                        return <div key={i}>{this.state.meals[mKey].name}</div>
-
-                      }
-
-                  }.bind(this))
-
-                }
-
-              </div>
-
-            }.bind(this))
- 
-          }
+        {content}
 
 
       </div>
