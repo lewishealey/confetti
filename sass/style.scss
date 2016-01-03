@@ -69,6 +69,15 @@ body {
 		flex-wrap: wrap;
 	}
 
+	&__image {
+		position: relative;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+		}
+	}
+
 	&--nest {
 		margin: 5px;
 		background: $white;
@@ -101,6 +110,11 @@ body {
 	align-items: stretch;
 	align-content: stretch;
 	height: 100%;
+
+	&__event {
+		border: 1px solid #ECEFF1;
+		display: flex;
+	}
 
 	&--white {
 		background-color: $white;
@@ -137,5 +151,20 @@ body {
 		flex-direction: column;
 		flex-wrap: wrap;
 
+	}
+
+	&--img {
+
+		img { 
+			width: 100%;
+		}
+		
+	}
+
+	&--nest {
+		margin: 5px;
+		background: $white;
+		padding: 20px;
+		flex: 1;
 	}
 }

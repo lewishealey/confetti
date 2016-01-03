@@ -4,6 +4,10 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
 
+// Upload file shiz
+var Dropzone = require('react-dropzone');
+var request = require('superagent');
+
 // Router Shiz
 var ref = new Firebase(rootUrl);
 var HashHistory = require('react-router/lib/hashhistory');
@@ -18,7 +22,8 @@ module.exports = React.createClass({
 			active: false,
 			addGuest: false,
 			addEvent: false,
-			authId: false
+			authId: false,
+			files: []
 		}
 	},
 	componentWillMount: function() {
@@ -81,7 +86,11 @@ module.exports = React.createClass({
 
 						<div className="dashboard-grid__column">
 							<div className="dashboard-grid--nest">
-								Data
+
+            					<Dropzone onDrop={this.handleDrop}>
+              						<div>Try dropping some files here, or click to select files to upload.</div>
+            					</Dropzone>
+
 							</div>
 						</div>
 
@@ -98,7 +107,19 @@ module.exports = React.createClass({
 	handleLogout: function() {
     	ref.unauth();
     	this.setState({ loggedIn: false });
-  	}
+  	},
+  	handleDrop: function (files) {
+  		var req = request.post('/upload');
+        files.forEach((file)=> {
+            req.attach(file.name, file);
+            console.log(file.name);
+        });
+        req.end(function(err, res){
+    		// Do something
+    		console.log(err);
+		});
+
+    },
 
 })
 

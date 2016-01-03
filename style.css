@@ -43,6 +43,11 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap; }
+  .dashboard-grid__image {
+    position: relative;
+    overflow: hidden; }
+    .dashboard-grid__image img {
+      width: 100%; }
   .dashboard-grid--nest {
     margin: 5px;
     background: #FFFFFF;
@@ -64,6 +69,9 @@ body {
   align-items: stretch;
   align-content: stretch;
   height: 100%; }
+  .view__event {
+    border: 1px solid #ECEFF1;
+    display: flex; }
   .view--white {
     background-color: #FFFFFF; }
 
@@ -87,3 +95,10 @@ body {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap; }
+  .column--img img {
+    width: 100%; }
+  .column--nest {
+    margin: 5px;
+    background: #FFFFFF;
+    padding: 20px;
+    flex: 1; }
