@@ -2,168 +2,107 @@ var React = require('react');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ReactFire = require('reactfire');
-
+var Choice = require('./choice'); 
 
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
-    return {  
-      event: this.props.event,
-      userId: this.props.userId,
-      guestId: this.props.guestId,
-      eventId: this.props.id,
-      attending: false,
+  return {  
+      event: false,
+      edit: false,
       meals: false
     }
   },
   componentWillMount: function() {
-      var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/meals/");
-      this.bindAsObject(mealRef, 'meals');
+    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/");
+    this.bindAsObject(eventRef, 'meals'); 
+
+    this.setState({event: this.props.event});
   },
   render: function() {
-    console.log(this.state.meals);
-  return <div className="view__event">
-
-    <div className="column__double"> 
-      <div className="column--nest"> 
-
-        <h4>{this.state.event.name}</h4>
-
-        {this.state.event.meals &&
-          <h6>Has meals</h6>
-
-        }
-
-        <a className="btn btn-success" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-        <a className="btn btn-danger" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
-
-        {(this.state.attending || this.state.event.guests[this.state.guestId].attending == true)&& 
-
-          <div>
-            <h4>Attending</h4>
-
-            {this.state.meals &&
-
-              <div>
-
-                <select className="form-control" ref="mealChoice">
-                  <option>Select a meal</option>
-              
-                    {Object.keys(this.state.event.meals).map(function (key, i) {
-                      return <option key={i} value={key}>{this.state.meals[key].name}</option>
-                    }.bind(this))}
-
-                </select>
-
-                <a onClick={this.handleMeals}>Save</a>
-
-              </div>
-
-            }
-
-
-          </div>
-
-        }
-
-      </div>
-    </div>
-
-    <div className="column__half column--img"> 
-      <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.event.postcode + "&zoom=16&size=500x500&markers=" + this.state.event.postcode + "&sensor=false"} />
-    </div>
-
+  return <div className="column column--border">
+    {this.renderList()}
   </div>
-   
+            
   },
-  removeMeal: function(mealId) {
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId + "/meals");
-    var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/meals/' + mealId + "/guests/" + this.state.guestId);
-    guestRef.remove();
-    mealRef.remove();
-  },
-  handleMeals: function() {
-    var timeInMs = Date.now();
-    var mealId = this.refs.mealChoice.getDOMNode().value ;
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
-    var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/meals/' + mealId);
-    console.log(event.target.value);
+  renderList: function() {
+    var guests = this.state.event.guests;
 
-    guestRef.child("meals").update({
-      [this.state.eventId]: mealId
-      }, function(error) {
-        // Error report event
-        if (error) {
-        console.log("Event could not be saved" + error);
-      } else {
-        console.log("Meal added to guest");
+    // Count the guests
+    if(this.state.event.guests) {
+      var countGuests = 0;
+      for ( guest in guests )   {
+         if(guests.hasOwnProperty(guest)) {
+            countGuests++;
+         }
       }
-
-    });
-
-    mealRef.child("guests").update({
-      [this.state.guestId]: true
-      }, function(error) {
-        // Error report event
-        if (error) {
-        console.log("Event could not be saved" + error);
-      } else {
-        console.log("Meal added to meals");
-      }
-
-    });
-
-  },
-  handleAttending: function(truth) {
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.state.eventId + '/guests/' + this.state.guestId);
-
-    // console.log(this.state.userId);
-    // console.log(this.state.guestId);
-    // console.log(this.state.eventId);
-
-    var timeInMs = Date.now();
-
-    // If true then flip state
-    if(truth == true) {
-
-      this.setState({
-        attending: true
-      });
-
-    } else {
-
-      this.setState({
-        attending: false
-      });
 
     }
 
-    // Set attending event key to the guest
-      guestRef.child("attending").update({
-          [this.state.eventId]: truth
+    if(this.state.edit) {
+      return <div className="cont__flex-column">
+
+        <div className="column__half">
+          <input type="text" className="form-control" defaultValue={this.state.event.name} onChange={this.handleInputChange.bind(this,"name")} />
+        </div>
+
+        <div className="column">
+
+          <input type="text" className="form-control" defaultValue={this.props.event.address} onChange={this.handleInputChange.bind(this,"address")} />
+          <input type="text" className="form-control" defaultValue={this.props.event.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
+        </div>
+
+
+        <div className="column">
+          <a onClick={this.handleEditClick}>Save</a> 
+        </div>
+
+      </div>
+
+    } else {
+ 
+      return <div className="column--nest">
+           <h4>{this.state.event.name}</h4>
+           <p>{this.state.event.address ? this.state.event.address : null}</p>
+           <p>{this.state.event.postcode ? this.state.event.postcode : null}</p>
+           <p>{(this.state.event.from ? this.state.event.from : null) + " - " + (this.state.event.to ? this.state.event.to : null)}</p>
+           
+            {this.state.event.meals &&
+              <p>Meals: 
+              {Object.keys(this.state.event.meals).map(function (event, i) {
+                return <span key={i}> {this.state.meals[event].name} </span>
+              }.bind(this))}
+              </p>
+            }
+
+            <p>{countGuests ? countGuests + " guests" : "No guests" }</p>
+
+            <a className="btn btn--blue" onClick={this.handleEditClick}>Edit</a>
+
+          </div>
+      
+    }
+
+
+  },
+  handleEditClick: function() {
+    this.setState({ edit: ! this.state.edit })
+  },
+  handleDeleteClick: function(e) {
+    e.preventDefault();
+    this.fb.remove();
+  },
+  handleInputChange: function(string, event) {
+    var value = event.target.value;
+
+    this.fb.update({
+          [string]: value
         }, function(error) { if (error) { 
-          console.log("Could not set attending to guest " + error);
+          console.log("Could not " + value + error);
         } else {
-          console.log("Set " + truth + " attending to guest");
+          console.log("Set " + value + " to " + string);
         }
-
-    // Update the event to save guest as attending
-    eventRef.update({ 
-        attending: truth
-      }, function(error) {
-        // Error report event
-        if (error) {
-        console.log("Nope to update event" + error);
-      } else {
-        console.log("Updated event" + truth);
-      }
-
-      });
-
     });
 
-
   }
-
 });

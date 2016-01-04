@@ -4,6 +4,8 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ref = new Firebase(rootUrl);
 
+var ListEvent = require('./list-event'); 
+
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
@@ -11,6 +13,7 @@ module.exports = React.createClass({
 			authId: false,
 			events: false,
 			guests: false,
+			addEvent: false,
 			meals: []
 		}
 	},
@@ -31,7 +34,7 @@ module.exports = React.createClass({
 
 	return <div>
 	          <h4>Events</h4>
-
+	          {this.state.addEvent &&
 				<div>
 					<h4>Add Event</h4>
 					<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
@@ -62,17 +65,23 @@ module.exports = React.createClass({
 					<p><a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a></p>
 				</div>
 
-				<div>
+			}
+
 
 					{this.state.events &&
 
-						Object.keys(this.state.events).map(function (key, i) {
-							return <div> {this.state.events[key].name} </div>
-						}.bind(this))
- 
+						<div className="cont e">
+							{Object.keys(this.state.events).map(function (key, i) {
+								return <ListEvent event={this.state.events[key]} key={i} id={i} userId={this.state.authId}/>
+							}.bind(this))}
+
+						<div className="column">
+							<a onClick={this.onToggleAddEvent} className="btn">{this.state.addEvent ? "Hide Event Add" : "Add Event"}</a>
+						</div>
+
+ 						</div>
 					}
 
-				</div>
 
 	       </div> 
 	},
@@ -95,7 +104,7 @@ module.exports = React.createClass({
 
 		// If meals then add, if not show false
 		if(this.state.meals.map) {
-			this.state.meals.map(function(meal) {
+			this.state.meals.map(function(meal, i) {
 				var mealId = (meal + randomNo).replace(/ /g,'').toLowerCase()
 				mealsArray[mealId] = true;
 
@@ -157,5 +166,8 @@ module.exports = React.createClass({
 
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
+	},
+	onToggleAddEvent: function() {
+		this.setState({ addEvent: ! this.state.addEvent })
 	}
 });
