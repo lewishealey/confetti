@@ -49,25 +49,47 @@ module.exports = React.createClass({
 
 
 		// Add guest and guest list content - comes from this.props.children in router
-		return <div className="guest">
-			{this.state.addGuest &&
-				<div className="guest__column">
-					<h4>Add Guest</h4>
-					<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
-					<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
-					<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" required/><br />
-					<input type="text" className="form-control" placeholder="Address (optional)" ref="guestAddress" name="postal" /><br />
-						
-					        {eventOptions}
+		return <div className="cont__flex-column">
 
-					<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
+			<div className="column column__half">
+	            <h4>Invited Guests</h4>
+	            <p>View your wonderful guests</p>
+	        </div>
+
+	        <div className="column">
+
+		        <div className="guest">
+					{this.state.addGuest &&
+						<div className="guest__column">
+							<h4>Add Guest</h4>
+							<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
+							<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
+							<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" required/><br />
+							<input type="text" className="form-control" placeholder="Address (optional)" ref="guestAddress" name="postal" /><br />
+								
+							        {eventOptions}
+
+							<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
+						</div>
+						}
+
+					<div className="guest__column">
+
+						<div className="cont row">
+					      <div className="column">
+					        Name
+					      </div>
+					      <div className="column__double">
+					        Invited Events
+					      </div>
+					    </div>
+
+						{this.renderList()}
+						<a onClick={this.onToggleAddGuest} className="btn btn-success">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a>
+					</div>
+
 				</div>
-				}
 
-			<div className="guest__column">
-				{this.renderList()}
-
-				<a onClick={this.onToggleAddGuest} className="btn btn-success">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a>
 			</div>
 
 		</div>
@@ -167,7 +189,7 @@ module.exports = React.createClass({
 		}
 
 		// DEV CHOICES
-		console.log(this.state.eventChoices);
+		// console.log(this.state.eventChoices);
 
 	},
 	onToggleAddGuest: function() {
