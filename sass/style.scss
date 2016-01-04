@@ -29,6 +29,12 @@ body {
     transition: $element $time $ease;
 }
 
+a {
+	&:hover {
+		cursor: pointer;
+	}
+}
+
 .dashboard {
 
 	&__header {
@@ -102,23 +108,6 @@ body {
 
 }
 
-.guest {
-	display: flex;
-
-	&__column {
-		flex: 1;
-	}
-
-	&__container {
-		display: flex;
-	}
-
-	&--column {
-		flex-direction: column;
-	}
-	
-}
-
 .view {
 	display: flex;
 	justify-content: flex-start;
@@ -137,11 +126,46 @@ body {
 
 }
 
+.guest {
+	display: flex;
+
+	&__column {
+		flex: 1;
+	}
+
+	&--column {
+		flex-direction: column;
+	}
+	
+}
+
+.cont {
+	display: flex;
+
+	&__header {
+
+	}
+
+	&__flex-row {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	&__flex-column {
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
+
+
+
+}
+
 .row {
 	padding: 10px 20px;
-	border: 1px solid #EFEFEF;
+	border: 1px solid $lfade;
 	border-left: none;
 	border-right: none;
+	border-top: none;
 }
 
 .column {
@@ -168,8 +192,20 @@ body {
 
 	}
 
+	&--border {
+		border: 1px solid $lfade;
+	}
+
 	&--space-between {
 		justify-content: space-between;
+	}
+
+	&--rev-hover {
+		opacity: 0;
+
+		&:hover {
+			opacity: 1;
+		}
 	}
 
 	&--img {
@@ -201,6 +237,10 @@ body {
 	vertical-align: baseline;
 	background-color: $blue;
 	border-radius: 10px;
+
+	&:active {
+
+	}
 
 	&--outline {
 		background-color: transparent;
@@ -246,6 +286,12 @@ body {
 	color: $lwhite;
 
 	@include animation(all,0.25s,linear)
+
+	&.active {
+		background-color: $dark;
+		border-color: $dark;
+		color: $white;
+	}
 
 	&:hover {
 		background-color: $blue;

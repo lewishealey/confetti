@@ -35,9 +35,24 @@ module.exports = React.createClass({
     	this.setState({ authId: authData.uid});
 	},
 	componentDidUpdate: function() {
-
+		if(this.state.users.guests) {
+			
+		}
 	},
 	render: function() { 
+		var guests = this.state.users.guests;
+
+		// Count the guests
+		if(this.state.users.guests) {
+			var countGuests = 0;
+			for ( guest in guests )   {
+			   if(guests.hasOwnProperty(guest)) {
+			      countGuests++;
+			   }
+			}
+
+		}
+
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
 						<Link to={`/dashboard`}>
@@ -51,7 +66,7 @@ module.exports = React.createClass({
 							<div className="dashboard-grid--nest dashboard-grid--dark column__flex-column">
 
 								<div className="column">
-									<span className="badge badge--large">100</span>
+									<span className="badge badge--large">{countGuests}</span>
 									<span className="badge--text-large">Invited</span>
 								</div>
 								<div className="column">

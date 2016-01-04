@@ -3,7 +3,7 @@ var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 
-var ListEvent = require('./list-event');
+var ViewEvent = require('./view-event');
 
 module.exports = React.createClass({
   mixins: [ReactFire],
@@ -37,7 +37,7 @@ module.exports = React.createClass({
 
       var content = Object.keys(this.state.guest.events).map(function (key, i) {
 
-        return <ListEvent event={this.state.events[key]} key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
+        return <ViewEvent event={this.state.events[key]} key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
                 
       }.bind(this));
 
