@@ -48,12 +48,25 @@ module.exports = React.createClass({
 					<div className="dashboard-grid">
 
 						<div className="dashboard-grid__column">
-							<div className="dashboard-grid--nest">
-								<h4>Hello </h4>
-								<p>{this.state.authId}</p>
-								<p>{this.state.users.email}</p>
-								<Link to={`/dashboard`}>Dashboard</Link>
-								<button onClick={this.handleLogout}>Logout</button>
+							<div className="dashboard-grid--nest dashboard-grid--dark column__flex-column">
+
+								<div className="column">
+									<span className="badge badge--large">100</span>
+									<span className="badge--text-large">Invited</span>
+								</div>
+								<div className="column">
+									<span className="badge badge--outline badge--blue">50</span>
+									<span className="badge--text">Ceremony</span>
+
+									<span className="badge badge--outline badge--blue">50</span>
+									<span className="badge--text">Reception</span>
+								</div>
+
+								<div className="column">
+									<a href="#" className="btn btn--outline">Add Guest</a>
+								</div>
+
+								
 							</div>
 						</div>
 
@@ -61,7 +74,7 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									Data
+									<Link to={`/dashboard`}>Dashboard</Link>
 								</div>
 							</div>
 
@@ -78,7 +91,7 @@ module.exports = React.createClass({
 							</div>
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									Data
+									<button onClick={this.handleLogout}>Logout</button>
 								</div>
 							</div>
 
