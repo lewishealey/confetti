@@ -29,53 +29,54 @@ module.exports = React.createClass({
 	  	// Set auth as a state
 		this.setState({ authId: authData.uid});
 
+
 	},
 	render: function() {
 
 	return <div>
 	          <h4>Events</h4>
-	          {this.state.addEvent &&
-				<div>
-					<h4>Add Event</h4>
-					<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
-					<p>
-						<label>From</label>
-						<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
-					</p>
-					<p>
-						<label>To</label>
-						<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
-					</p>
-
-					<label>Address</label>
-					<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
-
-					<label>Postcode</label>
-					<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
-					
-
-					<h5>Add meals</h5>
-					{this.state.meals &&
-						this.state.meals.map(function(meal, i) {
-							return <div key={i}>{meal} <a onClick={this.deleteMeal.bind(this, i) }>Delete</a></div>
-						}.bind(this)) 
-					}
-					<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" /><a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
-
-					<p><a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a></p>
-				</div>
-
-			}
-
-
+	       
 					{this.state.events &&
 
-						<div className="cont e">
+						<div className="cont ">
 							{Object.keys(this.state.events).map(function (key, i) {
-								return <ListEvent event={this.state.events[key]} key={i} id={i} userId={this.state.authId}/>
+								return <ListEvent event={this.state.events[key]} key={i} id={key} handleMeal={this.editMeal} userId={this.state.authId}/>
 							}.bind(this))}
 
 						<div className="column">
+						{this.state.addEvent &&
+							<div>
+								<h4>Add Event</h4>
+								<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
+								<p>
+									<label>From</label>
+									<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
+								</p>
+								<p>
+									<label>To</label>
+									<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
+								</p>
+
+								<label>Address</label>
+								<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
+
+								<label>Postcode</label>
+								<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
+								
+
+								<h5>Add meals</h5>
+								{this.state.meals &&
+									this.state.meals.map(function(meal, i) {
+										return <div key={i}>{meal} <a onClick={this.deleteMeal.bind(this, i) }>Delete</a></div>
+									}.bind(this)) 
+								}
+								<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" /><a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
+
+								<p><a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a></p>
+							</div>
+
+						}
+
 							<a onClick={this.onToggleAddEvent} className="btn">{this.state.addEvent ? "Hide Event Add" : "Add Event"}</a>
 						</div>
 
@@ -159,6 +160,40 @@ module.exports = React.createClass({
 
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
+	},
+	editMeal: function(value,eventId) {
+
+		var timeInMs = Date.now();
+	    var randomNo = Math.floor(Math.random() * 1000) + 1;
+
+	    // Unique ID
+	    var string = (value + randomNo).replace(/ /g,'').toLowerCase();
+
+	    // // Firebase Obj
+	    var mealRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/meals/");
+	    var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + eventId + "/");
+
+	    mealRef.child(string).set({
+	          name: value,
+	          date_created: timeInMs,
+	          event: eventId
+	        }, function(error) { if (error) { 
+	          console.log("Could not " + value + error);
+	        } else {
+	          console.log("Set " + value + " to " + string);
+	        }
+	    });
+
+	    eventRef.child("meals").update({
+	          [string]: true,
+	        }, function(error) { if (error) { 
+	          console.log("Could not " + value + error);
+	        } else {
+	          console.log("Set " + value + " to " + string);
+	        }
+	    });
+
+
 	},
 	deleteMeal: function(id) {
 		var mealsState = this.state.meals;

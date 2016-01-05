@@ -47,21 +47,21 @@ module.exports = React.createClass({
           </div>
 
         <div className="guest__column-half">
-          <input type="text" className="form-control" defaultValue={this.props.guest.fname} onChange={this.handleInputChange.bind(this,"fname")} />
+          <input type="text" className="form-control" defaultValue={this.state.guest.fname} onChange={this.handleInputChange.bind(this,"fname")} />
         </div>
 
         <div className="guest__column-half">
-          <input type="text" className="form-control" defaultValue={this.props.guest.lname} onChange={this.handleInputChange.bind(this,"lname")} />
+          <input type="text" className="form-control" defaultValue={this.state.guest.lname} onChange={this.handleInputChange.bind(this,"lname")} />
         </div>
 
         <div className="guest__column">
-          <input type="text" className="form-control" defaultValue={this.props.guest.email} onChange={this.handleInputChange.bind(this,"email")} />
+          <input type="text" className="form-control" defaultValue={this.state.guest.email} onChange={this.handleInputChange.bind(this,"email")} />
         </div>
 
         <div className="guest__column">
 
-          <input type="text" className="form-control" defaultValue={this.props.guest.address} onChange={this.handleInputChange.bind(this,"address")} />
-          <input type="text" className="form-control" defaultValue={this.props.guest.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
+          <input type="text" className="form-control" defaultValue={this.state.guest.address} onChange={this.handleInputChange.bind(this,"address")} />
+          <input type="text" className="form-control" defaultValue={this.state.guest.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
         </div>
 
         <div className="guest__column">

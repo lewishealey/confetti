@@ -8,16 +8,16 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
   return {  
-      event: false,
+      event: this.props.event,
       edit: false,
       meals: false
     }
   },
   componentWillMount: function() {
-    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/");
-    this.bindAsObject(eventRef, 'meals'); 
+    this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id);
+    var mealRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/");
+    this.bindAsObject(mealRef, 'meals'); 
 
-    this.setState({event: this.props.event});
   },
   render: function() {
   return <div className="column column--border">
@@ -43,13 +43,39 @@ module.exports = React.createClass({
       return <div className="cont__flex-column">
 
         <div className="column__half">
-          <input type="text" className="form-control" defaultValue={this.state.event.name} onChange={this.handleInputChange.bind(this,"name")} />
+          <input type="text" className="form-control" defaultValue={this.props.event.name} onChange={this.handleInputChange.bind(this,"name")} />
+        </div>
+
+        <div className="column">
+          <input type="text" className="form-control" defaultValue={this.props.event.address} onChange={this.handleInputChange.bind(this,"address")} />
+          <input type="text" className="form-control" defaultValue={this.props.event.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
+        </div>
+
+        <div className="column">
+          <input type="text" className="form-control" defaultValue={this.props.event.from} onChange={this.handleInputChange.bind(this,"from")} />
+          <input type="text" className="form-control" defaultValue={this.props.event.to} onChange={this.handleInputChange.bind(this,"to")} />
         </div>
 
         <div className="column">
 
-          <input type="text" className="form-control" defaultValue={this.props.event.address} onChange={this.handleInputChange.bind(this,"address")} />
-          <input type="text" className="form-control" defaultValue={this.props.event.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
+        {this.state.event.meals &&
+
+          Object.keys(this.state.event.meals).map(function (event, i) {
+                return <span key={i}> {this.state.meals[event].name} 
+                <span onClick={this.handleDeleteMeal.bind(this,event)}>Delete</span></span>
+            }.bind(this))
+
+        }
+
+        </div>
+
+        <div className="column">
+
+        <h5>Add meals</h5>
+
+          <p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
+          <a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
+
         </div>
 
 
@@ -62,15 +88,15 @@ module.exports = React.createClass({
     } else {
  
       return <div className="column--nest">
-           <h4>{this.state.event.name}</h4>
-           <p>{this.state.event.address ? this.state.event.address : null}</p>
-           <p>{this.state.event.postcode ? this.state.event.postcode : null}</p>
-           <p>{(this.state.event.from ? this.state.event.from : null) + " - " + (this.state.event.to ? this.state.event.to : null)}</p>
+           <h4>{this.props.event.name}</h4>
+           <p>{this.props.event.address ? this.props.event.address : null}</p>
+           <p>{this.props.event.postcode ? this.props.event.postcode : null}</p>
+           <p>{(this.props.event.from ? this.props.event.from : null) + " - " + (this.props.event.to ? this.props.event.to : null)}</p>
            
             {this.state.event.meals &&
               <p>Meals: 
               {Object.keys(this.state.event.meals).map(function (event, i) {
-                return <span key={i}> {this.state.meals[event].name} </span>
+                return <span key={i}> {this.state.meals[event].name}</span>
               }.bind(this))}
               </p>
             }
@@ -92,6 +118,20 @@ module.exports = React.createClass({
     e.preventDefault();
     this.fb.remove();
   },
+  handleDeleteMeal: function(event) {
+    var mealRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/" + event);
+    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id + "/" + event);
+    // eventRef.remove();
+    // mealRef.remove();
+
+    console.log(rootUrl + 'users/' + this.props.userId + "/meals/" + event);
+    console.log(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id + "/" + event);
+
+  },
+  handleMeal: function() {
+    var value = this.refs.mealName.getDOMNode().value;
+    this.props.handleMeal(value,this.props.id);
+  },
   handleInputChange: function(string, event) {
     var value = event.target.value;
 
@@ -103,6 +143,7 @@ module.exports = React.createClass({
           console.log("Set " + value + " to " + string);
         }
     });
+
 
   }
 });
