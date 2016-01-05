@@ -120,17 +120,16 @@ module.exports = React.createClass({
   },
   handleDeleteMeal: function(event) {
     var mealRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/" + event);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id + "/" + event);
-    // eventRef.remove();
-    // mealRef.remove();
+    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id + "/meals/" + event);
+    eventRef.remove();
+    mealRef.remove();
 
-    console.log(rootUrl + 'users/' + this.props.userId + "/meals/" + event);
-    console.log(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id + "/" + event);
 
   },
   handleMeal: function() {
     var value = this.refs.mealName.getDOMNode().value;
     this.props.handleMeal(value,this.props.id);
+
   },
   handleInputChange: function(string, event) {
     var value = event.target.value;

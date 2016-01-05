@@ -14,7 +14,8 @@ module.exports = React.createClass({
 			events: false,
 			guests: false,
 			addEvent: false,
-			meals: []
+			meals: [],
+			edit: false
 		}
 	},
 	componentWillMount: function() {
@@ -40,7 +41,7 @@ module.exports = React.createClass({
 
 						<div className="cont ">
 							{Object.keys(this.state.events).map(function (key, i) {
-								return <ListEvent event={this.state.events[key]} key={i} id={key} handleMeal={this.editMeal} userId={this.state.authId}/>
+								return <ListEvent event={this.state.events[key]} key={i} id={key} handleMeal={this.editMeal} userId={this.state.authId} editing={this.onEdit} />
 							}.bind(this))}
 
 						<div className="column">
@@ -171,7 +172,7 @@ module.exports = React.createClass({
 
 	    // // Firebase Obj
 	    var mealRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/meals/");
-	    var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + eventId + "/");
+	    var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + eventId + "/meals/");
 
 	    mealRef.child(string).set({
 	          name: value,
@@ -193,6 +194,8 @@ module.exports = React.createClass({
 	        }
 	    });
 
+	    this.setState({ addEvent: ! this.state.addEvent });
+
 
 	},
 	deleteMeal: function(id) {
@@ -202,7 +205,10 @@ module.exports = React.createClass({
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
 	},
+	onEdit: function() {
+		this.setState({ edit: ! this.state.edit })
+	},
 	onToggleAddEvent: function() {
-		this.setState({ addEvent: ! this.state.addEvent })
+		this.setState({ addEvent: ! this.state.addEvent });
 	}
 });
