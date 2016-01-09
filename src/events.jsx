@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
 						<div className="cont ">
 							{Object.keys(this.state.events).map(function (key, i) {
-								return <ListEvent event={this.state.events[key]} key={i} id={key} handleMeal={this.editMeal} userId={this.state.authId} editing={this.onEdit} />
+								return <ListEvent event={this.state.events[key]} key={i} id={key} userId={this.state.authId} editing={this.onEdit} />
 							}.bind(this))}
 
 						<div className="column">
@@ -161,42 +161,6 @@ module.exports = React.createClass({
 
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
-	},
-	editMeal: function(value,eventId) {
-
-		var timeInMs = Date.now();
-	    var randomNo = Math.floor(Math.random() * 1000) + 1;
-
-	    // Unique ID
-	    var string = (value + randomNo).replace(/ /g,'').toLowerCase();
-
-	    // // Firebase Obj
-	    var mealRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/meals/");
-	    var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + eventId + "/meals/");
-
-	    mealRef.child(string).set({
-	          name: value,
-	          date_created: timeInMs,
-	          event: eventId
-	        }, function(error) { if (error) { 
-	          console.log("Could not " + value + error);
-	        } else {
-	          console.log("Set " + value + " to " + string);
-	        }
-	    });
-
-	    eventRef.child("meals").update({
-	          [string]: true,
-	        }, function(error) { if (error) { 
-	          console.log("Could not " + value + error);
-	        } else {
-	          console.log("Set " + value + " to " + string);
-	        }
-	    });
-
-	    this.setState({ addEvent: ! this.state.addEvent });
-
-
 	},
 	deleteMeal: function(id) {
 		var mealsState = this.state.meals;

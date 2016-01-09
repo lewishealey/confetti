@@ -3,6 +3,7 @@ var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
+var Attending = require('./attending'); 
 
 // Upload file shiz
 var Dropzone = require('react-dropzone');
@@ -126,7 +127,7 @@ module.exports = React.createClass({
 
 					<div className="dashboard__content">
 						<div className="dashboard-grid--nest">
-							{this.props.children}
+							{this.props.children ? this.props.children : <Attending />}
 						</div>
 					</div>
 
@@ -135,6 +136,7 @@ module.exports = React.createClass({
 	handleLogout: function() {
     	ref.unauth();
     	this.setState({ loggedIn: false });
+    	window.location.href = '/#/';
   	},
   	handleDrop: function (files) {
   		var req = request.post('/upload');
