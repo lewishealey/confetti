@@ -12,6 +12,14 @@ body {
 a:hover {
   cursor: pointer; }
 
+.login {
+  width: 300px;
+  margin: 0 auto;
+  background-color: #FFFFFF; }
+
+.img-max {
+  width: 100%; }
+
 .dashboard__header {
   background: #FFFFFF;
   padding: 30px 0;
@@ -80,6 +88,11 @@ a:hover {
     flex: 1; }
   .guest--column {
     flex-direction: column; }
+  .guest__edit {
+    text-align: right; }
+    .guest__edit a {
+      color: #B0BEC5;
+      margin-left: 10px; }
 
 .cont {
   display: flex; }
@@ -126,6 +139,8 @@ a:hover {
     background: #FFFFFF;
     padding: 20px;
     flex: 1; }
+  .column i {
+    font-size: 14px; }
 
 .badge {
   display: inline-block;
@@ -162,6 +177,15 @@ a:hover {
     font-weight: 400;
     font-size: 14px; }
 
+label {
+  font-size: 14px;
+  color: #BAC3CC; }
+
+.form-control {
+  border: 1px solid #D2DCE6;
+  box-shadow: none;
+  border-radius: 5px; }
+
 .btn {
   padding: 8px 15px;
   font-size: 14px;
@@ -183,6 +207,14 @@ a:hover {
     background-color: #5DBBFD;
     border-color: #5DBBFD;
     color: #233332; }
+  .btn--gold {
+    background-color: #D5BF8C;
+    border-color: #D5BF8C;
+    color: #FFFFFF; }
+    .btn--gold:hover {
+      background-color: #233332;
+      border-color: #233332;
+      color: #FFFFFF; }
   .btn--outline {
     border-color: #B0BEC5;
     background-color: transparent; }

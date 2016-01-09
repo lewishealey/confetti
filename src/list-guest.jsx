@@ -41,11 +41,6 @@ module.exports = React.createClass({
     if(this.state.edit) {
       return <div className="cont">
 
-          <div className="column">
-            <h4>Invited Guests</h4>
-            <p>View your wonderful guests</p>
-          </div>
-
         <div className="guest__column-half">
           <input type="text" className="form-control" defaultValue={this.state.guest.fname} onChange={this.handleInputChange.bind(this,"fname")} />
         </div>
@@ -86,14 +81,14 @@ module.exports = React.createClass({
         <div className="column">
           {this.props.guest.events &&
             Object.keys(this.props.guest.events).map(function (event) {
-              return <span> {this.state.events[event].name} </span>
+              return <span> {this.props.guest.attending[event] ? <i className="material-icons">done</i> : <i className="material-icons">clear</i>} {this.state.events[event] ? this.state.events[event].name : null} </span>
             }.bind(this))
           }
         </div>
 
-        <div className="column">
-          <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View page</a> 
-          <a onClick={this.handleEditClick}>Edit</a> 
+        <div className="column guest__edit">
+          <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a> 
+          <a onClick={this.handleEditClick}> Edit </a> 
           <a onClick={this.handleDeleteClick}>Delete</a> 
         </div>
       

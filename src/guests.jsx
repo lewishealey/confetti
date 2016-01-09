@@ -51,11 +51,6 @@ module.exports = React.createClass({
 		// Add guest and guest list content - comes from this.props.children in router
 		return <div className="cont__flex-column">
 
-			<div className="column column__half">
-	            <h4>Invited Guests</h4>
-	            <p>View your wonderful guests</p>
-	        </div>
-
 	        <div className="column">
 
 		        <div className="guest">
@@ -75,17 +70,22 @@ module.exports = React.createClass({
 
 					<div className="guest__column">
 
+						<div className="column column__half">
+		            		<h4>Invited Guests</h4>
+		            		<p>View your wonderful guests</p>
+		        		</div>	
+
 						<div className="cont row">
 					      <div className="column">
 					        Name
 					      </div>
 					      <div className="column__double">
-					        Invited Events
+					        Events
 					      </div>
 					    </div>
 
 						{this.renderList()}
-						<a onClick={this.onToggleAddGuest} className="btn btn-success">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a>
+						<p><a onClick={this.onToggleAddGuest} className="btn btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
 					</div>
 
 				</div>
