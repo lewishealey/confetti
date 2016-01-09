@@ -22,7 +22,8 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       register: false,
-      loggedIn: false
+      loggedIn: false,
+      loaded: false
     }
   },
   componentWillMount: function() {
@@ -50,10 +51,12 @@ var App = React.createClass({
     } else {
 
     // Else show login or register form
-      return <div>
-              <Login login={this.onLoginSubmit} />
+      return <div className="login">
+        <div className="column--nest">
+              <Login login={this.onLoginSubmit} loading={this.state.loaded} />
               <Register register={this.onRegisterSubmit} />
             </div> 
+        </div>
     }
 
   },
@@ -66,6 +69,7 @@ var App = React.createClass({
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully with payload:", authData);
+        window.location.href = '/#/dashboard';
       }
     }
 
@@ -77,7 +81,7 @@ var App = React.createClass({
 
     // Set logged in state
     ref.onAuth(function(authData) {
-      this.setState({ loggedIn: true });
+      this.setState({ loggedIn: true, loaded: true });
     }.bind(this));
 
   },
