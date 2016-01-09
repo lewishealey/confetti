@@ -15,6 +15,7 @@ $fade: #B0BEC5;
 $lfade: #ECEFF1;
 $yellow: #FFE030;
 $dark: #233332;
+$gold: #D5BF8C;
 
 body {
 	background: $lfade url("img/pattern.png");
@@ -33,6 +34,16 @@ a {
 	&:hover {
 		cursor: pointer;
 	}
+}
+
+.login {
+	width: 300px;
+	margin: 0 auto;
+	background-color: $white;
+}
+
+.img-max {
+	width: 100%;
 }
 
 .dashboard {
@@ -136,6 +147,14 @@ a {
 	&--column {
 		flex-direction: column;
 	}
+
+	&__edit {
+		text-align: right;
+		a {
+			color: $fade;
+			margin-left: 10px;
+		}
+	}
 	
 }
 
@@ -222,6 +241,10 @@ a {
 		padding: 20px;
 		flex: 1;
 	}
+
+	i {
+		font-size: 14px;
+	}
 }
 
 .badge {
@@ -275,6 +298,17 @@ a {
 
 }
 
+label {
+	font-size: 14px;
+	color: #BAC3CC;
+}
+
+.form-control {
+	border: 1px solid #D2DCE6;
+	box-shadow: none;
+	border-radius: 5px;
+}
+
 .btn {
 	padding: 8px 15px;
 	font-size: 14px;
@@ -297,6 +331,19 @@ a {
 		background-color: $blue;
 		border-color: $blue;
 		color: $dark;
+
+	}
+
+	&--gold {
+		background-color: $gold;
+		border-color: $gold;
+		color: $white;
+
+		&:hover {
+			background-color: $dark;
+			border-color: $dark;
+			color: $white;
+		}
 	}
 
 	&--outline {

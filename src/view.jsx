@@ -37,7 +37,7 @@ module.exports = React.createClass({
 
       var content = Object.keys(this.state.guest.events).map(function (key, i) {
 
-        return <ViewEvent event={this.state.events[key]} key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
+        return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
                 
       }.bind(this));
 

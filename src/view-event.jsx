@@ -8,70 +8,79 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
     return {  
-      event: this.props.event,
+      event: false,
       userId: this.props.userId,
       guestId: this.props.guestId,
-      eventId: this.props.id,
       attending: false,
       meals: false
     }
   },
   componentWillMount: function() {
       var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/meals/");
+      var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/events/" + this.props.id);
       this.bindAsObject(mealRef, 'meals');
+      this.bindAsObject(eventRef, 'event');
   },
   render: function() {
-    console.log(this.state.meals);
+    console.log(this.state.event);
   return <div className="view__event">
 
-    <div className="column__double"> 
-      <div className="column--nest"> 
+    {this.state.event && 
 
-        <h4>{this.state.event.name}</h4>
+      <div>
 
-        {this.state.event.meals &&
-          <h6>Has meals</h6>
+        <div className="column__double"> 
+          <div className="column--nest"> 
 
-        }
+            <h4>{this.state.event.name}</h4>
 
-        <a className="btn btn-success" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-        <a className="btn btn-danger" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
+              {this.state.event.meals &&
+                <h6>Has meals</h6>
+              }
 
-        {(this.state.attending || this.state.event.guests[this.state.guestId].attending == true)&& 
+              <a className="btn btn-success" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+              <a className="btn btn-danger" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
 
-          <div>
-            <h4>Attending</h4>
+              {(this.state.attending || this.state.event.guests[this.props.guestId].attending == true)&& 
 
-            {this.state.meals &&
+                <div>
+                  <h4>Attending</h4>
 
-              <div>
+                  {this.state.event.meals &&
 
-                <select className="form-control" ref="mealChoice">
-                  <option>Select a meal</option>
-              
-                    {Object.keys(this.state.event.meals).map(function (key, i) {
-                      return <option key={i} value={key}>{this.state.meals[key].name}</option>
-                    }.bind(this))}
+                    <div>
 
-                </select>
+                      <select className="form-control" ref="mealChoice">
+                        <option>Select a meal</option>
+                    
+                          {Object.keys(this.state.event.meals).map(function (key, i) {
+                            return <option key={i} value={key}>{this.state.meals[key] ? this.state.meals[key].name : null}</option>
+                          }.bind(this))}
 
-                <a onClick={this.handleMeals}>Save</a>
+                      </select>
 
-              </div>
+                      <a onClick={this.handleMeals}>Save</a>
 
-            }
+                    </div>
+
+                  }
+
+
+                </div>
+
+              }
 
 
           </div>
+        </div>
 
-        }
-
+      <div className="column__half column--img"> 
+        <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.event.postcode + "&zoom=16&size=500x500&markers=" + this.state.event.postcode + "&sensor=false"} />
       </div>
+
     </div>
 
-    <div className="column__half column--img"> 
-      <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.event.postcode + "&zoom=16&size=500x500&markers=" + this.state.event.postcode + "&sensor=false"} />
-    </div>
+    }
 
   </div>
    
@@ -90,7 +99,7 @@ module.exports = React.createClass({
     console.log(event.target.value);
 
     guestRef.child("meals").update({
-      [this.state.eventId]: mealId
+      [this.props.id]: mealId
       }, function(error) {
         // Error report event
         if (error) {
@@ -116,11 +125,11 @@ module.exports = React.createClass({
   },
   handleAttending: function(truth) {
     var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.state.eventId + '/guests/' + this.state.guestId);
+    var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.props.id + '/guests/' + this.state.guestId);
 
     // console.log(this.state.userId);
     // console.log(this.state.guestId);
-    // console.log(this.state.eventId);
+    // console.log(this.props.id);
 
     var timeInMs = Date.now();
 
@@ -141,7 +150,7 @@ module.exports = React.createClass({
 
     // Set attending event key to the guest
       guestRef.child("attending").update({
-          [this.state.eventId]: truth
+          [this.props.id]: truth
         }, function(error) { if (error) { 
           console.log("Could not set attending to guest " + error);
         } else {
