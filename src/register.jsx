@@ -3,19 +3,32 @@ var React = require('react');
 module.exports = React.createClass({
   getInitialState: function() {
     return {
-      register: false
+      register: false,
+      loaded: false
     }
+  },
+  componentWillMount: function() {
+
+    if(this.props.loaded) {
+      this.setState({ loading: false });
+    } 
+
+    if(this.props.loaded == false) {
+      this.setState({ loading: false });
+    }
+
   },
   handleClick:function(type,event) {
 
     // Handle on click button and enter press
     if(type === "button" || event.keyCode == 13) {
       event.preventDefault();
-      var user = this.refs.regUser.getDOMNode().value;
       var email = this.refs.regEmail.getDOMNode().value;
       var password = this.refs.regPassword.getDOMNode().value;
-      this.props.register(email,password, user);
+      this.props.register(email,password);
     }
+
+    this.setState({ loading: true });
 
   },
   handleRegister: function() {
@@ -25,16 +38,14 @@ module.exports = React.createClass({
 
     return <div className="column">
 
-      <button type="submit" className="btn btn--outline" onClick={this.handleRegister}>Register</button>
+      <button type="submit" className="btn btn--outline" onClick={this.handleRegister}>{this.state.loading ? "Loading" : "Register"}</button>
 
       {this.state.register && 
 
         <div>
 
         <h4>Register</h4>
-        <form onKeyDown={this.handleClick.bind(this,"press")}>
-          <label>Please choose a username</label>
-          <input type="text" className="form-control" ref="regUser" name="username" required/>
+        <form>
 
           <label>Email</label>
           <input type="email" className="form-control" ref="regEmail" name="email" required/>
