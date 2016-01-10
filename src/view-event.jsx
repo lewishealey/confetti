@@ -149,13 +149,13 @@ module.exports = React.createClass({
     }
 
     // Set attending event key to the guest
-      guestRef.child("attending").update({
-          [this.props.id]: truth
-        }, function(error) { if (error) { 
-          console.log("Could not set attending to guest " + error);
-        } else {
-          console.log("Set " + truth + " attending to guest");
-        }
+    guestRef.child("attending").update({
+        [this.props.id]: truth
+      }, function(error) { if (error) { 
+        console.log("Could not set attending to guest " + error);
+      } else {
+        console.log("Set " + truth + " attending to guest");
+      }
 
     // Update the event to save guest as attending
     eventRef.update({ 

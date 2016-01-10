@@ -57,7 +57,7 @@ module.exports = React.createClass({
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
 						<Link to={`/dashboard`}>
-							<img src="img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
+							<img src="../img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
 						</Link>
 					</div>
 

@@ -32,6 +32,7 @@ var App = React.createClass({
     function authDataCallback(authData) {
       if (authData) {
         console.log("User " + authData.uid + " is logged in with " + authData.provider);
+        window.location.href = '/#/dashboard';
       } else {
         console.log("User is logged out");
       }
