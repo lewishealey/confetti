@@ -55,7 +55,7 @@ var App = React.createClass({
       return <div className="login">
         <div className="column--nest">
               <Login login={this.onLoginSubmit} loading={this.state.loaded} />
-              <Register register={this.onRegisterSubmit} />
+              <Register register={this.onRegisterSubmit} loading={this.state.loaded} />
             </div> 
         </div>
     }
@@ -86,10 +86,14 @@ var App = React.createClass({
     }.bind(this));
 
   },
-  onRegisterSubmit: function(regEmail,regPassword, regUser) {
+  onRegisterSubmit: function(regEmail,regPassword) {
     var timeInMs = Date.now();
     var randomNo = Math.floor(Math.random() * 1000) + 1;
-    var string = regUser + randomNo;
+
+    var initialEvents = {
+      ["ceremony" + randomNo] : { name : "Ceremony", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false },
+      ["reception" + randomNo] : { name : "Reception", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false }
+    }
 
     ref.createUser({
       email: regEmail,
@@ -110,18 +114,38 @@ var App = React.createClass({
       } else {
         // Add data to table
         ref.child("users").child(userData.uid).set({
-          username: string,
-          invited: false,
+          sentInvite: false,
+          onb1_wdate: false,
+          onb2_event: false,
+          onb3_side: false,
           email: regEmail,
           password: regPassword,
           date_created: timeInMs,
           sides: false,
-          events: false,
-          wdate: false
+          events: initialEvents,
+          wdate: false,
+          settings: false
         });
         console.log("Successfully created user account with uid:", userData.uid);
-      }
-    }.bind(this));
+
+        // Create a callback to handle the result of the authentication
+        function authHandler(error, authData) {
+          if (error) {
+            console.log("Login Failed!", error);
+          } else {
+            console.log("Authenticated successfully with payload:", authData);
+            window.location.href = '/#/dashboard';
+          }
+        }
+
+        // Auth with email/password
+        ref.authWithPassword({
+          email    : regEmail,
+          password : regPassword
+        }, authHandler);
+
+          }
+        }.bind(this));
 
   },
   handleDataLoaded: function(){
