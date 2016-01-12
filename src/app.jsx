@@ -13,6 +13,7 @@ var View = require('./view');
 var Dashboard = require('./dashboard');
 var Guests = require('./guests'); 
 var Events = require('./events'); 
+var Settings = require('./settings'); 
 var Login = require('./login');
 var Register = require('./register');
 var ref = new Firebase(rootUrl);
@@ -162,6 +163,7 @@ var routes = (
         <Route path="dashboard" component={Dashboard}>
           <Route path="guests" component={Guests} />
           <Route path="events" component={Events} />
+          <Route path="settings" component={Settings} />
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />

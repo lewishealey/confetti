@@ -23,6 +23,8 @@
     "react-router": "^1.0.0-beta2",
     "reactfire": "^0.4.0",
     "reactify": "^1.1.0",
+    "spotify-web-api-js": "^0.15.0",
+    "spotify-web-api-node": "^2.2.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^2.4.0"
   },
