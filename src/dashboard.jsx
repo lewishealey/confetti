@@ -24,7 +24,7 @@ module.exports = React.createClass({
 			addGuest: false,
 			addEvent: false,
 			authId: false,
-			files: []
+			files: [] 
 		}
 	},
 	componentWillMount: function() {

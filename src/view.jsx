@@ -5,6 +5,33 @@ var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 
 var ViewEvent = require('./view-event');
 
+// Spotify
+var SpotifyWebApi = require('spotify-web-api-js');
+
+
+// credentials are optional
+var spotifyApi = new SpotifyWebApi({
+  clientId : '2888525482b94ccb86ae7ee9469bab07',
+  clientSecret : '6df8e93ea2ba49c6ae90951fea0e2f9e',
+  redirectUri : 'http://confetti:8888/#/dashboard/'
+});
+
+//https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
+
+var prev = null;
+
+function onUserInput(queryTerm) {
+
+  spotifyApi.searchTracks(queryTerm)
+  .then(function(data) {
+    console.log('Search by ' + queryTerm, data);
+  }, function(err) {
+    console.error(err);
+  });
+
+}
+
+
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
@@ -29,6 +56,10 @@ module.exports = React.createClass({
       userId: this.props.params.userId 
     });
 
+  },
+  searchTrack: function(event) {
+    var value = event.target.value;
+    onUserInput(value);
   },
   render: function() {
 
@@ -58,6 +89,8 @@ module.exports = React.createClass({
         <div className="column--nest">
           <h4>Welcome {this.state.guest.fname}</h4>
           <h5>Feel free to rsvp to the beautiful day</h5>
+
+          <input type="text" refs="track search" onChange={this.searchTrack} />
 
           {content}
 
