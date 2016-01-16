@@ -12,10 +12,33 @@ $lblue: #0B8DFF;
 $orange: #FFA47D;
 $red: #FF7D7D;
 $fade: #B0BEC5;
-$lfade: #ECEFF1;
+$mfade: #BAC3CC;
+$lfade: #F2F5F5;
 $yellow: #FFE030;
 $dark: #233332;
 $gold: #D5BF8C;
+
+$phone-width: 320px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+@mixin phone {
+  @media (min-width: #{$phone-width}) and (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
 
 body {
 	background: $lfade url("img/pattern.png");
@@ -44,6 +67,10 @@ a {
 
 .img-max {
 	width: 100%;
+}
+
+.sub {
+	color: $mfade;
 }
 
 .dashboard {
@@ -126,11 +153,6 @@ a {
 	align-content: stretch;
 	height: 100%;
 
-	&__event {
-		border: 1px solid #ECEFF1;
-		display: flex;
-	}
-
 	&--white {
 		background-color: $white;
 	}
@@ -158,6 +180,41 @@ a {
 	
 }
 
+.event {
+
+	&__title {
+		margin-top: 0;
+	}
+
+	&__single {
+		border: 2px solid $lfade;
+		border-radius: 5px;
+
+		&.active {
+			border-color: $gold;
+		}
+
+	}
+
+	&__attending {
+
+		&-icon {
+			text-align: right;
+			color: $gold;
+
+			i {
+				font-size: 24px !important;
+			}
+		}
+
+	}
+
+	&--attending {
+		color: $gold;
+	}
+
+}
+
 .cont {
 	display: flex;
 
@@ -175,13 +232,11 @@ a {
 		flex-wrap: wrap;
 	}
 
-
-
 }
 
 .row {
 	padding: 10px 20px;
-	border: 1px solid $lfade;
+	border: 2px solid $lfade;
 	border-left: none;
 	border-right: none;
 	border-top: none;
@@ -199,16 +254,26 @@ a {
 	}
 
 	&__flex-row {
-		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
 
 	&__flex-column {
-		display: flex;
 		flex-direction: column;
 		flex-wrap: wrap;
+	}
 
+	&__half-width {
+
+		@include phone {
+			width: 100%;
+			flex-basis: 100%;
+		}
+
+		@include desktop {
+			width: 50%;
+			flex-basis: 50%;
+		}
 	}
 
 	&--border {
@@ -334,6 +399,26 @@ label {
 
 	}
 
+	&--icon {
+
+		&-tick:after {
+			content: "\E876";
+		}
+
+		&-cross:after {
+			content: "\E14C";
+		}
+
+		&:after {
+			font-family: 'Material Icons';
+			float: right;
+			content: inherit;
+    		font-size: 20px;
+    		line-height: 1;
+		}
+
+	}
+
 	&--gold {
 		background-color: $gold;
 		border-color: $gold;
@@ -346,8 +431,36 @@ label {
 		}
 	}
 
+	&--gold-o {
+		border-color: $gold;
+		color: $gold;
+
+		&:hover {
+			background-color: $gold;
+			border-color: $gold;
+			color: $white;
+		}
+	}
+
+	&--ghost {
+		background-color: $mfade;
+		border-color: $mfade;
+		color: $white;
+	}
+
+	&--ghost-o {
+		background-color: transparent;
+		border-color: $mfade;
+		color: $mfade;
+	}
+
 	&--outline {
-		border-color: $lwhite;
+		border-width: 2px;
 		background-color: transparent;
 	}
+
+	&--m-b {
+		margin-bottom: 10px;
+	}
+
 }

@@ -21,66 +21,87 @@ module.exports = React.createClass({
       this.bindAsObject(mealRef, 'meals');
       this.bindAsObject(eventRef, 'event');
   },
-  render: function() {
-    console.log(this.state.event);
-  return <div className="view__event">
-
-    {this.state.event && 
-
-      <div>
-
-        <div className="column__double"> 
-          <div className="column--nest"> 
-
-            <h4>{this.state.event.name}</h4>
-
-              {this.state.event.meals &&
-                <h6>Has meals</h6>
-              }
-
-              <a className="btn btn-success" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-              <a className="btn btn-danger" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
-
-              {(this.state.attending || this.state.event.guests[this.props.guestId].attending == true)&& 
-
-                <div>
-                  <h4>Attending</h4>
-
-                  {this.state.event.meals &&
-
-                    <div>
-
-                      <select className="form-control" ref="mealChoice">
-                        <option>Select a meal</option>
-                    
-                          {Object.keys(this.state.event.meals).map(function (key, i) {
-                            return <option key={i} value={key}>{this.state.meals[key] ? this.state.meals[key].name : null}</option>
-                          }.bind(this))}
-
-                      </select>
-
-                      <a onClick={this.handleMeals}>Save</a>
-
-                    </div>
-
-                  }
-
-
-                </div>
-
-              }
-
-
+  renderList: function() {
+    if(this.state.attending || this.state.event.guests[this.props.guestId].attending == true) {
+      return <div>     
+        <div className="column cont">
+          <div className="column__half-width">
+            <h4 className="event__title event--attending">Attending</h4>
+          </div>
+          <div className="column__half-width event__attending-icon">
+            <i className="material-icons">done</i>
           </div>
         </div>
 
-      <div className="column__half column--img"> 
-        <img src={"http://maps.googleapis.com/maps/api/staticmap?center=" + this.state.event.postcode + "&zoom=16&size=500x500&markers=" + this.state.event.postcode + "&sensor=false"} />
+        <div className="column">
+          <h4 className="event__title">{this.state.event.name}</h4>
+          <h6>{this.state.event.from + " - " + this.state.event.to}</h6>
+          <p className="sub">Thanks for attending! A notification has been sent to Lewis & Lucy to let them know you will be at the big day.</p>
+        </div>
+
+        <div className="column">
+          {this.state.event.meals &&
+            <div>
+              <select className="form-control" ref="mealChoice">
+                <option>Select a meal</option>
+            
+                  {Object.keys(this.state.event.meals).map(function (key, i) {
+                    return <option key={i} value={key}>{this.state.meals[key] ? this.state.meals[key].name : null}</option>
+                  }.bind(this))}
+
+              </select>
+              <a onClick={this.handleMeals}>Save</a>
+            </div>
+          }
+        </div>
+
+        <div className="column">
+          <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+          <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
+        </div>
       </div>
 
-    </div>
+    } else {
+
+      return <div> 
+                <div className="column cont">
+                  <div className="column__half-width">
+                    <h4 className="event__title">{this.state.event.name}</h4>
+                  </div>
+
+                  <div className="column__half-width">
+                    <h4>{this.state.event.from + " - " + this.state.event.to}</h4>
+                  </div>
+                </div>
+
+                <div className="column">
+                  <p className="sub">
+                    {this.state.event.address + ", " + this.state.event.postcode}<br />
+                    <a href="#">View on map</a>
+                  </p>
+                </div>
+
+                <div className="column">
+                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
+              </div>
+
+            </div>
+
 
     }
+  },
+  render: function() {
+
+  return <div className={((this.state.attending || this.state.event.guests[this.props.guestId].attending == true) ? "active " : "" ) + "column__half-width event__single"}> 
+
+
+      <div className="column--nest">
+        {this.state.event && 
+          this.renderList()
+        }
+      </div>
+            
 
   </div>
    

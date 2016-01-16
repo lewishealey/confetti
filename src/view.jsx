@@ -92,7 +92,9 @@ module.exports = React.createClass({
 
           <input type="text" refs="track search" onChange={this.searchTrack} />
 
-          {content}
+          <div className="cont cont__flex-row">
+            {content}
+          </div>
 
         </div>
 
