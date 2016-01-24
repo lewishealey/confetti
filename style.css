@@ -102,6 +102,8 @@ a:hover {
   border-radius: 5px; }
   .event__single.active {
     border-color: #D5BF8C; }
+  .event__single.not {
+    border-color: #FDCDD3; }
 
 .event__attending-icon {
   text-align: right;
@@ -109,8 +111,17 @@ a:hover {
   .event__attending-icon i {
     font-size: 24px !important; }
 
+.event__nattending-icon {
+  text-align: right;
+  color: #FF7D7D; }
+  .event__nattending-icon i {
+    font-size: 24px !important; }
+
 .event--attending {
   color: #D5BF8C; }
+
+.event--nattending {
+  color: #FF7D7D; }
 
 .cont {
   display: flex; }
@@ -162,6 +173,9 @@ a:hover {
     margin: 5px;
     background: #FFFFFF;
     padding: 20px;
+    flex: 1; }
+  .column--nest-v {
+    padding: 15px 0;
     flex: 1; }
   .column i {
     font-size: 14px; }

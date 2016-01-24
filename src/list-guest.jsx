@@ -81,7 +81,7 @@ module.exports = React.createClass({
         <div className="column">
           {this.props.guest.events &&
             Object.keys(this.props.guest.events).map(function (event) {
-              return <span> {this.props.guest.attending[event] ? <i className="material-icons">done</i> : <i className="material-icons">clear</i>} {this.state.events[event] ? this.state.events[event].name : null} </span>
+              return <span> {this.props.guest.attending[event] == "yes" ? <i className="material-icons">done</i> : <i className="material-icons">clear</i>} {this.state.events[event] ? this.state.events[event].name : null} </span>
             }.bind(this))
           }
         </div>

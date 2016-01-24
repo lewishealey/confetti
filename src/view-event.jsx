@@ -12,17 +12,42 @@ module.exports = React.createClass({
       userId: this.props.userId,
       guestId: this.props.guestId,
       attending: false,
-      meals: false
+      meals: false,
+      updated: false,
+      guest: false
     }
   },
   componentWillMount: function() {
       var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/meals/");
       var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/events/" + this.props.id);
+      var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/guests/" + this.props.guestId);
+
       this.bindAsObject(mealRef, 'meals');
       this.bindAsObject(eventRef, 'event');
+      this.bindAsObject(guestRef, 'guest');
+  },
+  componentDidMount: function() {
+
+    // If true then flip state
+    if(this.state.event.guests[this.props.guestId].attending == "yes") {
+
+      this.setState({
+        attending: "yes"
+      });
+
+    }
+
+    if(this.state.event.guests[this.props.guestId].attending == "no") {
+
+      this.setState({
+        attending: "no"
+      });
+
+    }
+
   },
   renderList: function() {
-    if(this.state.attending || this.state.event.guests[this.props.guestId].attending == true) {
+    if(this.state.event.guests[this.props.guestId].attending == "yes") {
       return <div>     
         <div className="column cont">
           <div className="column__half-width">
@@ -40,8 +65,11 @@ module.exports = React.createClass({
         </div>
 
         <div className="column">
-          {this.state.event.meals &&
+
+
+          {(this.state.event.meals && this.state.guest.meals == false) &&
             <div>
+              <label>Select a meal option</label>
               <select className="form-control" ref="mealChoice">
                 <option>Select a meal</option>
             
@@ -53,15 +81,55 @@ module.exports = React.createClass({
               <a onClick={this.handleMeals}>Save</a>
             </div>
           }
+
+          {(this.state.event.meals && this.state.guest.meals) &&
+
+            Object.keys(this.state.guest.meals).map(function (key, i) {
+                    return <p>{this.state.meals[key] ? this.state.meals[key].name : null}</p>
+            }.bind(this))
+
+          }
+
+
         </div>
 
         <div className="column">
-          <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-          <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
+          <a onClick={this.handleAttending.bind(this,"no")}>I cannot attend</a>
         </div>
       </div>
 
-    } else {
+    }
+
+    if (this.state.event.guests[this.props.guestId].attending == "no"){
+
+      return <div> 
+                <div className="column cont">
+                  <div className="column__half-width">
+                    <h4 className="event__title event--nattending">Not Attending</h4>
+                  </div>
+                  <div className="column__half-width event__nattending-icon">
+                    <i className="material-icons">clear</i>
+                  </div>
+                </div>
+
+                <div className="column">
+                  <h4 className="event__title">{this.state.event.name}</h4>
+                </div>
+
+                <div className="column">
+                  <p className="sub">{"Oh no! you can't attending :( Fancy letting Lewis & Lucy as to why?"}</p>
+                </div>
+
+                <div className="column">
+                  <a onClick={this.handleAttending.bind(this,"yes")}>I can attend now</a> 
+              </div>
+
+            </div>
+
+
+    }
+
+    if (this.state.attending == false){
 
       return <div> 
                 <div className="column cont">
@@ -82,8 +150,8 @@ module.exports = React.createClass({
                 </div>
 
                 <div className="column">
-                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
+                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,"yes")}>Attending</a> 
+                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,"no")}>Cannot Attend</a>
               </div>
 
             </div>
@@ -93,13 +161,14 @@ module.exports = React.createClass({
   },
   render: function() {
 
-  return <div className={((this.state.attending || this.state.event.guests[this.props.guestId].attending == true) ? "active " : "" ) + "column__half-width event__single"}> 
+  return <div className={(this.state.attending == "yes" ? "active " : "" ) + (this.state.attending == "no" ? "not " : "" ) + "column__half-width event__single"}> 
 
 
       <div className="column--nest">
         {this.state.event && 
           this.renderList()
         }
+        {this.state.status ? this.state.status : null}
       </div>
             
 
@@ -117,16 +186,16 @@ module.exports = React.createClass({
     var mealId = this.refs.mealChoice.getDOMNode().value ;
     var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
     var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/meals/' + mealId);
-    console.log(event.target.value);
 
     guestRef.child("meals").update({
-      [this.props.id]: mealId
+      [mealId]: true
       }, function(error) {
         // Error report event
         if (error) {
         console.log("Event could not be saved" + error);
       } else {
         console.log("Meal added to guest");
+
       }
 
     });
@@ -155,16 +224,16 @@ module.exports = React.createClass({
     var timeInMs = Date.now();
 
     // If true then flip state
-    if(truth == true) {
+    if(truth == "yes") {
 
       this.setState({
-        attending: true
+        attending: "yes"
       });
 
     } else {
 
       this.setState({
-        attending: false
+        attending: "no"
       });
 
     }

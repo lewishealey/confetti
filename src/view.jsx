@@ -18,13 +18,24 @@ var spotifyApi = new SpotifyWebApi({
 
 //https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
 
-var prev = null;
+var tracks = null;
 
 function onUserInput(queryTerm) {
-
   spotifyApi.searchTracks(queryTerm)
   .then(function(data) {
-    console.log('Search by ' + queryTerm, data);
+    if( data ) {
+
+      var tracks = [];
+
+      Object.keys(data.tracks.items).map(function (key, i) {
+        // console.log(data.tracks.items[i].name);
+          tracks.push(data.tracks.items[i].name);
+      })
+
+      return tracks;
+
+
+    }
   }, function(err) {
     console.error(err);
   });
@@ -37,7 +48,8 @@ module.exports = React.createClass({
   getInitialState: function() {
     return({
       guest: false,
-      loaded: false
+      loaded: false,
+      spotify: false
     })
   },
   componentWillMount: function() {
@@ -59,7 +71,8 @@ module.exports = React.createClass({
   },
   searchTrack: function(event) {
     var value = event.target.value;
-    onUserInput(value);
+    var results = onUserInput(value);
+
   },
   render: function() {
 
@@ -83,6 +96,16 @@ module.exports = React.createClass({
 
       <div className="column" style={{background : 'url("http://da-photo.co.uk/wp-content/uploads/2015/07/CS_PWS_BLOG_002.jpg")'}}>
         Photo
+
+        {this.state.spotify &&
+
+          <div className="view__tracks">
+
+
+          </div>
+
+        }
+
       </div>
 
       <div className="column view--white">

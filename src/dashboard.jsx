@@ -51,7 +51,26 @@ module.exports = React.createClass({
 			      countGuests++;
 			   }
 			}
+		}
 
+		// Count guests in events
+		// if(this.state.users.events) {
+		// 	this.state.users.events.map(function (eventN) {
+		// 		console.log(eventN);
+		// 	})
+		// } else {
+
+		// }
+
+
+
+
+		if (this.state.users.settings) { // needs if image
+			var drop = <img src={"upload/" + this.state.users.settings.image} width="200" />;
+		} else {
+			var drop = <Dropzone onDrop={this.handleDrop}>
+				<div>Try dropping some files here, or click to select files to upload.</div>
+			</Dropzone>;
 		}
 
 		return <div className="dashboard"> 
@@ -60,7 +79,6 @@ module.exports = React.createClass({
 							<img src="../img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
 						</Link>
 					</div>
-
 					<div className="dashboard-grid">
 
 						<div className="dashboard-grid__column">
@@ -71,17 +89,14 @@ module.exports = React.createClass({
 									<span className="badge--text-large">Invited</span>
 								</div>
 								<div className="column">
-									<span className="badge badge--outline badge--blue">50</span>
-									<span className="badge--text">Ceremony</span>
+									<div className="column--nest-v">
+										<span className="badge badge--outline badge--blue">50</span>
+										<span className="badge--text">Ceremony</span>
 
-									<span className="badge badge--outline badge--blue">50</span>
-									<span className="badge--text">Reception</span>
+										<span className="badge badge--outline badge--blue">50</span>
+										<span className="badge--text">Reception</span>
+									</div>
 								</div>
-
-								<div className="column">
-									<a href="#" className="btn btn--outline">Add Guest</a>
-								</div>
-
 								
 							</div>
 						</div>
@@ -115,10 +130,7 @@ module.exports = React.createClass({
 
 						<div className="dashboard-grid__column">
 							<div className="dashboard-grid--nest">
-
-            					<Dropzone onDrop={this.handleDrop}>
-              						<div>Try dropping some files here, or click to select files to upload.</div>
-            					</Dropzone>
+								{drop}
 
 							</div>
 						</div>
@@ -139,15 +151,25 @@ module.exports = React.createClass({
     	window.location.href = '/#/';
   	},
   	handleDrop: function (files) {
+  		var authData = ref.getAuth();
+  		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
   		var req = request.post('/upload');
         files.forEach((file)=> {
             req.attach(file.name, file);
             console.log(file.name);
+
+            firebaseRef.child("settings").update({
+				image: file.name
+			});
+
         });
+
         req.end(function(err, res){
     		// Do something
     		console.log(err);
 		});
+
+
 
     },
 

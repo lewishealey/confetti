@@ -17,6 +17,7 @@ $lfade: #F2F5F5;
 $yellow: #FFE030;
 $dark: #233332;
 $gold: #D5BF8C;
+$rose: #FDCDD3;
 
 $phone-width: 320px;
 $tablet-width: 768px;
@@ -194,6 +195,10 @@ a {
 			border-color: $gold;
 		}
 
+		&.not {
+			border-color: $rose;
+		}
+
 	}
 
 	&__attending {
@@ -209,8 +214,25 @@ a {
 
 	}
 
+	&__nattending {
+
+		&-icon {
+			text-align: right;
+			color: #FF7D7D;
+
+			i {
+				font-size: 24px !important;
+			}
+		}
+
+	}
+
 	&--attending {
 		color: $gold;
+	}
+
+	&--nattending {
+		color: #FF7D7D;
 	}
 
 }
@@ -304,6 +326,11 @@ a {
 		margin: 5px;
 		background: $white;
 		padding: 20px;
+		flex: 1;
+	}
+
+	&--nest-v {
+		padding: 15px 0;
 		flex: 1;
 	}
 
