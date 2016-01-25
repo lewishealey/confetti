@@ -29,7 +29,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
 
     // If true then flip state
-    if(this.state.event.guests[this.props.guestId].attending == "yes") {
+    if(this.state.event.guests[this.props.guestId].attending == true) {
 
       this.setState({
         attending: "yes"
@@ -37,7 +37,7 @@ module.exports = React.createClass({
 
     }
 
-    if(this.state.event.guests[this.props.guestId].attending == "no") {
+    if(this.state.event.guests[this.props.guestId].attending == false) {
 
       this.setState({
         attending: "no"
@@ -47,7 +47,7 @@ module.exports = React.createClass({
 
   },
   renderList: function() {
-    if(this.state.event.guests[this.props.guestId].attending == "yes") {
+    if(this.state.event.attending[this.props.guestId]) {
       return <div>     
         <div className="column cont">
           <div className="column__half-width">
@@ -65,7 +65,6 @@ module.exports = React.createClass({
         </div>
 
         <div className="column">
-
 
           {(this.state.event.meals && this.state.guest.meals == false) &&
             <div>
@@ -94,13 +93,13 @@ module.exports = React.createClass({
         </div>
 
         <div className="column">
-          <a onClick={this.handleAttending.bind(this,"no")}>I cannot attend</a>
+          <a onClick={this.handleAttending.bind(this,false)}>I cannot attend</a>
         </div>
       </div>
 
     }
 
-    if (this.state.event.guests[this.props.guestId].attending == "no"){
+    if (this.state.event.attending[this.props.guestId] == false){
 
       return <div> 
                 <div className="column cont">
@@ -121,7 +120,7 @@ module.exports = React.createClass({
                 </div>
 
                 <div className="column">
-                  <a onClick={this.handleAttending.bind(this,"yes")}>I can attend now</a> 
+                  <a onClick={this.handleAttending.bind(this,true)}>I can attend now</a> 
               </div>
 
             </div>
@@ -129,7 +128,7 @@ module.exports = React.createClass({
 
     }
 
-    if (this.state.attending == false){
+    if (! this.state.event.attending[this.props.guestId]){
 
       return <div> 
                 <div className="column cont">
@@ -150,18 +149,18 @@ module.exports = React.createClass({
                 </div>
 
                 <div className="column">
-                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,"yes")}>Attending</a> 
-                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,"no")}>Cannot Attend</a>
+                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
               </div>
 
             </div>
 
-
     }
+
   },
   render: function() {
 
-  return <div className={(this.state.attending == "yes" ? "active " : "" ) + (this.state.attending == "no" ? "not " : "" ) + "column__half-width event__single"}> 
+  return <div className={(this.state.event.attending[this.props.guestId] ? "active " : "" ) + (this.state.event.attending[this.props.guestId] == false ? "not " : "" ) + "column__half-width event__single"}> 
 
 
       <div className="column--nest">
@@ -214,13 +213,11 @@ module.exports = React.createClass({
 
   },
   handleAttending: function(truth) {
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.props.id + '/guests/' + this.state.guestId);
+   eventid = this.props.id;
 
-    // console.log(this.state.userId);
-    // console.log(this.state.guestId);
-    // console.log(this.props.id);
-
+    // Get event attending object
+    var attendingRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.props.id + '/attending/');
+    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId + '/attending/');
     var timeInMs = Date.now();
 
     // If true then flip state
@@ -238,30 +235,31 @@ module.exports = React.createClass({
 
     }
 
-    // Set attending event key to the guest
-    guestRef.child("attending").update({
-        [this.props.id]: truth
-      }, function(error) { if (error) { 
-        console.log("Could not set attending to guest " + error);
-      } else {
-        console.log("Set " + truth + " attending to guest");
-      }
-
-    // Update the event to save guest as attending
-    eventRef.update({ 
-        attending: truth
+    // Add attending object to event
+    attendingRef.update({ 
+        [this.state.guestId]: truth
       }, function(error) {
         // Error report event
         if (error) {
         console.log("Nope to update event" + error);
       } else {
         console.log("Updated event" + truth);
+
+        guestRef.update({ 
+          [eventid]: truth
+          }, function(error) {
+            // Error report event
+            if (error) {
+            console.log("Nope to update event" + error);
+          } else {
+            console.log("Updated event" + truth);
+          }
+
+        });
+
       }
 
-      });
-
     });
-
 
   }
 
