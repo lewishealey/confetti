@@ -33,7 +33,24 @@ module.exports = React.createClass({
   },
   render: function() {
     return <div>
-    {this.renderList()}
+
+    <div className="guest__column">
+
+            <div className="column column__half">
+                    <h2>Whos attending</h2>
+                </div>  
+
+            <div className="cont row">
+                <div className="column">
+                  Name
+                </div>
+                <div className="column__double">
+                  Events
+                </div>
+              </div>
+
+            {this.renderList()}
+          </div>
     </div>
   },
   renderList: function() {
@@ -50,7 +67,7 @@ module.exports = React.createClass({
         var guest = this.state.guests[key];
         guest.key = key;
         children.push(
-          <ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} attending="true"></ListGuest>
+          <ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} attending={true}></ListGuest>
         )
       }
 

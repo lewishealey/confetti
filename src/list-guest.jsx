@@ -78,20 +78,22 @@ module.exports = React.createClass({
           {this.props.guest.fname + " " + this.props.guest.lname} <span className="column--rev-hover">{this.props.guest.email}</span>
         </div>
 
-        <div className="column">
+        <div className={this.props.attending ? "column column__double" : "column"} >
           {this.props.guest.events &&
             Object.keys(this.props.guest.events).map(function (event) {
-              return <span> {this.props.guest.attending[event] == "yes" ? <i className="material-icons">done</i> : <i className="material-icons">clear</i>} {this.state.events[event] ? this.state.events[event].name : null} </span>
+              return <span>{this.state.events[event] ? this.state.events[event].name : null} </span>
             }.bind(this))
           }
         </div>
 
-        <div className="column guest__edit">
-          <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a> 
-          <a onClick={this.handleEditClick}> Edit </a> 
-          <a onClick={this.handleDeleteClick}>Delete</a> 
-        </div>
-      
+        {this.props.attending == false &&
+          <div className="column guest__edit">
+            <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a> 
+            <a onClick={this.handleEditClick}> Edit </a> 
+            <a onClick={this.handleDeleteClick}>Delete</a> 
+          </div>
+        }
+ 
       </div>
     }
 

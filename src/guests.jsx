@@ -108,7 +108,7 @@ module.exports = React.createClass({
 				var guest = this.state.guests[key];
 				guest.key = key;
 				children.push(
-					<ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} ></ListGuest>
+					<ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} attending={false}></ListGuest>
 				)
 			}
 
@@ -154,13 +154,13 @@ module.exports = React.createClass({
 
 		// Save guest
 		guestRef.child(string).set({
-			attending: false,
 			fname: this.refs.fName.getDOMNode().value,
 			lname: this.refs.lName.getDOMNode().value,
         	email: this.refs.guestEmail.getDOMNode().value,
         	address: this.refs.guestAddress.getDOMNode().value,
         	date_created: timeInMs,
-        	events: choices
+        	events: choices,
+        	meals: false
         }, function(error) {
   			
   		// ERROR GUEST

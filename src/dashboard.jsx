@@ -19,7 +19,7 @@ var Link = require('react-router').Link
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
-	return { users: {},
+	return { users: false,
 			active: false,
 			addGuest: false,
 			addEvent: false,
@@ -52,18 +52,36 @@ module.exports = React.createClass({
 			   }
 			}
 		}
+		var events = this.state.users.events;
 
-		// Count guests in events
-		// if(this.state.users.events) {
-		// 	this.state.users.events.map(function (eventN) {
-		// 		console.log(eventN);
-		// 	})
-		// } else {
+		function countEvents(id) {
 
-		// }
+			var eventData = events[id].guests;
 
+			if(eventData) {
+				var countEvent = 0;
+				for ( event in eventData )   {
+				   if(eventData.hasOwnProperty(event)) {
+				      countEvent++;
+				   }
+				}
+			}
 
+			return countEvent;
 
+		}
+
+		if(this.state.users.events) {
+			var userEvents = Object.keys(this.state.users.events).map(function(key, i) {
+
+      		return (
+		        <div key={i}>
+		        	<span className="badge badge--outline badge--blue">{countEvents(key)}</span>
+		        	<span className="badge--text">{this.state.users.events[key].name}</span>
+		        </div>
+		      );
+		    }.bind(this));
+		}
 
 		if (this.state.users.settings) { // needs if image
 			var drop = <img src={"upload/" + this.state.users.settings.image} width="200" />;
@@ -90,11 +108,7 @@ module.exports = React.createClass({
 								</div>
 								<div className="column">
 									<div className="column--nest-v">
-										<span className="badge badge--outline badge--blue">50</span>
-										<span className="badge--text">Ceremony</span>
-
-										<span className="badge badge--outline badge--blue">50</span>
-										<span className="badge--text">Reception</span>
+										{userEvents}
 									</div>
 								</div>
 								
