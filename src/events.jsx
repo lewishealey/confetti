@@ -140,6 +140,8 @@ module.exports = React.createClass({
 	    	to: toTime,
 	    	address: this.refs.eventAddress.getDOMNode().value,
 	    	postcode: this.refs.eventPostcode.getDOMNode().value,
+	    	attending: false,
+	    	invited: false,
 	    	meals: mealsArray
 	    }, function(error) {
 				// Error report event
