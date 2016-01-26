@@ -2,8 +2,11 @@ var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
+var JQuery = require('jquery'); 
 
 var ViewEvent = require('./view-event');
+
+//this.state.tracks[key].album.images[0].url
 
 // Spotify
 var SpotifyWebApi = require('spotify-web-api-js');
@@ -17,30 +20,6 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 //https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
-
-var tracks = null;
-
-function onUserInput(queryTerm) {
-  spotifyApi.searchTracks(queryTerm)
-  .then(function(data) {
-    if( data ) {
-
-      var tracks = [];
-
-      Object.keys(data.tracks.items).map(function (key, i) {
-        // console.log(data.tracks.items[i].name);
-          tracks.push(data.tracks.items[i].name);
-      })
-
-      return tracks;
-
-
-    }
-  }, function(err) {
-    console.error(err);
-  });
-
-}
 
 
 module.exports = React.createClass({
@@ -69,9 +48,23 @@ module.exports = React.createClass({
     });
 
   },
+  handleAccessToken: function() {
+
+  },
+  handleTrack: function(trackId) {
+
+    spotifyApi.addTracksToPlaylist("1113560298","7Fyg5tJ0oQdIRxLwOJ2T1g", "3yuTRbmGdsnEbQ5n6jNGSL").then(function(data) {
+      console.log(data);
+    }.bind(this));
+
+  },
   searchTrack: function(event) {
-    var value = event.target.value;
-    var results = onUserInput(value);
+    
+    spotifyApi.searchTracks(event.target.value).then(function(data) {
+        if( data ) {
+          this.setState({ tracks: data.tracks.items });
+        }
+    }.bind(this));
 
   },
   render: function() {
@@ -96,16 +89,6 @@ module.exports = React.createClass({
 
       <div className="column" style={{background : 'url("http://da-photo.co.uk/wp-content/uploads/2015/07/CS_PWS_BLOG_002.jpg")'}}>
         Photo
-
-        {this.state.spotify &&
-
-          <div className="view__tracks">
-
-
-          </div>
-
-        }
-
       </div>
 
       <div className="column view--white">
@@ -115,9 +98,33 @@ module.exports = React.createClass({
 
           <input type="text" refs="track search" onChange={this.searchTrack} />
 
+          <button onClick={this.handleAccessToken}>Get access token</button>
+
           <div className="cont cont__flex-row">
             {content}
           </div>
+
+          <div className="cont cont__flex-row">
+            Add a song to spotify
+          </div>
+
+            {this.state.tracks &&
+
+              Object.keys(this.state.tracks).map(function (key, i) {
+                if(i < 10) {
+                return <div className="cont cont__flex-row">
+                    <div className="column">
+                      {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
+                    </div>
+                    <div className="column">
+                      <button onClick={this.handleTrack.bind(this,this.state.tracks[key].id)}>Choose</button>
+                    </div>
+                  </div>
+                }
+
+              }.bind(this))
+
+            }
 
         </div>
 
