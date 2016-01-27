@@ -22,26 +22,31 @@ module.exports = React.createClass({
 
 		// Preload guest & event data
 		var authData = ref.getAuth();
+		var firebaseRef = new Firebase(rootUrl + 'users/' + authData.uid);
 		var eventRef = new Firebase(rootUrl + 'users/' + authData.uid + "/events/");
 
 		// Bind Events to states
 	  	this.bindAsObject(eventRef, 'events'); 
+	  	this.bindAsObject(firebaseRef, 'users');
 
 	  	// Set auth as a state
 		this.setState({ authId: authData.uid});
-
 
 	},
 	render: function() {
 
 	return <div>
-	          <h4>Events</h4>
+
+			{this.state.users &&
+	          <h4>{this.state.users.onb2_event ? "Events" : "Edit your events below" }</h4>
+	      	} 
 	       
 					{this.state.events &&
 
-						<div className="cont ">
+						<div className="cont column--space-between">
+
 							{Object.keys(this.state.events).map(function (key, i) {
-								return <ListEvent event={this.state.events[key]} key={i} id={key} userId={this.state.authId} editing={this.onEdit} />
+								return <ListEvent event={this.state.events[key]} key={i} id={key} userId={this.state.authId} edit={this.state.edit} />
 							}.bind(this))}
 
 						<div className="column">
@@ -83,6 +88,7 @@ module.exports = React.createClass({
 
  						</div>
 					}
+
 
 
 	       </div> 
@@ -170,9 +176,6 @@ module.exports = React.createClass({
 
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
-	},
-	onEdit: function() {
-		this.setState({ edit: ! this.state.edit })
 	},
 	onToggleAddEvent: function() {
 		this.setState({ addEvent: ! this.state.addEvent });

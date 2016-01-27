@@ -19,6 +19,11 @@ module.exports = React.createClass({
     this.bindAsObject(mealRef, 'meals'); 
     this.bindAsObject(this.fb, 'event'); 
 
+    console.log(this.props.edit);
+    this.setState({
+      edit : this.props.edit
+    });
+
   },
   render: function() {
     console.log(this.state.event.meals);

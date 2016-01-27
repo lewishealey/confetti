@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
-var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
+rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
 var Attending = require('./attending'); 
 
@@ -9,12 +9,20 @@ var Attending = require('./attending');
 var Dropzone = require('react-dropzone');
 var request = require('superagent');
 
+// Onboarding
+var DatePicker = require('react-date-picker');
+
+var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('4gS7S9jS9Ef7rt8Hq5jtFg');
+
 // Router Shiz
 var ref = new Firebase(rootUrl);
 var HashHistory = require('react-router/lib/hashhistory');
 var Router = require('react-router').Router
 var Route = require('react-router').Route
 var Link = require('react-router').Link
+
+date = Date.now(); 
 
 module.exports = React.createClass({
 	mixins: [ReactFire],
@@ -30,7 +38,7 @@ module.exports = React.createClass({
 	componentWillMount: function() {
 		// Get user data
 		var authData = ref.getAuth();
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
+		firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
     	this.bindAsObject(firebaseRef, 'users');
 
     	this.setState({ authId: authData.uid});
@@ -39,6 +47,17 @@ module.exports = React.createClass({
 		if(this.state.users.guests) {
 			
 		}
+	},
+	handleMail: function() {
+
+	// mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
+	//     console.log(result);
+	// }, function(e) {
+	//     // Mandrill returns the error as an object with name and message keys
+	//     console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+	//     // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+	// });
+
 	},
 	render: function() { 
 		var guests = this.state.users.guests;
@@ -136,6 +155,7 @@ module.exports = React.createClass({
 							</div>
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
+									<button onClick={this.handleMail}>Email</button>
 									<button onClick={this.handleLogout}>Logout</button>
 								</div>
 							</div>
@@ -153,11 +173,27 @@ module.exports = React.createClass({
 
 					<div className="dashboard__content">
 						<div className="dashboard-grid--nest">
+							{! this.state.users.onb1_wdate &&
+								<div className="column">
+									<h4>Add your wedding date</h4>
+									<DatePicker minDate={date} maxDate='2018-10-10' date={date} onChange={this.handleOnb1} />
+								</div>
+							}
+
 							{this.props.children ? this.props.children : <Attending />}
+							
 						</div>
 					</div>
 
 		</div>
+	},
+	handleOnb1: function(datastring, moment) {
+		console.log(datastring);
+
+		firebaseRef.update({
+          onb1_wdate: datastring
+        });
+
 	},
 	handleLogout: function() {
     	ref.unauth();
@@ -174,7 +210,7 @@ module.exports = React.createClass({
 
             firebaseRef.child("settings").update({
 				image: file.name
-			});
+			}); 
 
         });
 
