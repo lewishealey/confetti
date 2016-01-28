@@ -16,7 +16,6 @@ var Events = require('./events');
 var Settings = require('./settings'); 
 var Login = require('./login');
 var Register = require('./register');
-var Auth = require('./auth');
 var ref = new Firebase(rootUrl);
  
 var App = React.createClass({
