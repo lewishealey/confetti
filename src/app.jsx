@@ -16,6 +16,7 @@ var Events = require('./events');
 var Settings = require('./settings'); 
 var Login = require('./login');
 var Register = require('./register');
+var Auth = require('./auth');
 var ref = new Firebase(rootUrl);
  
 var App = React.createClass({
@@ -167,6 +168,7 @@ var routes = (
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />
+    <Route path="/auth" component={Auth} />
 
   </Router>
   )
