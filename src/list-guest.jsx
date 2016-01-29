@@ -132,9 +132,11 @@ module.exports = React.createClass({
   handleChoice: function(choice,id,truth) {
     console.log(choice + id + truth);
     var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + id + "/guests/" + this.state.guest.key);
+    var attendingRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/invited/");
 
     if(truth == true) {
 
+    // Add referent to guest
     eventRef.update({
           attending: truth
         }, function(error) { if (error) { 
@@ -144,6 +146,7 @@ module.exports = React.createClass({
         }
     });
 
+    // Add reference to event
     this.fb.child("events").update({
           [id]: truth
         }, function(error) { if (error) { 
@@ -154,11 +157,24 @@ module.exports = React.createClass({
     });
 
 
+    // Add reference to attending
+    attendingRef.child(this.state.guest.key).update({
+          [id]: truth
+        }, function(error) { if (error) { 
+          console.log("Could not " + id + error);
+        } else {
+          console.log("Set attending" + id + " to " + truth);
+        }
+    });
+
+
     } else {
       var guestRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.state.guest.key);
 
       // Remove Event from guest
       this.fb.child("/events/" + id).remove();
+
+      attendingRef.child(this.state.guest.key + "/" + id).remove();
 
       // Remove guest from event
       eventRef.remove();

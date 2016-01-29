@@ -124,6 +124,7 @@ var App = React.createClass({
           date_created: timeInMs,
           sides: false,
           attending: false,
+          invited: false,
           events: initialEvents,
           wedding_date: false,
           settings: false

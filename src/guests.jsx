@@ -129,6 +129,7 @@ module.exports = React.createClass({
 		var choices = this.state.eventChoices;
 		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
 		var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
+		var inviteRef = new Firebase(rootUrl + 'users/' + authData.uid + "/invited/");
 
 		var events = {};
 
@@ -137,6 +138,19 @@ module.exports = React.createClass({
 
 			// Get event data for each choice
 			var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + key + "/guests/"); 
+
+			// Invited object
+			inviteRef.child(string).update({
+				[key]: true
+	        }, function(error) {
+	  			
+	  		// ERROR GUEST
+	  		if (error) { 
+	  			console.log("Attending guest could not be saved" + error); } else { 
+	  			console.log("Attending guest saved"); 
+	  		}
+
+			}.bind(this));
 
 			// Set details to /events data
 	    	eventRef.child(string).set({ 
@@ -160,7 +174,10 @@ module.exports = React.createClass({
         	address: this.refs.guestAddress.getDOMNode().value,
         	date_created: timeInMs,
         	events: choices,
-        	meals: false
+        	meals: false,
+        	dietary: false,
+        	spotify_song: false,
+        	side: false
         }, function(error) {
   			
   		// ERROR GUEST
