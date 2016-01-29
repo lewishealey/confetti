@@ -116,15 +116,16 @@ var App = React.createClass({
         // Add data to table
         ref.child("users").child(userData.uid).set({
           sentInvite: false,
-          onb1_wdate: false,
-          onb2_event: false,
-          onb3_side: false,
+          onboard_1: false,
+          onboard_2: false,
+          onboard_3: false,
           email: regEmail,
           password: regPassword,
           date_created: timeInMs,
           sides: false,
+          attending: false,
           events: initialEvents,
-          wdate: false,
+          wedding_date: false,
           settings: false
         });
         console.log("Successfully created user account with uid:", userData.uid);
@@ -167,8 +168,6 @@ var routes = (
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />
-    <Route path="/auth" component={Auth} />
-
   </Router>
   )
 
