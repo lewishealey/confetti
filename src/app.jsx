@@ -167,6 +167,7 @@ var routes = (
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />
+    <Route path="/auth" component={Auth} />
 
   </Router>
   )
