@@ -35,10 +35,12 @@ module.exports = React.createClass({
 
     var firebaseRef = new Firebase(rootUrl + 'users/' + this.props.params.userId + '/guests/' + this.props.params.guestId);
     var eventRef = new Firebase(rootUrl + 'users/' + this.props.params.userId + "/events/");
+    var userRef = new Firebase(rootUrl + 'users/' + this.props.params.userId);
 
     // Bind Events, Meals & Guests to states
     this.bindAsObject(eventRef, 'events'); 
     this.bindAsObject(firebaseRef, 'guest');
+    this.bindAsObject(userRef, 'user');
 
   },
   componentDidMount: function() {
@@ -48,23 +50,7 @@ module.exports = React.createClass({
     });
 
   },
-  handleAccessToken: function() {
-
-    // axios.get('https://accounts.spotify.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&response_type=code&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&scope=user-read-private%20user-read-email&state=34fFs29kd09')
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (response) {
-    //     console.log(response);
-    //   });
-
-  },
   handleTrack: function(trackId) {
-
-    spotifyApi.addTracksToPlaylist("1113560298","7Fyg5tJ0oQdIRxLwOJ2T1g", "3yuTRbmGdsnEbQ5n6jNGSL").then(function(data) {
-      console.log(data);
-    }.bind(this));
-
 
   },
   searchTrack: function(event) {
@@ -79,9 +65,9 @@ module.exports = React.createClass({
   render: function() {
 
     // If component is loaded
-    if(this.state.loaded && this.state.guest.events) {
+    if(this.state.loaded && this.state.user) {
 
-      var content = Object.keys(this.state.guest.events).map(function (key, i) {
+      var content = Object.keys(this.state.user.invited[this.props.params.guestId]).map(function (key, i) {
 
         return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
                 
@@ -89,7 +75,7 @@ module.exports = React.createClass({
 
     } else {
 
-      var content = "Loading";
+      var content = "Loading your page";
 
     }
 

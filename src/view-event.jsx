@@ -9,85 +9,80 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {  
       event: false,
-      userId: this.props.userId,
+      userId: false,
       guestId: this.props.guestId,
       attending: false,
       meals: false,
-      updated: false,
-      guest: false
+      guest: false,
+      user: false
     }
   },
   componentWillMount: function() {
-      var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/meals/");
-      var eventRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/events/" + this.props.id);
-      var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + "/guests/" + this.props.guestId);
-
-      this.bindAsObject(mealRef, 'meals');
-      this.bindAsObject(eventRef, 'event');
-      this.bindAsObject(guestRef, 'guest');
+      userRef = new Firebase(rootUrl + 'users/' + this.props.userId);
+      this.bindAsObject(userRef, 'user');
   },
   componentDidMount: function() {
 
-    // If true then flip state
-    if(this.state.event.guests[this.props.guestId].attending == true) {
-
-      this.setState({
-        attending: "yes"
-      });
-
-    }
-
-    if(this.state.event.guests[this.props.guestId].attending == false) {
-
-      this.setState({
-        attending: "no"
-      });
-
-    }
-
   },
   renderList: function() {
-    if(this.state.event.attending[this.props.guestId]) {
-      return <div>     
-        <div className="column cont">
-          <div className="column__half-width">
-            <h4 className="event__title event--attending">Attending</h4>
-          </div>
-          <div className="column__half-width event__attending-icon">
-            <i className="material-icons">done</i>
-          </div>
-        </div>
 
-        <div className="column">
-          <h4 className="event__title">{this.state.event.name}</h4>
-          <h6>{this.state.event.from + " - " + this.state.event.to}</h6>
-          <p className="sub">Thanks for attending! A notification has been sent to Lewis & Lucy to let them know you will be at the big day.</p>
-        </div>
 
-        <div className="column">
 
-          {(this.state.event.meals && this.state.guest.meals == false) &&
-            <div>
-              <label>Select a meal option</label>
-              <select className="form-control" ref="mealChoice">
-                <option>Select a meal</option>
-            
-                  {Object.keys(this.state.event.meals).map(function (key, i) {
-                    return <option key={i} value={key}>{this.state.meals[key] ? this.state.meals[key].name : null}</option>
-                  }.bind(this))}
+      if(this.state.user.attending && this.state.user.attending[this.props.guestId] && this.state.user.attending[this.props.guestId][this.props.id]) {
+        
+        if(this.state.user.events[this.props.id].from && this.state.user.events[this.props.id].to) {
+          var event_time = this.state.user.events[this.props.id].from + " - " + this.state.user.events[this.props.id].to;
+        } else {
+          var event_time = '';
+        }
 
-              </select>
-              <a onClick={this.handleMeals}>Save</a>
+        return <div>     
+          <div className="column cont">
+
+            <div className="column__half-width">
+              <h4 className="event__title event--attending">Attending</h4>
             </div>
-          }
+            
+            <div className="column__half-width event__attending-icon">
+              <i className="material-icons">done</i>
+            </div>
 
-          {(this.state.event.meals && this.state.guest.meals) &&
+          </div>
 
-            Object.keys(this.state.guest.meals).map(function (key, i) {
-                    return <p>{this.state.meals[key] ? this.state.meals[key].name : null}</p>
-            }.bind(this))
+          <div className="column">
+            <h4 className="event__title">{this.state.user.events ? this.state.user.events[this.props.id].name : ''}</h4>
+            <h6>{event_time}</h6>
+            <p className="sub">Thanks for attending! A notification has been sent to Lewis & Lucy to let them know you will be at the big day.</p>
+          </div>
 
-          }
+          <div className="column">
+
+            {(this.state.user.events[this.props.id].meals && this.state.user.guests[this.props.guestId].meals == false) &&
+              <div>
+
+                <label>Select a meal option</label>
+
+                  <select className="form-control" ref="mealChoice">
+                    <option>Select a meal</option>
+                
+                      {Object.keys(this.state.user.events[this.props.id].meals).map(function (key, i) {
+                        return <option key={i} value={key}>{this.state.user.meals[key] ? this.state.user.meals[key].name : null}</option>
+                      }.bind(this))}
+
+                  </select>
+
+                <a onClick={this.handleMeals}>Save</a>
+
+              </div>
+            }
+
+            {(this.state.user.events[this.props.id].meals && this.state.user.guests[this.props.guestId].meals) &&
+
+              Object.keys(this.state.user.guests[this.props.guestId].meals).map(function (key, i) {
+                      return <p>{this.state.user.meals[key] ? this.state.user.meals[key].name : null}</p>
+              }.bind(this))
+
+            }
 
 
         </div>
@@ -97,77 +92,46 @@ module.exports = React.createClass({
         </div>
       </div>
 
-    }
+      } else {
+        return <div> 
+                  <div className="column cont">
+                    <div className="column__half-width">
+                      <h4 className="event__title">{this.state.user.events[this.props.id].name}</h4>
+                    </div>
 
-    if (this.state.event.attending[this.props.guestId] == false){
-
-      return <div> 
-                <div className="column cont">
-                  <div className="column__half-width">
-                    <h4 className="event__title event--nattending">Not Attending</h4>
+                    <div className="column__half-width">
+                      <h4>{event_time}</h4>
+                    </div>
                   </div>
-                  <div className="column__half-width event__nattending-icon">
-                    <i className="material-icons">clear</i>
-                  </div>
+
+                  {this.state.user.events[this.props.id].address &&
+                    <div className="column">
+                      <p className="sub">
+                        {this.state.user.events[this.props.id].address + ", " + this.state.user.events[this.props.id].postcode}<br />
+                        <a href="#">View on map</a>
+                      </p>
+                    </div>
+                  }
+
+                  <div className="column">
+                    <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
                 </div>
 
-                <div className="column">
-                  <h4 className="event__title">{this.state.event.name}</h4>
-                </div>
-
-                <div className="column">
-                  <p className="sub">{"Oh no! you can't attending :( Fancy letting Lewis & Lucy as to why?"}</p>
-                </div>
-
-                <div className="column">
-                  <a onClick={this.handleAttending.bind(this,true)}>I can attend now</a> 
               </div>
 
-            </div>
+      }
 
-
-    }
-
-    if (! this.state.event.attending[this.props.guestId]){
-
-      return <div> 
-                <div className="column cont">
-                  <div className="column__half-width">
-                    <h4 className="event__title">{this.state.event.name}</h4>
-                  </div>
-
-                  <div className="column__half-width">
-                    <h4>{this.state.event.from + " - " + this.state.event.to}</h4>
-                  </div>
-                </div>
-
-                <div className="column">
-                  <p className="sub">
-                    {this.state.event.address + ", " + this.state.event.postcode}<br />
-                    <a href="#">View on map</a>
-                  </p>
-                </div>
-
-                <div className="column">
-                  <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
-                  <a className="btn btn--outline btn--ghost-o btn--icon btn--icon-cross" onClick={this.handleAttending.bind(this,false)}>Cannot Attend</a>
-              </div>
-
-            </div>
-
-    }
 
   },
   render: function() {
 
-  return <div className={(this.state.event.attending[this.props.guestId] ? "active " : "" ) + (this.state.event.attending[this.props.guestId] == false ? "not " : "" ) + "column__half-width event__single"}> 
+  return <div className={"column__half-width event__single"}> 
 
 
       <div className="column--nest">
-        {this.state.event && 
+      {this.state.user &&
           this.renderList()
-        }
-        {this.state.status ? this.state.status : null}
+      }
       </div>
             
 
@@ -183,10 +147,8 @@ module.exports = React.createClass({
   handleMeals: function() {
     var timeInMs = Date.now();
     var mealId = this.refs.mealChoice.getDOMNode().value ;
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId);
-    var mealRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/meals/' + mealId);
 
-    guestRef.child("meals").update({
+    userRef.child("guests/" + this.props.guestId + "/meals/").update({
       [mealId]: true
       }, function(error) {
         // Error report event
@@ -199,7 +161,7 @@ module.exports = React.createClass({
 
     });
 
-    mealRef.child("guests").update({
+    userRef.child("/meals/" + mealId + "/guests/").update({
       [this.state.guestId]: true
       }, function(error) {
         // Error report event
@@ -213,54 +175,45 @@ module.exports = React.createClass({
 
   },
   handleAttending: function(truth) {
-   eventid = this.props.id;
+    eventid = this.props.id;
 
-    // Get event attending object
-    var attendingRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/events/' + this.props.id + '/attending/');
-    var guestRef = new Firebase(rootUrl + 'users/' + this.state.userId + '/guests/' + this.state.guestId + '/attending/');
-    var timeInMs = Date.now();
+    if(truth) {
 
-    // If true then flip state
-    if(truth == "yes") {
+      // Add attending object to event
+      userRef.child("attending/" + this.props.guestId).update({ 
 
-      this.setState({
-        attending: "yes"
-      });
+        [this.props.id]: truth
 
-    } else {
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+          
+          // Success
+          console.log("Attending " + this.props.guestId + " " + this.props.id + " " + truth);
 
-      this.setState({
-        attending: "no"
-      });
+        } //userRef.child("attending/")
 
-    }
+      }.bind(this));
 
-    // Add attending object to event
-    attendingRef.update({ 
-        [this.state.guestId]: truth
-      }, function(error) {
-        // Error report event
-        if (error) {
-        console.log("Nope to update event" + error);
-      } else {
-        console.log("Updated event" + truth);
+      userRef.child("events/" + this.props.id + "/attending/").update({ 
 
-        guestRef.update({ 
-          [eventid]: truth
-          }, function(error) {
-            // Error report event
-            if (error) {
-            console.log("Nope to update event" + error);
-          } else {
-            console.log("Updated event" + truth);
+          [this.props.guestId]: true
+
+          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
+              
+            // Success
+            console.log("Event " + this.props.id + " " + this.props.guestId + " " + truth);
+
           }
 
-        });
+      }.bind(this));
 
-      }
 
-    });
+    } else {
+      userRef.child("events/" + this.props.id + "/attending/").remove();
+      userRef.child("attending/" + this.props.guestId + "/" + this.props.id).remove();
+    }
+
 
   }
+
 
 });
