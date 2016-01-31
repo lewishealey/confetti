@@ -119,7 +119,7 @@ module.exports = React.createClass({
 		} else {
 			var drop = <Dropzone onDrop={this.handleDrop}>
 				<div>Try dropping some files here, or click to select files to upload.</div>
-			</Dropzone>;
+			</Dropzone>; 
 		}
 
 		return <div className="dashboard"> 
