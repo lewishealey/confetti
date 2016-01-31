@@ -153,14 +153,16 @@ module.exports = React.createClass({
 			}.bind(this));
 
 			// Set details to /events data
-	    	eventRef.child(string).set({ 
-				[string] : true,
-				invited: "true",
-				attending: false
+	    	eventRef.update({ 
+				[string] : true
 	        }, function(error) {
 	  			
 	  		// ERROR EVENT
-  			if (error) { console.log("Event could not be saved" + error); } else { console.log(key + " event saved"); }
+  			if (error) { console.log("Event could not be saved" + error); 
+  				} else { 
+  					console.log(key + " event saved"); 
+
+  			}
 
 			}.bind(this));
 

@@ -122,6 +122,7 @@ var App = React.createClass({
           email: regEmail,
           password: regPassword,
           date_created: timeInMs,
+          guests: false,
           sides: false,
           attending: false,
           invited: false,

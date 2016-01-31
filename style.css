@@ -141,8 +141,7 @@ a:hover {
 
 .column {
   flex: 1;
-  border-radius: 5px;
-  max-width: 300px; }
+  border-radius: 5px; }
   .column__half {
     flex: 0.5; }
   .column__double {
