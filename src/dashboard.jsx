@@ -32,6 +32,7 @@ module.exports = React.createClass({
 			addGuest: false,
 			addEvent: false,
 			authId: false,
+			guests: false,
 			files: [] 
 		}
 	},
@@ -50,27 +51,38 @@ module.exports = React.createClass({
 	},
 	handleMail: function() {
 
-	// mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
-	//     console.log(result);
-	// }, function(e) {
-	//     // Mandrill returns the error as an object with name and message keys
-	//     console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-	//     // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-	// });
-
 	},
 	render: function() { 
+
+		var attending = this.state.users.attending;
+
+		// Count the guests
+		if(attending) {
+			var countAttending = 0;
+			for ( attend in attending )   {
+			   if(attending.hasOwnProperty(attend)) {
+			      countAttending++;
+			   }
+			}
+		} else {
+			var countAttending = 0;
+		}
+
+
 		var guests = this.state.users.guests;
 
 		// Count the guests
-		if(this.state.users.guests) {
+		if(guests) {
 			var countGuests = 0;
 			for ( guest in guests )   {
 			   if(guests.hasOwnProperty(guest)) {
 			      countGuests++;
 			   }
 			}
+		} else {
+			var countGuests = 0;
 		}
+
 		var events = this.state.users.events;
 
 		function countEvents(id) {
@@ -126,6 +138,10 @@ module.exports = React.createClass({
 									<span className="badge--text-large">Invited</span>
 								</div>
 								<div className="column">
+									<span className="badge badge--large">{countAttending}</span>
+									<span className="badge--text-large">Attending</span> 
+								</div>
+								<div className="column">
 									<div className="column--nest-v">
 										{userEvents}
 									</div>
@@ -173,12 +189,6 @@ module.exports = React.createClass({
 
 					<div className="dashboard__content">
 						<div className="dashboard-grid--nest">
-							{! this.state.users.onb1_wdate &&
-								<div className="column">
-									<h4>Add your wedding date</h4>
-									<DatePicker minDate={date} maxDate='2018-10-10' date={date} onChange={this.handleOnb1} />
-								</div>
-							}
 
 							{this.props.children ? this.props.children : <Attending />}
 							
