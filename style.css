@@ -271,6 +271,13 @@ label {
       background-color: #D5BF8C;
       border-color: #D5BF8C;
       color: #FFFFFF; }
+  .btn--rose-o {
+    border-color: #FDCDD3;
+    color: #FDCDD3; }
+    .btn--rose-o:hover {
+      background-color: #FDCDD3;
+      border-color: #FDCDD3;
+      color: #FFFFFF; }
   .btn--ghost {
     background-color: #BAC3CC;
     border-color: #BAC3CC;

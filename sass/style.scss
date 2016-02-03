@@ -470,6 +470,17 @@ label {
 		}
 	}
 
+	&--rose-o {
+		border-color: $rose;
+		color: $rose;
+
+		&:hover {
+			background-color: $rose;
+			border-color: $rose;
+			color: $white;
+		}
+	}
+
 	&--ghost {
 		background-color: $mfade;
 		border-color: $mfade;

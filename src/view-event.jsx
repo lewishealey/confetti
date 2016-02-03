@@ -14,7 +14,8 @@ module.exports = React.createClass({
       attending: false,
       meals: false,
       guest: false,
-      user: false
+      user: false,
+      responded: false
     }
   },
   componentWillMount: function() {
@@ -23,12 +24,18 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
+    if(this.state.user.attending && this.state.user.attending[this.props.guestId] && this.state.user.attending[this.props.guestId][this.props.id]) {
+      this.setState({ responded: "attending" });
+    }
+
+    if(this.state.user.notattending && this.state.user.notattending[this.props.guestId] && this.state.user.notattending[this.props.guestId][this.props.id]) {
+      this.setState({ responded: "notattending" });
+    }
+
   },
   renderList: function() {
 
-
-
-      if(this.state.user.attending && this.state.user.attending[this.props.guestId] && this.state.user.attending[this.props.guestId][this.props.id]) {
+      if(this.state.responded == "attending") {
         
         if(this.state.user.events[this.props.id].from && this.state.user.events[this.props.id].to) {
           var event_time = this.state.user.events[this.props.id].from + " - " + this.state.user.events[this.props.id].to;
@@ -92,7 +99,39 @@ module.exports = React.createClass({
         </div>
       </div>
 
-      } else {
+      }
+
+      if(this.state.responded == "notattending") {
+        return <div> 
+                  <div className="column cont">
+                    <div className="column__half-width">
+                      <h4 className="event__title">Not attending</h4>
+                    </div>
+
+                    <div className="column__half-width">
+                      <h4>{event_time}</h4>
+                    </div>
+                  </div>
+
+                  {this.state.user.events[this.props.id].address &&
+                    <div className="column">
+                      <p className="sub">
+                        {this.state.user.events[this.props.id].address + ", " + this.state.user.events[this.props.id].postcode}<br />
+                        <a href="#">View on map</a>
+                      </p>
+                    </div>
+                  }
+
+                  <div className="column">
+                    <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+                    <a className="btn btn--outline btn--rose-o btn--icon btn--icon-cross btn--m-b" onClick={this.handleAttending.bind(this,false)}>Not Attending</a> 
+                </div>
+
+              </div>
+
+      }
+
+      if(this.state.responded == false) {
         return <div> 
                   <div className="column cont">
                     <div className="column__half-width">
@@ -115,6 +154,7 @@ module.exports = React.createClass({
 
                   <div className="column">
                     <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
+                    <a className="btn btn--outline btn--rose-o btn--icon btn--icon-cross btn--m-b" onClick={this.handleAttending.bind(this,false)}>Not Attending</a> 
                 </div>
 
               </div>
@@ -124,6 +164,8 @@ module.exports = React.createClass({
 
   },
   render: function() {
+
+    console.log(this.state.responded);
 
   return <div className={"column__half-width event__single"}> 
 
@@ -182,7 +224,7 @@ module.exports = React.createClass({
       // Add attending object to event
       userRef.child("attending/" + this.props.guestId).update({ 
 
-        [this.props.id]: truth
+        [this.props.id]: true
 
         }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
           
@@ -206,10 +248,48 @@ module.exports = React.createClass({
 
       }.bind(this));
 
+      userRef.child("events/" + this.props.id + "/notattending/").remove();
+      userRef.child("notattending/" + this.props.guestId + "/" + this.props.id).remove();
+
+      // Set state for new view
+      this.setState({ responded: "attending" });
+
 
     } else {
       userRef.child("events/" + this.props.id + "/attending/").remove();
       userRef.child("attending/" + this.props.guestId + "/" + this.props.id).remove();
+
+      // Add attending object to event
+      userRef.child("notattending/" + this.props.guestId).update({ 
+
+        [this.props.id]: true
+
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+          
+          // Success
+          console.log("Not attending " + this.props.guestId + " " + this.props.id + " " + truth);
+
+        } //userRef.child("attending/")
+
+      }.bind(this));
+
+      userRef.child("events/" + this.props.id + "/notattending/").update({ 
+
+          [this.props.guestId]: true
+
+          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
+              
+            // Success
+            console.log("N Event " + this.props.id + " " + this.props.guestId + " " + truth);
+
+          }
+
+      }.bind(this));
+
+      // Set state for new view
+      this.setState({ responded: "notattending" });
+
+
     }
 
 
