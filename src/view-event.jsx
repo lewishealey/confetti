@@ -105,22 +105,22 @@ module.exports = React.createClass({
         return <div> 
                   <div className="column cont">
                     <div className="column__half-width">
-                      <h4 className="event__title">Not attending</h4>
+                      <h4 className={"event__title " + (this.state.responded == "notattending" ? "event--nattending" : null)}>Not attending</h4>
                     </div>
 
-                    <div className="column__half-width">
-                      <h4>{event_time}</h4>
+                    <div className="column__half-width event__nattending-icon">
+                      <i className="material-icons">clear</i>
                     </div>
+
                   </div>
 
-                  {this.state.user.events[this.props.id].address &&
-                    <div className="column">
-                      <p className="sub">
-                        {this.state.user.events[this.props.id].address + ", " + this.state.user.events[this.props.id].postcode}<br />
-                        <a href="#">View on map</a>
-                      </p>
+                  <div className="column">
+                      <h4>{this.state.user.events[this.props.id].name ? this.state.user.events[this.props.id].name : null}</h4>
                     </div>
-                  }
+
+                  <div className="column">
+                    {"Oh no! you can't attending :( Fancy letting Lewis & Lucy as to why?"}
+                  </div>
 
                   <div className="column">
                     <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,true)}>Attending</a> 
@@ -167,7 +167,7 @@ module.exports = React.createClass({
 
     console.log(this.state.responded);
 
-  return <div className={"column__half-width event__single"}> 
+  return <div className={"column__half-width event__single " + (this.state.responded == "notattending" ? "not" : null)}> 
 
 
       <div className="column--nest">
