@@ -4,6 +4,7 @@ var Firebase = require('firebase');
 rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests'); 
 var Attending = require('./attending'); 
+var JQuery = require('jquery'); 
 
 // Upload file shiz
 var Dropzone = require('react-dropzone');
@@ -33,7 +34,8 @@ module.exports = React.createClass({
 			addEvent: false,
 			authId: false,
 			guests: false,
-			files: [] 
+			files: [],
+			sendingInvites: false
 		}
 	},
 	componentWillMount: function() {
@@ -48,9 +50,6 @@ module.exports = React.createClass({
 		if(this.state.users.guests) {
 			
 		}
-	},
-	handleMail: function() {
-
 	},
 	render: function() { 
 
@@ -114,13 +113,13 @@ module.exports = React.createClass({
 		    }.bind(this));
 		}
 
-		if (this.state.users.settings) { // needs if image
-			var drop = <img src={"upload/" + this.state.users.settings.image} width="200" />;
-		} else {
-			var drop = <Dropzone onDrop={this.handleDrop}>
-				<div>Try dropping some files here, or click to select files to upload.</div>
-			</Dropzone>; 
-		}
+		// if (this.state.users.settings) { // needs if image
+		// 	var drop = <img src={"upload/" + this.state.users.settings.image} width="200" />;
+		// } else {
+		// 	var drop = <Dropzone onDrop={this.handleDrop}>
+		// 		<div>Try dropping some files here, or click to select files to upload.</div>
+		// 	</Dropzone>; 
+		// }
 
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
@@ -146,7 +145,6 @@ module.exports = React.createClass({
 										{userEvents}
 									</div>
 								</div>
-								
 							</div>
 						</div>
 
@@ -180,8 +178,7 @@ module.exports = React.createClass({
 
 						<div className="dashboard-grid__column">
 							<div className="dashboard-grid--nest">
-								{drop}
-
+								<button className="btn btn--invite" onClick={this.handleMail}>{this.state.sendingInvites ? "Sending" : "Send Invites"}</button>
 							</div>
 						</div>
 
@@ -213,14 +210,14 @@ module.exports = React.createClass({
   	handleDrop: function (files) {
   		var authData = ref.getAuth();
   		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
-  		var req = request.post('/upload');
+  		var req = request.post('upload/');
         files.forEach((file)=> {
             req.attach(file.name, file);
             console.log(file.name);
 
-            firebaseRef.child("settings").update({
-				image: file.name
-			}); 
+   //          firebaseRef.child("settings").update({
+			// 	image: file.name
+			// }); 
 
         });
 
@@ -232,6 +229,25 @@ module.exports = React.createClass({
 
 
     },
+    handleMail: function(event) {
+		var dataString = 'user='+ this.state.authId;
+
+		event.target.value = "loading";
+
+		this.setState({ sendingInvites: true });
+
+		JQuery.ajax({
+			type: "POST",
+			url: "invite.php",
+			data: dataString,
+			cache: false,
+			success: function(result){
+				console.log(result);
+				this.setState({ sendingInvites: false });
+			}.bind(this)
+		});
+		
+	}
 
 })
 
