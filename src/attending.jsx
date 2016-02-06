@@ -14,7 +14,8 @@ module.exports = React.createClass({
       guests: false,
       events: false,
       addGuest: false,
-      eventChoices: []
+      eventChoices: [],
+      user: false
     }
   },
   componentWillMount: function() {
@@ -23,9 +24,11 @@ module.exports = React.createClass({
     var authData = ref.getAuth();
 
     var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
+    userRef = new Firebase(rootUrl + 'users/' + authData.uid);
 
     // Bind guest
     this.bindAsObject(guestRef, 'guests');
+    this.bindAsObject(userRef, 'user');
 
     // Set auth as a state
     this.setState({ authId: authData.uid});
@@ -54,20 +57,23 @@ module.exports = React.createClass({
     </div>
   },
   renderList: function() {
+    if(this.state.user) {
+      console.log(this.state.user.attending);
+    }
 
     // Go through list of guests
-    if(! this.state.guests) {
+    if(! this.state.user.attending) {
       return <h4>
       Add a guest to get started
       </h4>
     } else {
       var children = [];
 
-      for(var key in this.state.guests) {
-        var guest = this.state.guests[key];
+      for(var key in this.state.user.attending) {
+        var guest = this.state.user.guests[key];
         guest.key = key;
         children.push(
-          <ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} attending={true}></ListGuest>
+          <ListGuest guest={this.state.user.guests[key]} key={key} userId={this.state.authId} attending={true}></ListGuest>
         )
       }
 

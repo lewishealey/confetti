@@ -11,13 +11,17 @@ module.exports = React.createClass({
     guest: false,
     events: false,
     edit: false,
-    eventChoices: []
+    eventChoices: [],
+    user: false
     }
   },
   componentWillMount: function() {
       this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.props.guest.key);
       var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/");
       this.bindAsObject(eventRef, 'events'); 
+
+      userRef = new Firebase(rootUrl + 'users/' + this.props.userId);
+      this.bindAsObject(userRef, 'user');
 
       this.setState({ guest: this.props.guest })
   },
@@ -108,10 +112,16 @@ module.exports = React.createClass({
     // Remove guest
     this.fb.remove();
 
+    userRef.child("attending/" + this.state.guest.key).remove();
+    userRef.child("notattending/" + this.state.guest.key).remove();
+
     Object.keys(this.props.guest.events).map(function (event) {
-      var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + event + "/guests/" + this.state.guest.key);
+      
       // Remove guest from event
-      eventRef.remove();
+      userRef.child("events/" + event + "/guests/" + this.state.guest.key).remove();
+      userRef.child("events/" + event + "/attending/" + this.state.guest.key).remove();
+      userRef.child("events/" + event + "/notattending/" + this.state.guest.key).remove();
+
 
     }.bind(this))
 
