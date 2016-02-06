@@ -427,6 +427,10 @@ label {
 
 	}
 
+	&:focus {
+		outline: none;
+	}
+
 	&--icon {
 
 		&-tick:after {
@@ -445,6 +449,22 @@ label {
     		line-height: 1;
 		}
 
+	}
+
+	&--invite {
+		background-color: #6522FF;
+		border-color: #6522FF;
+		color: $white;
+
+		&:hover {
+			background-color: #6522FF;
+			border-color: #6522FF;
+			color: $white;
+		}
+
+		&:focus {
+			color: $white;
+		}
 	}
 
 	&--gold {

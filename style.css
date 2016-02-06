@@ -246,6 +246,8 @@ label {
     background-color: #5DBBFD;
     border-color: #5DBBFD;
     color: #233332; }
+  .btn:focus {
+    outline: none; }
   .btn--icon-tick:after {
     content: "\E876"; }
   .btn--icon-cross:after {
@@ -256,6 +258,16 @@ label {
     content: inherit;
     font-size: 20px;
     line-height: 1; }
+  .btn--invite {
+    background-color: #6522FF;
+    border-color: #6522FF;
+    color: #FFFFFF; }
+    .btn--invite:hover {
+      background-color: #6522FF;
+      border-color: #6522FF;
+      color: #FFFFFF; }
+    .btn--invite:focus {
+      color: #FFFFFF; }
   .btn--gold {
     background-color: #D5BF8C;
     border-color: #D5BF8C;
