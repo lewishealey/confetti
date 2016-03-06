@@ -36,7 +36,7 @@ module.exports = React.createClass({
     if(this.state.events) {
           // Loop through event choices object for simple toggle
           var eventOptions = Object.keys(this.state.events).map(function (key, i) {
-            return <div><Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} active={this.state.guest.events[key] ? true : false}/></div>
+            return <div><Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} active={this.state.guest.events ? (this.state.guest.events[key] ? true : false) : ''}/></div>
           }.bind(this));
         } else {
           var eventOptions = "Not set";
@@ -114,6 +114,7 @@ module.exports = React.createClass({
 
     userRef.child("attending/" + this.state.guest.key).remove();
     userRef.child("notattending/" + this.state.guest.key).remove();
+    userRef.child("invited/" + this.state.guest.key).remove();
 
     Object.keys(this.props.guest.events).map(function (event) {
       
@@ -121,7 +122,6 @@ module.exports = React.createClass({
       userRef.child("events/" + event + "/guests/" + this.state.guest.key).remove();
       userRef.child("events/" + event + "/attending/" + this.state.guest.key).remove();
       userRef.child("events/" + event + "/notattending/" + this.state.guest.key).remove();
-
 
     }.bind(this))
 

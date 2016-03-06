@@ -2,6 +2,7 @@
     "require": {
         "mandrill/mandrill": "1.0.*",
         "jwilsson/spotify-web-api-php": "^1.0.0",
-        "ktamas77/firebase-php": "dev-master"
+        "ktamas77/firebase-php": "dev-master",
+        "facebook/php-sdk-v4": "^5.1"
     }
 }

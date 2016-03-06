@@ -135,7 +135,7 @@ module.exports = React.createClass({
         return <div> 
                   <div className="column cont">
                     <div className="column__half-width">
-                      <h4 className="event__title">{this.state.user.events[this.props.id].name}</h4>
+                      <h4 className="event__title">{this.state.user.events ? this.state.user.events[this.props.id].name : ''}</h4>
                     </div>
 
                     <div className="column__half-width">

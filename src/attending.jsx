@@ -64,7 +64,7 @@ module.exports = React.createClass({
     // Go through list of guests
     if(! this.state.user.attending) {
       return <h4>
-      Add a guest to get started
+        No one is attending :(, Add a guest to get started
       </h4>
     } else {
       var children = [];

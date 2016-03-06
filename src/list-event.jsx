@@ -10,65 +10,72 @@ module.exports = React.createClass({
   return {  
       event: false,
       edit: false,
-      meals: false
+      meals: false,
+      user: false
     }
   },
   componentWillMount: function() {
+    userRef = new Firebase(rootUrl + 'users/' + this.props.userId);
+
     this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + this.props.id);
     var mealRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/");
     this.bindAsObject(mealRef, 'meals'); 
     this.bindAsObject(this.fb, 'event'); 
 
-    console.log(this.props.edit);
+    this.bindAsObject(userRef, 'user'); 
+
     this.setState({
       edit : this.props.edit
     });
 
   },
   render: function() {
-    console.log(this.state.event.meals);
-  return <div className="column column--border">
-    {this.renderList()}
-  </div>
+      return (
+        <div className="column column--border">
+          {this.renderList()}
+        </div>
+      )
             
   },
   renderList: function() {
-    var guests = this.state.event.guests;
+    console.log(this.props.id);
 
+    var countGuests = 0;
     // Count the guests
-    if(this.state.event.guests) {
-      var countGuests = 0;
-      for ( guest in guests )   {
-         if(guests.hasOwnProperty(guest)) {
-            countGuests++;
-         }
-      }
+    // if(this.state.user.event[this.props.id] && this.state.user.event[this.props.id].guests) {
+    //   var guests = this.state.user.events[this.props.id].guests;
+    //   var countGuests = 0;
+    //   for ( guest in guests )   {
+    //      if(guests.hasOwnProperty(guest)) {
+    //         countGuests++;
+    //      }
+    //   }
 
-    }
+    // }.bind(this)
 
     if(this.state.edit) {
       return <div className="cont__flex-column">
 
         <div className="column__half">
-          <input type="text" className="form-control" defaultValue={this.state.event.name} onChange={this.handleInputChange.bind(this,"name")} />
+          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].name} onChange={this.handleInputChange.bind(this,"name")} />
         </div>
 
         <div className="column">
-          <input type="text" className="form-control" defaultValue={this.state.event.address} onChange={this.handleInputChange.bind(this,"address")} />
-          <input type="text" className="form-control" defaultValue={this.state.event.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
+          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].address} onChange={this.handleInputChange.bind(this,"address")} />
+          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
         </div>
 
         <div className="column">
-          <input type="text" className="form-control" defaultValue={this.state.event.from} onChange={this.handleInputChange.bind(this,"from")} />
-          <input type="text" className="form-control" defaultValue={this.state.event.to} onChange={this.handleInputChange.bind(this,"to")} />
+          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : ''} onChange={this.handleInputChange.bind(this,"from")} />
+          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : ''} onChange={this.handleInputChange.bind(this,"to")} />
         </div>
 
         <div className="column">
 
-        {this.state.event.meals &&
+        {this.state.user.events[this.props.id].meals &&
 
-          Object.keys(this.state.event.meals).map(function (event, i) {
-                return <span key={i}> {this.state.meals[event] ? this.state.meals[event].name : null} 
+          Object.keys(this.state.user.events[this.props.id].meals).map(function (event, i) {
+                return <span key={i}> {this.state.user.meals[event] ? this.state.user.meals[event].name : null} 
                 <span onClick={this.handleDeleteMeal.bind(this,event)}>Delete</span></span>
             }.bind(this))
 
@@ -88,7 +95,7 @@ module.exports = React.createClass({
 
 
         <div className="column">
-          <a onClick={this.handleEditClick}>Save</a> 
+            <a onClick={this.handleEditClick}>Save</a> 
         </div>
 
       </div>
@@ -96,15 +103,15 @@ module.exports = React.createClass({
     } else {
  
       return <div className="column--nest">
-           <h4>{this.state.event.name}</h4>
-           <p>{this.state.event.address ? this.state.event.address : null}</p>
-           <p>{this.state.event.postcode ? this.state.event.postcode : null}</p>
-           <p>{(this.state.event.from ? this.state.event.from : null) + " - " + (this.state.event.to ? this.state.event.to : null)}</p>
+           <h4>{this.state.user.events[this.props.id].name}</h4>
+           <p>{this.state.user.events[this.props.id].address ? this.state.user.events[this.props.id].address : ''}</p>
+           <p>{this.state.user.events[this.props.id].postcode ? this.state.user.events[this.props.id].postcode : ''}</p>
+           <p>{this.state.user.events[this.props.id].from || this.state.user.events[this.props.id].to ? (this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : '') + " - " + (this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : '') : ''}</p>
 
-           {this.state.event.meals &&
+           {this.state.user.events[this.props.id].meals &&
               <p>Meals: 
-              {Object.keys(this.state.event.meals).map(function (event, i) {
-                return <span key={i}> {this.state.meals[event] ? this.state.meals[event].name : null}</span>
+              {Object.keys(this.state.user.events[this.props.id].meals).map(function (event, i) {
+                return <span key={i}> {this.state.user.meals[event] ? this.state.user.meals[event].name : ''}</span>
               }.bind(this))}
               </p>
             }
@@ -112,7 +119,7 @@ module.exports = React.createClass({
 
             <p>{countGuests ? countGuests + " guests" : "No guests" }</p>
 
-            <a className="btn btn--blue" onClick={this.handleEditClick}>Edit</a>
+            <a className="btn btn--blue" onClick={this.handleEditClick}>Edit</a> <a onClick={this.handleDeleteClick}>Delete</a>
 
           </div>
       
@@ -124,8 +131,19 @@ module.exports = React.createClass({
     this.setState({ edit: ! this.state.edit })
   },
   handleDeleteClick: function(e) {
-    e.preventDefault();
-    eventRef.remove();
+    // e.preventDefault();
+
+    // Remove event
+    userRef.child("events/" + this.props.id).remove();
+
+    // Remove from all guest record
+    {Object.keys(this.state.user.guests).map(function (guest, i) {
+      userRef.child("guests/" + guest + "/events/" + this.props.id).remove();
+      userRef.child("attending/" + guest + "/" + this.props.id).remove();
+      userRef.child("notattending/" + guest + "/" + this.props.id).remove();
+      userRef.child("invited/" + guest + "/" + this.props.id).remove();
+    }.bind(this))}
+
   },
   handleDeleteMeal: function(event) {
     var mealRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/meals/" + event);

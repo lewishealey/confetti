@@ -55,16 +55,35 @@ module.exports = React.createClass({
 
 		        <div className="guest">
 					{this.state.addGuest &&
-						<div className="guest__column">
+						<div className="column column--spacing-r">
 							<h4>Add Guest</h4>
-							<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /><br />
-							<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /><br />
-							<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" required/><br />
-							<input type="text" className="form-control" placeholder="Address (optional)" ref="guestAddress" name="postal" /><br />
-								
-							        {eventOptions}
+							<p className="sub">Enter some information about your guests</p>
 
-							<a className="btn btn-primary" onClick={this.handleGuest}>Add Guest</a>
+							<div className="column">
+								<div className="cont cont__flex-row">
+									<div className="column column--spacing-r">
+										<input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" />
+									</div>
+									<div className="column">
+										<input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" />
+									</div>
+								</div>
+							</div>
+
+							<div className="column">
+								<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" required/><br />
+								<input type="text" className="form-control" placeholder="Address (optional)" ref="guestAddress" name="postal" /><br />
+							</div>
+
+							<div className="column column--spacing-d">
+								<h5>What event/s are they invited to?</h5>
+								{eventOptions}
+							</div>
+
+							<div className="column">
+								<a className="btn btn--gold" onClick={this.handleGuest}>Add Guest</a>
+							</div>
+
 						</div>
 						}
 

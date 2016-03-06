@@ -91,7 +91,7 @@ module.exports = React.createClass({
 			if(eventData) {
 				var countEvent = 0;
 				for ( event in eventData )   {
-				   if(eventData.hasOwnProperty(event)) {
+				   if(eventData.hasOwnProperty(event)) { 
 				      countEvent++;
 				   }
 				}
@@ -105,27 +105,18 @@ module.exports = React.createClass({
 			var userEvents = Object.keys(this.state.users.events).map(function(key, i) {
 
       		return (
-		        <div key={i}>
-		        	<span className="badge badge--outline badge--blue">{countEvents(key)}</span>
-		        	<span className="badge--text">{this.state.users.events[key].name}</span>
-		        </div>
+		        	<span key={i} className="count"><span className="count--blue">{countEvents(key) ? countEvents(key) : "0"}</span> {this.state.users.events[key].name}</span>
 		      );
 		    }.bind(this));
 		}
-
-		// if (this.state.users.settings) { // needs if image
-		// 	var drop = <img src={"upload/" + this.state.users.settings.image} width="200" />;
-		// } else {
-		// 	var drop = <Dropzone onDrop={this.handleDrop}>
-		// 		<div>Try dropping some files here, or click to select files to upload.</div>
-		// 	</Dropzone>; 
-		// }
 
 		return <div className="dashboard"> 
 					<div className="dashboard__header">
 						<Link to={`/dashboard`}>
 							<img src="../img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
 						</Link>
+
+						<a onClick={this.handleLogout}>Logout</a>
 					</div>
 					<div className="dashboard-grid">
 
@@ -134,16 +125,14 @@ module.exports = React.createClass({
 
 								<div className="column">
 									<span className="badge badge--large">{countGuests}</span>
-									<span className="badge--text-large">Invited</span>
+									<span className="badge--text-large">Guests</span>
+								</div>
+								<div className="column">
+									<span>{userEvents}</span>
 								</div>
 								<div className="column">
 									<span className="badge badge--large">{countAttending}</span>
 									<span className="badge--text-large">Attending</span> 
-								</div>
-								<div className="column">
-									<div className="column--nest-v">
-										{userEvents}
-									</div>
 								</div>
 							</div>
 						</div>
@@ -169,8 +158,7 @@ module.exports = React.createClass({
 							</div>
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									<button onClick={this.handleMail}>Email</button>
-									<button onClick={this.handleLogout}>Logout</button>
+									<Link to={`/dashboard/settings/`}>Settings</Link>
 								</div>
 							</div>
 

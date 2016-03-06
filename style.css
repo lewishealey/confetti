@@ -23,6 +23,14 @@ a:hover {
 .sub {
   color: #BAC3CC; }
 
+.blue {
+  color: #5DBBFD; }
+
+.count {
+  margin-right: 10px; }
+  .count--blue {
+    color: #5DBBFD; }
+
 .dashboard__header {
   background: #FFFFFF;
   padding: 30px 0;
@@ -178,6 +186,12 @@ a:hover {
   .column--nest-v {
     padding: 15px 0;
     flex: 1; }
+  .column--spacing-r {
+    margin-right: 15px; }
+  .column--spacing-u {
+    margin-top: 15px; }
+  .column--spacing-d {
+    margin-bottom: 15px; }
   .column i {
     font-size: 14px; }
 
@@ -229,7 +243,7 @@ label {
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 20px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   min-width: 150px;
   text-align: left;
   position: relative;
@@ -258,6 +272,16 @@ label {
     content: inherit;
     font-size: 20px;
     line-height: 1; }
+  .btn--choice {
+    border-color: #F2F5F5;
+    background-color: #F2F5F5;
+    color: #8B9299;
+    margin-right: 10px; }
+    .btn--choice:hover {
+      color: #FFFFFF;
+      background-color: #233332;
+      border-color: #233332;
+      outline: none; }
   .btn--invite {
     background-color: #6522FF;
     border-color: #6522FF;

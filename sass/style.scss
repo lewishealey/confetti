@@ -74,6 +74,18 @@ a {
 	color: $mfade;
 }
 
+.blue {
+	color: $blue;
+}
+
+.count {
+	margin-right: 10px;
+
+	&--blue {
+		color: $blue;
+	}
+}
+
 .dashboard {
 
 	&__header {
@@ -335,6 +347,18 @@ a {
 		flex: 1;
 	}
 
+	&--spacing-r {
+		margin-right: 15px;
+	}
+
+	&--spacing-u {
+		margin-top: 15px;
+	}
+
+	&--spacing-d {
+		margin-bottom: 15px;
+	}
+
 	i {
 		font-size: 14px;
 	}
@@ -406,7 +430,7 @@ label {
 	padding: 8px 15px;
 	font-size: 14px;
 	border-radius: 20px;
-	border: 1px solid transparent;
+	border: 2px solid transparent;
 	min-width: 150px;
 	text-align: left;
 	position: relative;
@@ -449,6 +473,20 @@ label {
     		line-height: 1;
 		}
 
+	}
+
+	&--choice {
+		border-color: #F2F5F5;
+		background-color: #F2F5F5;
+		color: #8B9299;
+		margin-right: 10px;
+
+		&:hover {
+			color: $white;
+			background-color: $dark;
+			border-color: $dark;
+			outline: none;
+		}
 	}
 
 	&--invite {

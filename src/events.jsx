@@ -47,6 +47,7 @@ module.exports = React.createClass({
 
 							{Object.keys(this.state.events).map(function (key, i) {
 								return <ListEvent event={this.state.events[key]} key={i} id={key} userId={this.state.authId} edit={this.state.edit} />
+								
 							}.bind(this))}
 
 						<div className="column">
