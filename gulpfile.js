@@ -70,4 +70,5 @@ gulp.task('default', ['build', 'serve', 'sass', 'watch']);
 
 gulp.task('watch', function () {
   gulp.watch('./sass/**/*.scss', ['sass']);
+  gulp.watch('./src/**/*.jsx', ['build']);
 });

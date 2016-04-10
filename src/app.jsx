@@ -10,14 +10,15 @@ var Route = require('react-router').Route
 var Link = require('react-router').Link
 
 var View = require('./view');
+var ViewMain = require('./view-main');
 var Dashboard = require('./dashboard');
-var Guests = require('./guests'); 
-var Events = require('./events'); 
-var Settings = require('./settings'); 
+var Guests = require('./guests');
+var Events = require('./events');
+var Settings = require('./settings');
 var Login = require('./login');
 var Register = require('./register');
 var ref = new Firebase(rootUrl);
- 
+
 var App = React.createClass({
   mixins: [ ReactFire ],
   getInitialState: function() {
@@ -28,7 +29,7 @@ var App = React.createClass({
     }
   },
   componentWillMount: function() {
-    
+
     // Create a callback which logs the current auth state
     function authDataCallback(authData) {
       if (authData) {
@@ -44,7 +45,7 @@ var App = React.createClass({
   },
   render: function() {
     var authData = ref.getAuth();
-    
+
     // If user is logged in show dashboard
     if (authData) {
 
@@ -57,7 +58,7 @@ var App = React.createClass({
         <div className="column--nest">
               <Login login={this.onLoginSubmit} loading={this.state.loaded} />
               <Register register={this.onRegisterSubmit} loading={this.state.loaded} />
-            </div> 
+            </div>
         </div>
     }
 
@@ -170,6 +171,7 @@ var routes = (
         </Route>
       </Route>
     <Route path="/view/:userId/guest/:guestId" component={View} />
+    <Route path=":userId" component={ViewMain} />
   </Router>
   )
 

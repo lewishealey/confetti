@@ -2,11 +2,9 @@ var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
-var JQuery = require('jquery'); 
+var JQuery = require('jquery');
 
 var ViewEvent = require('./view-event');
-
-//this.state.tracks[key].album.images[0].url
 
 // Spotify
 var SpotifyWebApi = require('spotify-web-api-js');
@@ -38,7 +36,7 @@ module.exports = React.createClass({
     var userRef = new Firebase(rootUrl + 'users/' + this.props.params.userId);
 
     // Bind Events, Meals & Guests to states
-    this.bindAsObject(eventRef, 'events'); 
+    this.bindAsObject(eventRef, 'events');
     this.bindAsObject(firebaseRef, 'guest');
     this.bindAsObject(userRef, 'user');
 
@@ -46,7 +44,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     this.setState({
       loaded: true,
-      userId: this.props.params.userId 
+      userId: this.props.params.userId
     });
 
   },
@@ -54,8 +52,8 @@ module.exports = React.createClass({
 
   },
   searchTrack: function(event) {
-    
-    spotifyApi.searchTracks(event.target.value).then(function(data) { 
+
+    spotifyApi.searchTracks(event.target.value).then(function(data) {
         if( data ) {
           this.setState({ tracks: data.tracks.items });
         }
@@ -70,7 +68,7 @@ module.exports = React.createClass({
       var content = Object.keys(this.state.user.invited[this.props.params.guestId]).map(function (key, i) {
 
         return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
-                
+
       }.bind(this));
 
     } else {
@@ -79,7 +77,7 @@ module.exports = React.createClass({
 
     }
 
-  
+
   return <div className="view">
 
       <div className="column" style={{background : 'url("http://da-photo.co.uk/wp-content/uploads/2015/07/CS_PWS_BLOG_002.jpg")'}}>
