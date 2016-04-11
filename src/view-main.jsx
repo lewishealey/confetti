@@ -81,6 +81,10 @@ module.exports = React.createClass({
 
 
   },
+  onSelectGuest: function(guestData) {
+    this.setState({ guest : guestData });
+    // console.log(guestData);
+  },
   render: function() {
     console.log(this.state.guestSearch);
 
@@ -100,7 +104,7 @@ module.exports = React.createClass({
               {this.state.guestSearch &&
                 Object.keys(this.state.guestSearch).map(function (key, i) {
 
-                  return <p>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname}</p>
+                  return <p>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname} <span onClick={this.onSelectGuest.bind(this, this.state.guestSearch[key])}>Select</span></p>
 
                 }.bind(this))
 
