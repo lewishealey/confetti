@@ -4,7 +4,7 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var JQuery = require('jquery');
 
-var ViewEvent = require('./view-event');
+var ViewGuest = require('./view-guest');
 
 // Spotify
 var SpotifyWebApi = require('spotify-web-api-js');
@@ -81,12 +81,24 @@ module.exports = React.createClass({
 
 
   },
-  onSelectGuest: function(guestData) {
-    this.setState({ guest : guestData });
-    // console.log(guestData);
+  onSelectGuest: function(guestData, key) {
+
+    this.setState({
+      guest : guestData,
+      guest_id: key
+    });
+
   },
   render: function() {
-    console.log(this.state.guestSearch);
+    // console.log(this.state.guestSearch);
+
+    // If component is loaded
+    if(this.state.guest) {
+      var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={this.state.guest_id} />
+    } else {
+      var content = "Choose your guest";
+    }
+
 
   return <div className="view">
 
@@ -104,11 +116,13 @@ module.exports = React.createClass({
               {this.state.guestSearch &&
                 Object.keys(this.state.guestSearch).map(function (key, i) {
 
-                  return <p>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname} <span onClick={this.onSelectGuest.bind(this, this.state.guestSearch[key])}>Select</span></p>
+                  return <p>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname} <span onClick={this.onSelectGuest.bind(this, this.state.guestSearch[key], key)}>Select</span></p>
 
                 }.bind(this))
 
               }
+
+              {content}
 
         </div>
       </div>
