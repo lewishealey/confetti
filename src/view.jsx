@@ -4,7 +4,8 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var JQuery = require('jquery');
 
-var ViewEvent = require('./view-event');
+var ViewUser = require('./view-user');
+var ViewGuest = require('./view-new');
 
 // Spotify
 var SpotifyWebApi = require('spotify-web-api-js');
@@ -24,27 +25,23 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
     return({
-      guest: false,
+      user: false,
       loaded: false,
       spotify: false
     })
   },
   componentWillMount: function() {
 
-    var firebaseRef = new Firebase(rootUrl + 'users/' + this.props.params.userId + '/guests/' + this.props.params.guestId);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.props.params.userId + "/events/");
-    var userRef = new Firebase(rootUrl + 'users/' + this.props.params.userId);
-
-    // Bind Events, Meals & Guests to states
-    this.bindAsObject(eventRef, 'events');
-    this.bindAsObject(firebaseRef, 'guest');
-    this.bindAsObject(userRef, 'user');
+    if(this.props.params.userId) {
+      userRef = new Firebase(rootUrl + 'users/' + this.props.params.userId);
+      // Bind Events, Meals & Guests to states
+      this.bindAsObject(userRef, 'user');
+    }
 
   },
   componentDidMount: function() {
     this.setState({
-      loaded: true,
-      userId: this.props.params.userId
+      loaded: true
     });
 
   },
@@ -62,20 +59,27 @@ module.exports = React.createClass({
   },
   render: function() {
 
-    // If component is loaded
-    if(this.state.loaded && this.state.user) {
-
-      var content = Object.keys(this.state.user.invited[this.props.params.guestId]).map(function (key, i) {
-
-        return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
-
-      }.bind(this));
-
+    if(this.props.params.userId && this.props.params.guestId) {
+      // console.log("Guest");
     } else {
-
-      var content = "Loading your page";
-
+      // console.log("User");
+      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} />
     }
+
+    // If component is loaded
+    // if(this.state.loaded && this.state.user) {
+    //
+    //   var content = Object.keys(this.state.user.invited[this.props.params.guestId]).map(function (key, i) {
+    //
+    //     return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
+    //
+    //   }.bind(this));
+    //
+    // } else {
+    //
+    //   var content = "Loading your page";
+    //
+    // }
 
 
   return <div className="view">
@@ -86,7 +90,7 @@ module.exports = React.createClass({
 
       <div className="column view--white">
         <div className="column--nest">
-          <h4>Welcome {this.state.guest.fname}</h4>
+          <h4>Welcome {this.state.guest ? this.state.guest.fname : ''}</h4>
           <h5>Feel free to rsvp to the beautiful day</h5>
 
           <input type="text" refs="track search" onChange={this.searchTrack} />
@@ -126,6 +130,82 @@ module.exports = React.createClass({
 
     </div>
 
+  },
+  // Change data
+  handleGuest: function(guest, event, truth) {
+    console.log(guest + event + truth);
+
+    if(truth) {
+
+      // Add attending object to event
+      userRef.child("attending/" + guest).update({
+
+        [event]: true
+
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+
+          // Success
+          console.log("Attending " + guest + " " + event + " " + truth);
+
+        } //userRef.child("attending/")
+
+      }.bind(this));
+
+      userRef.child("events/" + event + "/attending/").update({
+
+          [guest]: true
+
+          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
+
+            // Success
+            console.log("Event " + event + " " + guest + " " + truth);
+
+          }
+
+      }.bind(this));
+
+      userRef.child("events/" + event + "/notattending/").remove();
+      userRef.child("notattending/" + guest + "/" + event).remove();
+
+      // Set state for new view
+      this.setState({ responded: "attending" });
+
+
+    } else {
+      userRef.child("events/" + event + "/attending/").remove();
+      userRef.child("attending/" + guest + "/" + event).remove();
+
+      // Add attending object to event
+      userRef.child("notattending/" + guest).update({
+
+        [event]: true
+
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+
+          // Success
+          console.log("Not attending " + guest + " " + event + " " + truth);
+
+        } //userRef.child("attending/")
+
+      }.bind(this));
+
+      userRef.child("events/" + event + "/notattending/").update({
+
+          [guest]: true
+
+          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
+
+            // Success
+            console.log("N Event " + event + " " + guest + " " + truth);
+
+          }
+
+      }.bind(this));
+
+      // Set state for new view
+      this.setState({ responded: "notattending" });
+
+    }
   }
 
 });

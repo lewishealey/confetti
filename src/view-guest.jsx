@@ -8,49 +8,65 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
     return({
-      guest: this.props.guest,
-      guest_id: this.props.guestId,
-      user: this.props.user
+      loaded: false
     })
   },
   componentWillMount: function() {
   },
   componentDidMount: function() {
+    this.setState({
+      loaded: true
+    })
+  },
+  componentWillReceiveProps: function() {
   },
   render: function() {
-    console.log(this.state.user);
 
-    if(this.state.user.invited[this.props.guestId]) {
+    var eventClass;
 
-      return <div>
-        {Object.keys(this.state.user.invited[this.props.guestId]).map(function (key, i) {
+    if(this.props.user.invited[this.props.guestId] && this.state.loaded) {
 
-              <div>
-                    <div className="column cont">
-                      <div className="column__half-width">
-                        <h4 className="event__title">{this.state.user.events ? this.state.user.events[key].name : ''}</h4>
-                      </div>
 
-                      <div className="column__half-width">
-                        <h4>Time</h4>
-                      </div>
+      return <div className="cont">
+        {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
+
+            return <div className={"column__half-width event__single"} key={i}>
+
+                <div className="column--nest">
+
+                  <div className="column cont">
+                    <div className="column__half-width">
+                      <h4 className="event__title">{this.props.user.events ? this.props.user.events[key].name : ''}</h4>
                     </div>
 
-                    {this.state.user.events[key].address &&
-                      <div className="column">
-                        <p className="sub">
-                          {this.state.user.events[key].address + ", " + this.state.user.events[key].postcode}<br />
-                          <a href="#">View on map</a>
-                        </p>
-                      </div>
-                    }
+                    <div className="column__half-width">
+                      <h4>Time</h4>
+                    </div>
+                  </div>
 
+                  {this.props.user.events[key].address &&
                     <div className="column">
-                      <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b">Attending</a>
-                      <a className="btn btn--outline btn--rose-o btn--icon btn--icon-cross btn--m-b">Not Attending</a>
+                      <p className="sub">
+                        {this.props.user.events[key].address + ", " + this.props.user.events[key].postcode}<br />
+                        <a href="#">View on map</a>
+
+                        {(this.props.user.attending && this.props.user.attending[this.props.guestId]) &&
+                          this.props.user.attending[this.props.guestId][key] ? "Attending" : "Not attending"
+                        }
+
+                      </p>
+                    </div>
+                  }
+
+                  <div className="column">
+                    <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,this.props.guestId,key,true)}>Attending</a>
+                    <a className="btn btn--outline btn--rose-o btn--icon btn--icon-cross btn--m-b" onClick={this.handleAttending.bind(this,this.props.guestId,key,false)}>Not Attending</a>
                   </div>
 
                 </div>
+
+            </div>
+
 
         }.bind(this))}
 
@@ -63,6 +79,9 @@ module.exports = React.createClass({
       </div>
     }
 
+  },
+  handleAttending: function(guest, event, truth) {
+      this.props.onChange(guest, event, truth);
   }
 
 });

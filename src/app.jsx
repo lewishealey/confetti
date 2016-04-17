@@ -11,6 +11,8 @@ var Link = require('react-router').Link
 
 var View = require('./view');
 var ViewMain = require('./view-main');
+var ViewGuest = require('./view-new');
+var ViewUser = require('./view-user');
 var Dashboard = require('./dashboard');
 var Guests = require('./guests');
 var Events = require('./events');
@@ -170,8 +172,10 @@ var routes = (
           <Route path="settings" component={Settings} />
         </Route>
       </Route>
-    <Route path="/view/:userId/guest/:guestId" component={View} />
-    <Route path=":userId" component={ViewMain} />
+      <Route path="page" component={View}>
+          <Route path=":userId/:guestId" component={ViewGuest} />
+          <Route path=":userId" component={ViewUser} />
+      </Route>
   </Router>
   )
 
