@@ -31,6 +31,15 @@ a:hover {
   .count--blue {
     color: #5DBBFD; }
 
+.tal {
+  text-align: left; }
+
+.tac {
+  text-align: center; }
+
+.tar {
+  text-align: right; }
+
 .dashboard__header {
   background: #FFFFFF;
   padding: 30px 0;
@@ -86,7 +95,8 @@ a:hover {
   justify-content: flex-start;
   align-items: stretch;
   align-content: stretch;
-  height: 100%; }
+  height: 100%;
+  margin: 15px; }
   .view--white {
     background-color: #FFFFFF; }
 
@@ -101,16 +111,40 @@ a:hover {
     .guest__edit a {
       color: #B0BEC5;
       margin-left: 10px; }
+  .guest-select {
+    margin-top: 15px;
+    width: 100%; }
+  .guest-list {
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+    border: 2px solid #D2DCE6;
+    border-top: none; }
+    .guest-list__item {
+      padding: 5px 10px;
+      display: block;
+      list-style: none; }
+      .guest-list__item:hover {
+        background: #f7f7f7;
+        cursor: pointer; }
+    .guest-list__select {
+      float: right;
+      color: #D5BF8C; }
 
 .event__title {
   margin-top: 0; }
 
 .event__single {
   border: 2px solid #F2F5F5;
-  border-radius: 5px; }
-  .event__single.active {
+  border-radius: 5px;
+  margin: 15px 7.5px; }
+  .event__single:first-child {
+    margin-left: 0px; }
+  .event__single:last-child {
+    margin-right: 0px; }
+  .event__single.attending {
     border-color: #D5BF8C; }
-  .event__single.not {
+  .event__single.nattending {
     border-color: #FDCDD3; }
 
 .event__attending-icon {
@@ -148,8 +182,7 @@ a:hover {
   border-top: none; }
 
 .column {
-  flex: 1;
-  border-radius: 5px; }
+  flex: 1; }
   .column__half {
     flex: 0.5; }
   .column__double {
@@ -235,9 +268,13 @@ label {
   color: #BAC3CC; }
 
 .form-control {
-  border: 1px solid #D2DCE6;
+  border: 2px solid #D2DCE6;
   box-shadow: none;
   border-radius: 5px; }
+  .form-control.success {
+    border-color: #19B26B; }
+  .form-control.error {
+    border-color: #FDCDD3; }
 
 .btn {
   padding: 8px 15px;

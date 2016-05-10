@@ -1,0 +1,6 @@
+{
+    "require": {
+        "wildbit/postmark-php": "^2.2",
+        "daniel-zahariev/php-aws-ses": "^0.8.7"
+    }
+}

@@ -6,12 +6,12 @@ var ref = new Firebase(rootUrl);
 
 // Components
 var ListGuest = require('./list-guest');
-var Choice = require('./choice'); 
+var Choice = require('./choice');
 
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
-	return { 
+	return {
 			authId: false,
 			guests: false,
 			events: false,
@@ -29,7 +29,7 @@ module.exports = React.createClass({
 
 		// Bind guest & events to states
     	this.bindAsObject(guestRef, 'guests');
-      	this.bindAsObject(eventRef, 'events'); 
+      	this.bindAsObject(eventRef, 'events');
 
       	// Set auth as a state
     	this.setState({ authId: authData.uid});
@@ -71,8 +71,7 @@ module.exports = React.createClass({
 							</div>
 
 							<div className="column">
-								<input type="text" className="form-control" placeholder="Enter guest email" ref="guestEmail" name="email" required/><br />
-								<input type="text" className="form-control" placeholder="Address (optional)" ref="guestAddress" name="postal" /><br />
+								<p><input type="text" className="form-control" placeholder="Enter guest email (optional)" ref="guestEmail" name="email" required/></p>
 							</div>
 
 							<div className="column column--spacing-d">
@@ -92,7 +91,7 @@ module.exports = React.createClass({
 						<div className="column column__half">
 		            		<h4>Invited Guests</h4>
 		            		<p>View your wonderful guests</p>
-		        		</div>	
+		        		</div>
 
 						<div className="cont row">
 					      <div className="column">
@@ -156,43 +155,42 @@ module.exports = React.createClass({
 		{Object.keys(this.state.eventChoices).map(function(key) {
 
 			// Get event data for each choice
-			var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + key + "/guests/"); 
+			var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + key + "/guests/");
 
 			// Invited object
 			inviteRef.child(string).update({
 				[key]: true
 	        }, function(error) {
-	  			
+
 	  		// ERROR GUEST
-	  		if (error) { 
-	  			console.log("Attending guest could not be saved" + error); } else { 
-	  			console.log("Attending guest saved"); 
+	  		if (error) {
+	  			console.log("Attending guest could not be saved" + error); } else {
+	  			console.log("Attending guest saved");
 	  		}
 
 			}.bind(this));
 
 			// Set details to /events data
-	    	eventRef.update({ 
+	    	eventRef.update({
 				[string] : true
 	        }, function(error) {
-	  			
+
 	  		// ERROR EVENT
-  			if (error) { console.log("Event could not be saved" + error); 
-  				} else { 
-  					console.log(key + " event saved"); 
+  			if (error) { console.log("Event could not be saved" + error);
+  				} else {
+  					console.log(key + " event saved");
 
   			}
 
 			}.bind(this));
 
-		}.bind(this))}; 
+		}.bind(this))};
 
 		// Save guest
 		guestRef.child(string).set({
 			fname: this.refs.fName.getDOMNode().value,
 			lname: this.refs.lName.getDOMNode().value,
         	email: this.refs.guestEmail.getDOMNode().value,
-        	address: this.refs.guestAddress.getDOMNode().value,
         	date_created: timeInMs,
         	events: choices,
         	meals: false,
@@ -200,14 +198,14 @@ module.exports = React.createClass({
         	spotify_song: false,
         	side: false
         }, function(error) {
-  			
+
   		// ERROR GUEST
-  		if (error) { console.log("Guest could not be saved" + error); } else { 
-  			console.log("Guest saved"); 
+  		if (error) { console.log("Guest could not be saved" + error); } else {
+  			console.log("Guest saved");
 
   			this.refs.fName.getDOMNode().value = "";
+				this.refs.lName.getDOMNode().value = "";
   			this.refs.guestEmail.getDOMNode().value = "";
-  			this.refs.guestAddress.getDOMNode().value = "";
   			this.setState({eventChoices: []});
 
   		}

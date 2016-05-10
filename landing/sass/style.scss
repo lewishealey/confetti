@@ -1,0 +1,466 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+$white: #FFFFFF;
+$lwhite: #B0BEC5;
+$blue: #5DBBFD;
+$lblue: #0B8DFF;
+$orange: #FFA47D;
+$red: #FF7D7D;
+$fade: #F2F5F5;
+$mfade: #8B9299;
+$lfade: #F2F5F5;
+$yellow: #FFE030;
+$dark: #233332;
+$gold: #D5BF8C;
+$rose: #FDCDD3;
+$success: #19B26B;
+
+$phone-width: 320px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+@mixin phone {
+  @media (min-width: #{$phone-width}) and (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	-webkit-font-smoothing: antialiased;
+  color: $mfade;
+  background: $fade;
+}
+
+@mixin animation($element,$time,$ease) {
+    webkit-transition: $element $time $ease;
+    -moz-transition: $element $time $ease;
+    -o-transition: $element $time $ease;
+    transition: $element $time $ease;
+}
+
+a {
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+h1,h2,h3,h4,h5 {
+  line-height: 1.44;
+  color: $dark;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h4 {
+  color: $mfade;
+  font-size: 14px;
+}
+
+.login {
+	width: 300px;
+	margin: 0 auto;
+	background-color: $white;
+}
+
+.img-max {
+	width: 100%;
+}
+
+.sub {
+	color: $mfade;
+}
+
+.blue {
+	color: $blue;
+}
+
+.count {
+	margin-right: 10px;
+
+	&--blue {
+		color: $blue;
+	}
+}
+
+.tal {
+  text-align: left;
+}
+
+.tac {
+  text-align: center;
+}
+
+.tar {
+  text-align: right;
+}
+
+#world {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 680px;
+}
+
+
+.header {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 680px;
+  padding: 30px 0 0 0;
+  overflow: hidden;
+
+  &__logo {
+    margin: 30px 0;
+    max-width: 120px;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  &__info {
+    margin-bottom: 30px;
+    color: #8B9299;
+    font-weight: 500;
+    font-size: 16px;
+
+    a {
+      margin-left: 15px;
+      text-decoration: underline;
+      color: #8B9299;
+
+      &:hover {
+        color: $rose;
+      }
+
+    }
+
+  }
+
+  &__signup {
+    margin-bottom: 30px;
+  }
+
+  &__screenshot {
+    width: 100%;
+  }
+
+}
+
+.section {
+  position: absolute;
+  top: 680px;
+  width: 100%;
+  background: $white;
+  padding: 60px 0;
+
+  &__title {
+    margin-top: 0px;
+    margin-bottom: 60px;
+  }
+
+  &__follow {
+    line-height: 1;
+    margin: 60px 0;
+
+    span {
+      margin-right: 30px;
+
+      &:last-child{
+        margin-right: 0px;
+      }
+
+    }
+
+    img {
+      width: 24px;
+    }
+
+    &-text {
+      font-size: 20px;
+      color: $dark;
+    }
+
+  }
+
+}
+
+.footer {
+  background: #F2F5F5 url("img/pattern.png");
+  padding: 60px 0;
+}
+
+.copyright {
+  padding: 30px 0;
+  color: #C6CED6;
+}
+
+.badge {
+	display: inline-block;
+	min-width: 10px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	color: $dark;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	background-color: $blue;
+	border-radius: 10px;
+
+	&:active {
+
+	}
+
+	&--outline {
+		background-color: transparent;
+	}
+
+	&--blue {
+		color: $blue;
+		border: 1px solid $blue;
+	}
+
+	&--large {
+		font-weight: 500;
+		font-size: 24px;
+		border-radius: 50px;
+		padding: 7px 12px;
+	}
+
+	&--text-large {
+		font-weight: 400;
+		font-size: 24px;
+		border-radius: 50px;
+		padding: 5px 10px;
+		color: $white;
+	}
+
+	&--text {
+		margin-left: 10px;
+		color: $lwhite;
+		font-weight: 400;
+		font-size: 14px;
+	}
+
+}
+
+label {
+	font-size: 14px;
+	color: #BAC3CC;
+}
+
+.form-control {
+	border: 2px solid #D2DCE6;
+	box-shadow: none;
+	border-radius: 5px;
+  min-width: 350px;
+  height: 40px;
+
+  &.success {
+    border-color: $success;
+  }
+
+  &.error {
+    border-color: $rose;
+  }
+
+}
+
+.card {
+  padding: 15px;
+  border-radius: 4px;
+  border: 2px solid #D2DCE6;
+  margin-bottom: 30px;
+  min-height: 190px;
+  @include animation(all,0.5s,linear);
+
+  &:hover {
+    border: 2px solid $gold;
+  }
+
+  h4 {
+    font-size: 18px;
+    color: $gold;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+
+
+}
+
+.btn {
+	padding: 8px 15px;
+	font-size: 14px;
+	border-radius: 20px;
+	border: 2px solid transparent;
+	min-width: 150px;
+	position: relative;
+	color: $lwhite;
+  text-align: center;
+
+	@include animation(all,0.25s,linear)
+
+	&.active {
+		background-color: $dark;
+		border-color: $dark;
+		color: $white;
+	}
+
+	&:hover {
+		background-color: $blue;
+		border-color: $blue;
+		color: $dark;
+
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&--icon {
+
+		&-tick:after {
+			content: "\E876";
+		}
+
+		&-cross:after {
+			content: "\E14C";
+		}
+
+		&:after {
+			font-family: 'Material Icons';
+			float: right;
+			content: inherit;
+    		font-size: 20px;
+    		line-height: 1;
+		}
+
+	}
+
+	&--choice {
+		border-color: #F2F5F5;
+		background-color: #F2F5F5;
+		color: #8B9299;
+		margin-right: 10px;
+
+		&:hover {
+			color: $white;
+			background-color: $dark;
+			border-color: $dark;
+			outline: none;
+		}
+	}
+
+	&--invite {
+		background-color: #6522FF;
+		border-color: #6522FF;
+		color: $white;
+
+		&:hover {
+			background-color: #6522FF;
+			border-color: #6522FF;
+			color: $white;
+		}
+
+		&:focus {
+			color: $white;
+		}
+	}
+
+	&--gold {
+		background-color: $gold;
+		border-color: $gold;
+		color: $white;
+
+		&:hover {
+			background-color: $dark;
+			border-color: $dark;
+			color: $white;
+		}
+	}
+
+	&--gold-o {
+		border-color: $gold;
+		color: $gold;
+
+		&:hover {
+			background-color: $gold;
+			border-color: $gold;
+			color: $white;
+		}
+	}
+
+	&--rose-o {
+		border-color: $rose;
+		color: $rose;
+
+		&:hover {
+			background-color: $rose;
+			border-color: $rose;
+			color: $white;
+		}
+	}
+
+	&--ghost {
+		background-color: $mfade;
+		border-color: $mfade;
+		color: $white;
+	}
+
+	&--ghost-o {
+		background-color: transparent;
+		border-color: $mfade;
+		color: $mfade;
+	}
+
+	&--outline {
+		border-width: 2px;
+		background-color: transparent;
+	}
+
+	&--m-b {
+		margin-bottom: 10px;
+	}
+
+}
+
+.card-4 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.12);
+}
+
+mysqldump -u root -p main_site > main_site.sql
+
+ip -6 addr remove 2400:6180:0:d0::55d:9001/64 dev eth0

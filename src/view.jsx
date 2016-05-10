@@ -27,7 +27,9 @@ module.exports = React.createClass({
     return({
       user: false,
       loaded: false,
-      spotify: false
+      spotify: false,
+      emailState: false,
+      step: 1
     })
   },
   componentWillMount: function() {
@@ -63,7 +65,7 @@ module.exports = React.createClass({
       // console.log("Guest");
     } else {
       // console.log("User");
-      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} />
+      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} handleEmailState={this.state.emailState} step={this.state.step} onStep={this.handleStep}/>
     }
 
     // If component is loaded
@@ -81,6 +83,7 @@ module.exports = React.createClass({
     //
     // }
 
+//<input type="text" refs="track search" onChange={this.searchTrack} />
 
   return <div className="view">
 
@@ -90,12 +93,14 @@ module.exports = React.createClass({
 
       <div className="column view--white">
         <div className="column--nest">
-          <h4>Welcome {this.state.guest ? this.state.guest.fname : ''}</h4>
-          <h5>Feel free to rsvp to the beautiful day</h5>
-
-          <input type="text" refs="track search" onChange={this.searchTrack} />
-
-          <button onClick={this.handleAccessToken}>Get access token</button>
+          <div className="cont cont__flex-row">
+            <div className="column"><h4>RSVP {this.state.user.fname ? this.state.user.fname : ''} & {this.state.user.spousefname ? this.state.user.spousefname + "'s" : ''} wedding</h4></div>
+            {this.state.user.wedding_date &&
+               <div className="column tar"><h4>{this.state.user.wedding_date}</h4></div>
+             }
+          </div>
+          <h1>Welcome! RSVP now</h1>
+          <p>Type in your last name to get going</p>
 
           <div className="cont cont__flex-row">
             {content}
@@ -131,15 +136,15 @@ module.exports = React.createClass({
     </div>
 
   },
-  // Change data
   handleGuest: function(guest, event, truth) {
     console.log(guest + event + truth);
+    var timeInMs = Date.now();
 
     if(truth) {
 
       // Add attending object to event
       userRef.child("attending/" + guest).update({
-
+        date_created: timeInMs,
         [event]: true
 
         }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
@@ -177,7 +182,7 @@ module.exports = React.createClass({
 
       // Add attending object to event
       userRef.child("notattending/" + guest).update({
-
+        date_created: timeInMs,
         [event]: true
 
         }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
@@ -206,6 +211,41 @@ module.exports = React.createClass({
       this.setState({ responded: "notattending" });
 
     }
+  },
+  handleMeal: function(mealName, courseName, eventName, guestName) {
+    // console.info(mealName + "/" + courseName + "/" + eventName + "/" + guestName)
+    var timeInMs = Date.now();
+
+    userRef.child("attending/" + guestName + "/" + eventName + "/" + courseName).update({
+        date_created: timeInMs,
+        meal_name: mealName
+    });
+
+  },
+  handleEmail: function(value,guest) {
+
+    if(isEmail(value)) {
+
+      userRef.child("guests/" + guest).update({
+          "email_address": value
+          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
+            console.log("updated" + guest + "email_address with " + value);
+          }
+
+          this.setState({ emailState: true });
+
+      }.bind(this));
+
+    } else {
+      this.setState({ emailState: "Not valid" });
+    }
+
+
   }
 
 });
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}

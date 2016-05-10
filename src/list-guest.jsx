@@ -2,12 +2,12 @@ var React = require('react');
 var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ReactFire = require('reactfire');
-var Choice = require('./choice'); 
+var Choice = require('./choice');
 
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
-  return {  
+  return {
     guest: false,
     events: false,
     edit: false,
@@ -18,7 +18,7 @@ module.exports = React.createClass({
   componentWillMount: function() {
       this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.props.guest.key);
       var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/");
-      this.bindAsObject(eventRef, 'events'); 
+      this.bindAsObject(eventRef, 'events');
 
       userRef = new Firebase(rootUrl + 'users/' + this.props.userId);
       this.bindAsObject(userRef, 'user');
@@ -29,7 +29,7 @@ module.exports = React.createClass({
   return <div>
     {this.renderList()}
   </div>
-            
+
   },
   renderList: function() {
 
@@ -69,16 +69,16 @@ module.exports = React.createClass({
 
 
         <div className="guest__column">
-          <a onClick={this.handleEditClick}>Save</a> 
+          <a onClick={this.handleEditClick}>Save</a>
         </div>
 
       </div>
 
     } else {
- 
+
       return <div className="cont row">
 
-        <div className="column"> 
+        <div className="column">
           {this.props.guest.fname + " " + this.props.guest.lname} <span className="column--rev-hover">{this.props.guest.email}</span>
         </div>
 
@@ -92,19 +92,19 @@ module.exports = React.createClass({
 
         {this.props.attending == false &&
           <div className="column guest__edit">
-            <a href={"/#/view/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a> 
-            <a onClick={this.handleEditClick}> Edit </a> 
-            <a onClick={this.handleDeleteClick}>Delete</a> 
+            <a href={"/confetti_app/#/page/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a>
+            <a onClick={this.handleEditClick}> Edit </a>
+            <a onClick={this.handleDeleteClick}>Delete</a>
           </div>
         }
- 
+
       </div>
     }
 
 
   },
   handleEditClick: function() {
-    this.setState({ edit: ! this.state.edit })
+    this.setState({ edit: ! this.state.edit }) 
   },
   handleDeleteClick: function(e) {
     e.preventDefault();
@@ -117,7 +117,7 @@ module.exports = React.createClass({
     userRef.child("invited/" + this.state.guest.key).remove();
 
     Object.keys(this.props.guest.events).map(function (event) {
-      
+
       // Remove guest from event
       userRef.child("events/" + event + "/guests/" + this.state.guest.key).remove();
       userRef.child("events/" + event + "/attending/" + this.state.guest.key).remove();
@@ -131,7 +131,7 @@ module.exports = React.createClass({
 
     this.fb.update({
           [string]: value
-        }, function(error) { if (error) { 
+        }, function(error) { if (error) {
           console.log("Could not " + value + error);
         } else {
           console.log("Set " + value + " to " + string);
@@ -149,7 +149,7 @@ module.exports = React.createClass({
     // Add referent to guest
     eventRef.update({
           attending: truth
-        }, function(error) { if (error) { 
+        }, function(error) { if (error) {
           console.log("Could not " + id + error);
         } else {
           console.log("Set " + id + " to " + truth);
@@ -159,7 +159,7 @@ module.exports = React.createClass({
     // Add reference to event
     this.fb.child("events").update({
           [id]: truth
-        }, function(error) { if (error) { 
+        }, function(error) { if (error) {
           console.log("Could not " + id + error);
         } else {
           console.log("Set " + id + " to " + truth);
@@ -170,7 +170,7 @@ module.exports = React.createClass({
     // Add reference to attending
     attendingRef.child(this.state.guest.key).update({
           [id]: truth
-        }, function(error) { if (error) { 
+        }, function(error) { if (error) {
           console.log("Could not " + id + error);
         } else {
           console.log("Set attending" + id + " to " + truth);

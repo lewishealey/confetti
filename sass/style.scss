@@ -18,6 +18,7 @@ $yellow: #FFE030;
 $dark: #233332;
 $gold: #D5BF8C;
 $rose: #FDCDD3;
+$success: #19B26B;
 
 $phone-width: 320px;
 $tablet-width: 768px;
@@ -84,6 +85,18 @@ a {
 	&--blue {
 		color: $blue;
 	}
+}
+
+.tal {
+  text-align: left;
+}
+
+.tac {
+  text-align: center;
+}
+
+.tar {
+  text-align: right;
 }
 
 .dashboard {
@@ -165,6 +178,7 @@ a {
 	align-items: stretch;
 	align-content: stretch;
 	height: 100%;
+  margin: 15px;
 
 	&--white {
 		background-color: $white;
@@ -190,7 +204,39 @@ a {
 			margin-left: 10px;
 		}
 	}
-	
+
+  &-select {
+    margin-top: 15px;
+    width: 100%;
+  }
+
+
+  &-list {
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+    border: 2px solid #D2DCE6;
+    border-top: none;
+
+    &__item {
+      padding: 5px 10px;
+      display: block;
+      list-style: none;
+
+      &:hover {
+        background: darken($white,3%);
+        cursor: pointer;
+      }
+
+    }
+
+    &__select {
+      float: right;
+      color: $gold;
+    }
+
+  }
+
 }
 
 .event {
@@ -202,12 +248,21 @@ a {
 	&__single {
 		border: 2px solid $lfade;
 		border-radius: 5px;
+    margin: 15px 7.5px;
 
-		&.active {
+    &:first-child {
+      margin-left: 0px;
+    }
+
+    &:last-child {
+      margin-right: 0px;
+    }
+
+		&.attending {
 			border-color: $gold;
 		}
 
-		&.not {
+		&.nattending {
 			border-color: $rose;
 		}
 
@@ -278,7 +333,6 @@ a {
 
 .column {
 	flex: 1;
-	border-radius: 5px;
 
 	&__half {
 		flex: 0.5
@@ -329,10 +383,10 @@ a {
 
 	&--img {
 
-		img { 
+		img {
 			width: 100%;
 		}
-		
+
 	}
 
 	&--nest {
@@ -421,9 +475,18 @@ label {
 }
 
 .form-control {
-	border: 1px solid #D2DCE6;
+	border: 2px solid #D2DCE6;
 	box-shadow: none;
 	border-radius: 5px;
+
+  &.success {
+    border-color: $success;
+  }
+
+  &.error {
+    border-color: $rose;
+  }
+
 }
 
 .btn {

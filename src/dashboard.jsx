@@ -2,9 +2,9 @@ var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
-var Guests = require('./guests'); 
-var Attending = require('./attending'); 
-var JQuery = require('jquery'); 
+var Guests = require('./guests');
+var Attending = require('./attending');
+var JQuery = require('jquery');
 
 // Upload file shiz
 var Dropzone = require('react-dropzone');
@@ -23,7 +23,7 @@ var Router = require('react-router').Router
 var Route = require('react-router').Route
 var Link = require('react-router').Link
 
-date = Date.now(); 
+date = Date.now();
 
 module.exports = React.createClass({
 	mixins: [ReactFire],
@@ -48,10 +48,10 @@ module.exports = React.createClass({
 	},
 	componentDidUpdate: function() {
 		if(this.state.users.guests) {
-			
+
 		}
 	},
-	render: function() { 
+	render: function() {
 
 		var attending = this.state.users.attending;
 
@@ -91,7 +91,7 @@ module.exports = React.createClass({
 			if(eventData) {
 				var countEvent = 0;
 				for ( event in eventData )   {
-				   if(eventData.hasOwnProperty(event)) { 
+				   if(eventData.hasOwnProperty(event)) {
 				      countEvent++;
 				   }
 				}
@@ -110,10 +110,10 @@ module.exports = React.createClass({
 		    }.bind(this));
 		}
 
-		return <div className="dashboard"> 
+		return <div className="dashboard">
 					<div className="dashboard__header">
 						<Link to={`/dashboard`}>
-							<img src="../img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
+							<img src="http://localhost/confetti_app/img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
 						</Link>
 
 						<a onClick={this.handleLogout}>Logout</a>
@@ -132,7 +132,7 @@ module.exports = React.createClass({
 								</div>
 								<div className="column">
 									<span className="badge badge--large">{countAttending}</span>
-									<span className="badge--text-large">Attending</span> 
+									<span className="badge--text-large">Attending</span>
 								</div>
 							</div>
 						</div>
@@ -141,24 +141,24 @@ module.exports = React.createClass({
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									<Link to={`/dashboard`}>Dashboard</Link>
+									<Link to={`/`}>Dashboard</Link>
 								</div>
 							</div>
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									<Link to={`/dashboard/guests/`}>Guests</Link>
+									<Link to={`/guests/`}>Guests</Link>
 								</div>
 							</div>
 
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									<Link to={`/dashboard/events/`}>Events</Link>
+									<Link to={`/events/`}>Events</Link>
 								</div>
 							</div>
 							<div className="dashboard-grid__column-half">
 								<div className="dashboard-grid--nest">
-									<Link to={`/dashboard/settings/`}>Settings</Link>
+									<Link to={`/settings/`}>Settings</Link>
 								</div>
 							</div>
 
@@ -176,7 +176,7 @@ module.exports = React.createClass({
 						<div className="dashboard-grid--nest">
 
 							{this.props.children ? this.props.children : <Attending />}
-							
+
 						</div>
 					</div>
 
@@ -193,7 +193,6 @@ module.exports = React.createClass({
 	handleLogout: function() {
     	ref.unauth();
     	this.setState({ loggedIn: false });
-    	window.location.href = '/#/';
   	},
   	handleDrop: function (files) {
   		var authData = ref.getAuth();
@@ -205,7 +204,7 @@ module.exports = React.createClass({
 
    //          firebaseRef.child("settings").update({
 			// 	image: file.name
-			// }); 
+			// });
 
         });
 
@@ -234,7 +233,7 @@ module.exports = React.createClass({
 				this.setState({ sendingInvites: false });
 			}.bind(this)
 		});
-		
+
 	}
 
 })

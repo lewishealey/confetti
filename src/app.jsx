@@ -51,7 +51,7 @@ var App = React.createClass({
     // If user is logged in show dashboard
     if (authData) {
 
-      return <div>{this.props.children}</div>
+      return <div><Dashboard>{this.props.children}</Dashboard></div>
 
     } else {
 
@@ -166,11 +166,9 @@ var App = React.createClass({
 var routes = (
   <Router history={new HashHistory}>
     <Route path="/" component={App}>
-        <Route path="dashboard" component={Dashboard}>
           <Route path="guests" component={Guests} />
           <Route path="events" component={Events} />
           <Route path="settings" component={Settings} />
-        </Route>
       </Route>
       <Route path="page" component={View}>
           <Route path=":userId/:guestId" component={ViewGuest} />

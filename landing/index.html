@@ -1,0 +1,180 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cnftti - Your guests, managed</title>
+    <!-- You can use open graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+	<meta property="og:url"           content="http://www.your-domain.com/your-page.html" />
+	<meta property="og:type"          content="website" />
+	<meta property="og:title"         content="Your Website Title" />
+	<meta property="og:description"   content="Your description" />
+	<meta property="og:image"         content="http://www.your-domain.com/path/image.jpg" />
+
+  <script src="https://cdn.optimizely.com/js/5150340131.js"></script>
+</head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+
+
+  <body>
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.6&appId=924962840952453";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <header class="header">
+
+        <div class="container">
+
+          <div class="row">
+
+          <div class="col-md-12 tac">
+            <img src="img/confetti.png" class="header__logo">
+          </div>
+
+          <div class="col-md-8 col-md-offset-2 tac">
+            <h1 class="header__title">The only wedding website, RSVP & planning tool you need</h1>
+            <h4 class="header__sub">A painless online rsvp website that helps you communicate with <br>your guests like never before. Register now for early access.</h4>
+
+            <div class="form-inline header__signup">
+              <div class="form-group">
+                <input type="text" class="form-control" id="email" placeholder="Your email address">
+              </div>
+              <a href="#" class="btn btn--gold" id="email-submit">Get beta access</a>
+            </div>
+
+          </div>
+
+          <div class="col-md-8 col-md-offset-2">
+              <img src="img/screenshot-dashboard.png" class="header__screenshot">
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <canvas id="world"></canvas>
+
+    <section class="section">
+
+      <div class="container">
+
+        <div class="col-md-12 tac">
+          <h1 class="section__title">Some of our features</h1>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-4 col-md-offset-2">
+            <div class="card">
+              <h4>Full guest list management</h4>
+              <p>A guest list planning tool that makes adding guests as easy as pie. Import via csv, excel or add the tradiational way.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card">
+              <h4>Create a registry from anything</h4>
+              <p>Create your gift registry with any online retailer. Simply enter the url and we'll do all the magic to make it happen. We also support multiple registries.</p>
+            </div>
+          </div>
+
+          <div class="clearboth"></div>
+
+          <div class="col-md-4 col-md-offset-2">
+            <div class="card">
+              <h4>Flexible invite builder</h4>
+              <p>Put your personal touch to your online invite. Start from one of our 30 pre-set templates and customise until your hearts content! Add custom pages, content, directions and much more.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card">
+              <h4>Live social stream</h4>
+              <p>Create your hastag and watch your friends send love via Facebook, Instagram & Twitter. We'll also save them in a gallery for you to view after the fun.</p>
+            </div>
+          </div>
+
+          <div class="col-md-12 tac">
+            <div class="section__follow">
+              <span class="section__follow-text">Tweet this page</span>
+              <span>
+                <img src="img/twitter.png">
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <footer class="footer">
+
+        <div class="container tac">
+          <h3>Get access to the new era of wedding rsvp websites</h3>
+          <p>Enter your email to get FREE access before public release. (RRP £99)</p>
+
+          <div class="form-inline header__signup">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Enter your email address">
+            </div>
+            <a href="#" class="btn btn--gold">Get beta access</a>
+          </div>
+
+
+        </div>
+
+      </footer>
+
+      <div class="copyright">
+
+        <div class="container">
+          <div class="row">
+
+            <div class="col-md-4">
+              Copyright 2016 Cnftti.com
+            </div>
+
+            <div class="col-md-8 tar">
+              Made with love by @getconfetti
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76827022-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+    <script src="main.js"></script>
+  </body>
+</html>
