@@ -9,75 +9,84 @@ var ListGuest = require('./list-guest');
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
-  return { 
-      authId: false,
-      guests: false,
-      events: false,
-      addGuest: false,
-      eventChoices: [],
-      user: false
+  return {
+      eventId: false
     }
   },
   componentWillMount: function() {
 
-    // Preload guest & event data
-    var authData = ref.getAuth();
+    if(this.props.user && this.props.user.events) {
+      var events = this.props.user.events;
 
-    var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
-    userRef = new Firebase(rootUrl + 'users/' + authData.uid);
-
-    // Bind guest
-    this.bindAsObject(guestRef, 'guests');
-    this.bindAsObject(userRef, 'user');
-
-    // Set auth as a state
-    this.setState({ authId: authData.uid});
-
-  },
-  render: function() {
-    return <div>
-
-    <div className="guest__column">
-
-            <div className="column column__half">
-                    <h2>Whos attending</h2>
-                </div>  
-
-            <div className="cont row">
-                <div className="column">
-                  Name
-                </div>
-                <div className="column__double">
-                  Events
-                </div>
-              </div>
-
-            {this.renderList()}
-          </div>
-    </div>
-  },
-  renderList: function() {
-    if(this.state.user) {
-      console.log(this.state.user.attending);
-    }
-
-    // Go through list of guests
-    if(! this.state.user.attending) {
-      return <h4>
-        No one is attending :(, Add a guest to get started
-      </h4>
-    } else {
-      var children = [];
-
-      for(var key in this.state.user.attending) {
-        var guest = this.state.user.guests[key];
-        guest.key = key;
-        children.push(
-          <ListGuest guest={this.state.user.guests[key]} key={key} userId={this.state.authId} attending={true}></ListGuest>
-        )
+      var firstProp;
+      for(var key in events) {
+          if(events.hasOwnProperty(key)) {
+              firstProp = key;
+              break;
+          }
       }
 
-      return children;
+      if(firstProp) {
+        this.setState({eventId: firstProp})
+      }
+
     }
-  }
+
+  },
+  toggleEvent: function(key) {
+    this.setState({eventId: key});
+  },
+  render: function() {
+
+    if(this.props.user && this.props.user.events) {
+      var events = this.props.user.events;
+    }
+
+    return <div>
+
+    <div className="row">
+
+        <div className="col-md-6">
+            <h4>Whos attending</h4>
+            <p>See which guests are attending <a href="#">Add more guests</a></p>
+        </div>
+
+    </div>
+
+    <div className="row">
+
+      <div className="col-md-12">
+
+        <div className="event-bar">
+          {this.props.user.events &&
+            Object.keys(this.props.user.events).map(function (key) {
+              if(this.props.user.events[key].attending) {
+                return <div className={"event-bar__item " + (this.state.eventId == key ? "active" : "")} onClick={this.toggleEvent.bind(this,key)}>
+                  {this.props.user.events[key] ? this.props.user.events[key].name : null}
+                </div>
+              }
+            }.bind(this))
+          }
+          <div className="event-bar__item event-bar__item--add">
+            <button onClick={this.onToggleAddEvent.bind(this,"add","event")}><i className="material-icons">add</i> Add a new event</button>
+          </div>
+        </div>
+
+        {this.state.eventId &&
+          Object.keys(this.props.user.events[this.state.eventId].attending).map(function (key) {
+            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true}></ListGuest>
+          }.bind(this))
+        }
+
+      </div>
+
+    </div>
+
+
+  </div>
+},
+  onToggleAddEvent: function(action,type) {
+		this.props.handleAction(action,type);
+	}
+
 });

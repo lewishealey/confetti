@@ -1,25 +1,19 @@
 var React = require('react');
 var ReactFire = require('reactfire');
 var Firebase = require('firebase');
-var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
+var rootUrl = 'https://boiling-fire-2669.firebaseio.com/users/';
 var JQuery = require('jquery');
+
+var axios = require('axios');
 
 var ViewUser = require('./view-user');
 var ViewGuest = require('./view-new');
 
-// Spotify
-var SpotifyWebApi = require('spotify-web-api-js');
-
-
-// credentials are optional
-var spotifyApi = new SpotifyWebApi({
-  clientId : '2888525482b94ccb86ae7ee9469bab07',
-  clientSecret : '6df8e93ea2ba49c6ae90951fea0e2f9e',
-  redirectUri : 'http://confetti:8888/#/dashboard/'
-});
+var root = "http://localhost:8888/confetti/";
 
 //https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
 
+var authid;
 
 module.exports = React.createClass({
   mixins: [ReactFire],
@@ -34,56 +28,51 @@ module.exports = React.createClass({
   },
   componentWillMount: function() {
 
-    if(this.props.params.userId) {
-      userRef = new Firebase(rootUrl + 'users/' + this.props.params.userId);
-      // Bind Events, Meals & Guests to states
-      this.bindAsObject(userRef, 'user');
-    }
+      this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.params.userId);
+
+      this.bindAsObject(this.fb, "user");
+
+  },
+  componentDidUpdate: function() {
 
   },
   componentDidMount: function() {
+
     this.setState({
       loaded: true
     });
 
   },
-  handleTrack: function(trackId) {
+  handleTrack: function(guestId,artistName,trackName,albumImage,trackHref,trackId,trackUri) {
+    var timeInMs = Date.now();
 
-  },
-  searchTrack: function(event) {
 
-    spotifyApi.searchTracks(event.target.value).then(function(data) {
-        if( data ) {
-          this.setState({ tracks: data.tracks.items });
-        }
+    this.fb.child("playlist/" + guestId).update({
+      id: trackId,
+      date_created: timeInMs,
+      guest_id: guestId,
+      track_name: trackName,
+      artist_name: artistName,
+      album_image: albumImage,
+      uri: trackUri
+
+    }, function(error) { if (error) { console.log("Nope to add track" + error);  } else {
+
+        // Success
+        console.log("Added track " + trackId + " " + guestId + " " + artistName);
+
+      } //userRef.child("playlist/")
+
     }.bind(this));
 
   },
   render: function() {
+    console.log(this.state.user);
 
     if(this.props.params.userId && this.props.params.guestId) {
-      // console.log("Guest");
     } else {
-      // console.log("User");
-      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} handleEmailState={this.state.emailState} step={this.state.step} onStep={this.handleStep}/>
+      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail}  step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack}/>
     }
-
-    // If component is loaded
-    // if(this.state.loaded && this.state.user) {
-    //
-    //   var content = Object.keys(this.state.user.invited[this.props.params.guestId]).map(function (key, i) {
-    //
-    //     return <ViewEvent key={i} id={key} i={i} userId={this.props.params.userId} guestId={this.props.params.guestId} />
-    //
-    //   }.bind(this));
-    //
-    // } else {
-    //
-    //   var content = "Loading your page";
-    //
-    // }
-
-//<input type="text" refs="track search" onChange={this.searchTrack} />
 
   return <div className="view">
 
@@ -106,28 +95,6 @@ module.exports = React.createClass({
             {content}
           </div>
 
-          <div className="cont cont__flex-row">
-            Add a song to spotify
-          </div>
-
-            {this.state.tracks &&
-
-              Object.keys(this.state.tracks).map(function (key, i) {
-                if(i < 10) {
-                return <div className="cont cont__flex-row">
-                    <div className="column">
-                      {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
-                    </div>
-                    <div className="column">
-                      <button onClick={this.handleTrack.bind(this,this.state.tracks[key].id)}>Choose</button>
-                    </div>
-                  </div>
-                }
-
-              }.bind(this))
-
-            }
-
         </div>
 
 
@@ -143,8 +110,19 @@ module.exports = React.createClass({
     if(truth) {
 
       // Add attending object to event
-      userRef.child("attending/" + guest).update({
+      this.fb.child("attending/" + guest).update({
         date_created: timeInMs,
+
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+
+          // Success
+          console.log("Attending " + guest + " " + event + " " + truth);
+
+        } //userRef.child("attending/")
+
+      }.bind(this));
+
+      this.fb.child("attending/" + guest + "/events/").update({
         [event]: true
 
         }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
@@ -156,7 +134,7 @@ module.exports = React.createClass({
 
       }.bind(this));
 
-      userRef.child("events/" + event + "/attending/").update({
+      this.fb.child("events/" + event + "/attending/").update({
 
           [guest]: true
 
@@ -169,21 +147,45 @@ module.exports = React.createClass({
 
       }.bind(this));
 
-      userRef.child("events/" + event + "/notattending/").remove();
-      userRef.child("notattending/" + guest + "/" + event).remove();
+      this.fb.child("events/" + event + "/notattending/").remove();
+      this.fb.child("notattending/" + guest + "/events/" + event).remove();
 
       // Set state for new view
       this.setState({ responded: "attending" });
 
+      axios.post(root + 'server/mail/notification_attending.php', {
+        firstName: 'Fred',
+        lastName: 'Flintstone'
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
 
     } else {
-      userRef.child("events/" + event + "/attending/").remove();
-      userRef.child("attending/" + guest + "/" + event).remove();
+      this.fb.child("events/" + event + "/attending/").remove();
+      this.fb.child("attending/" + guest + "/events/" + event).remove();
 
       // Add attending object to event
-      userRef.child("notattending/" + guest).update({
-        date_created: timeInMs,
+      this.fb.child("notattending/" + guest + "/events/").update({
         [event]: true
+
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+
+          // Success
+          console.log("fafsfsa " + guest + " " + event + " " + truth);
+
+        } //userRef.child("attending/")
+
+      }.bind(this));
+
+
+      // Add attending object to event
+      this.fb.child("notattending/" + guest).update({
+        date_created: timeInMs,
 
         }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
 
@@ -194,7 +196,8 @@ module.exports = React.createClass({
 
       }.bind(this));
 
-      userRef.child("events/" + event + "/notattending/").update({
+
+      this.fb.child("events/" + event + "/notattending/").update({
 
           [guest]: true
 
@@ -216,7 +219,7 @@ module.exports = React.createClass({
     // console.info(mealName + "/" + courseName + "/" + eventName + "/" + guestName)
     var timeInMs = Date.now();
 
-    userRef.child("attending/" + guestName + "/" + eventName + "/" + courseName).update({
+    this.fb.child("attending/" + guestName + "/events/" + eventName + "/" + courseName).update({
         date_created: timeInMs,
         meal_name: mealName
     });
@@ -226,18 +229,16 @@ module.exports = React.createClass({
 
     if(isEmail(value)) {
 
-      userRef.child("guests/" + guest).update({
-          "email_address": value
+      this.fb.child("guests/" + guest).update({
+          "email": value
           }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
-            console.log("updated" + guest + "email_address with " + value);
+            console.log("updated" + guest + "email with " + value);
           }
-
-          this.setState({ emailState: true });
 
       }.bind(this));
 
     } else {
-      this.setState({ emailState: "Not valid" });
+      // Error
     }
 
 

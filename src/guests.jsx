@@ -8,13 +8,19 @@ var ref = new Firebase(rootUrl);
 var ListGuest = require('./list-guest');
 var Choice = require('./choice');
 
+function logging(name,object,type) {
+	if(type == "obj") {
+		console.log(object);
+	} else {
+		console.log(name + ": " + object);
+	}
+}
+
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
 	return {
 			authId: false,
-			guests: false,
-			events: false,
 			addGuest: false,
 			eventChoices: []
 		}
@@ -23,30 +29,28 @@ module.exports = React.createClass({
 
 		// Preload guest & event data
 		var authData = ref.getAuth();
-
-		var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
-		var eventRef = new Firebase(rootUrl + 'users/' + authData.uid + "/events/");
-
-		// Bind guest & events to states
-    	this.bindAsObject(guestRef, 'guests');
-      	this.bindAsObject(eventRef, 'events');
-
-      	// Set auth as a state
-    	this.setState({ authId: authData.uid});
+    this.setState({ authId: authData.uid});
 
 	},
 	render: function() {
 
-		if(this.state.events) {
+		if(this.props.user.events) {
 			// Loop through event choices object for simple toggle
-			var eventOptions = Object.keys(this.state.events).map(function (key, i) {
-				return <Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} />
+			var eventOptions = Object.keys(this.props.user.events).map(function (key, i) {
+				return <Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} />
 			}.bind(this));
 		} else {
 			var eventOptions = "Not set";
 		}
 
-
+		if(this.props.user.guests) {
+			// Loop through event choices object for simple toggle
+			var guestOptions = Object.keys(this.props.user.guests).map(function (key, i) {
+				return <ListGuest guest={this.props.user.guests[key]} key={key + i} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={false}></ListGuest>
+			}.bind(this));
+		} else {
+			var guestOptions = "Add a guest to get started";
+		}
 
 		// Add guest and guest list content - comes from this.props.children in router
 		return <div className="cont__flex-column">
@@ -71,7 +75,7 @@ module.exports = React.createClass({
 							</div>
 
 							<div className="column">
-								<p><input type="text" className="form-control" placeholder="Enter guest email (optional)" ref="guestEmail" name="email" required/></p>
+								<p><input type="text" className="form-control" placeholder="Enter guest email (optional)" ref="email" name="email" required/></p>
 							</div>
 
 							<div className="column column--spacing-d">
@@ -80,7 +84,7 @@ module.exports = React.createClass({
 							</div>
 
 							<div className="column">
-								<a className="btn btn--gold" onClick={this.handleGuest}>Add Guest</a>
+								<a className="btn btn--gold" onClick={this.handleGuest.bind(this)}>Add Guest</a>
 							</div>
 
 						</div>
@@ -93,16 +97,16 @@ module.exports = React.createClass({
 		            		<p>View your wonderful guests</p>
 		        		</div>
 
-						<div className="cont row">
+						<div className="cont">
 					      <div className="column">
-					        Name
+					        <strong>Name</strong>
 					      </div>
 					      <div className="column__double">
-					        Events
+					        <strong>Events</strong>
 					      </div>
 					    </div>
 
-						{this.renderList()}
+							{guestOptions}
 						<p><a onClick={this.onToggleAddGuest} className="btn btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
 					</div>
 
@@ -112,105 +116,47 @@ module.exports = React.createClass({
 
 		</div>
 	},
-	renderList: function() {
-
-		// Go through list of guests
-		if(! this.state.guests) {
-			return <h4>
-			Add a guest to get started
-			</h4>
-		} else {
-			var children = [];
-
-			for(var key in this.state.guests) {
-				var guest = this.state.guests[key];
-				guest.key = key;
-				children.push(
-					<ListGuest guest={this.state.guests[key]} key={key} userId={this.state.authId} attending={false}></ListGuest>
-				)
-			}
-
-			return children;
-		}
+	handleDeleteGuest: function(id) {
+		this.props.handleDeleteGuest(id,"delete");
+	},
+	handleEditGuest: function(fname,lname,email,choices,id) {
+		this.props.handleEditGuest(fname,lname,email,choices,id,"edit");
 	},
 	handleGuest: function(e) {
 		// Prevent anchor firing
 		e.preventDefault();
 
-		// Get time
-		var timeInMs = Date.now();
-		var authData = ref.getAuth();
-
-		// Random no to attach to name
-		var randomNo = Math.floor(Math.random() * 1000) + 1;
-
+		// Vars
+		var fname = this.refs.fName.getDOMNode().value;
+		var lname = this.refs.lName.getDOMNode().value;
+		var email = this.refs.email.getDOMNode().value;
 		var choices = this.state.eventChoices;
-		var string = (this.refs.fName.getDOMNode().value + this.refs.lName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
-		var guestRef = new Firebase(rootUrl + 'users/' + authData.uid + "/guests/");
-		var inviteRef = new Firebase(rootUrl + 'users/' + authData.uid + "/invited/");
 
-		var events = {};
+		// Validation
+		if(!fname) { alert("enter fname"); }
+		if(!lname) { alert("enter lname"); }
+		// if(choices.length < 1) { alert("Please select an event"); }
+		if (choices === "[]") {
+			alert("Please select an event");
+		}
 
-		// Loop through EventChoices state object
-		{Object.keys(this.state.eventChoices).map(function(key) {
+		// console.log(choices);
 
-			// Get event data for each choice
-			var eventRef = new Firebase(rootUrl + 'users/' + this.state.authId + "/events/" + key + "/guests/");
+		if(fname && lname && choices) {
+			this.props.handleGuest(fname,lname,email,choices,null,"add");
 
-			// Invited object
-			inviteRef.child(string).update({
-				[key]: true
-	        }, function(error) {
+			// Resets
+			this.refs.fName.getDOMNode().value = "";
+			this.refs.lName.getDOMNode().value = "";
+			this.refs.email.getDOMNode().value = "";
+			this.setState({eventChoices: [] });
+		}
 
-	  		// ERROR GUEST
-	  		if (error) {
-	  			console.log("Attending guest could not be saved" + error); } else {
-	  			console.log("Attending guest saved");
-	  		}
-
-			}.bind(this));
-
-			// Set details to /events data
-	    	eventRef.update({
-				[string] : true
-	        }, function(error) {
-
-	  		// ERROR EVENT
-  			if (error) { console.log("Event could not be saved" + error);
-  				} else {
-  					console.log(key + " event saved");
-
-  			}
-
-			}.bind(this));
-
-		}.bind(this))};
-
-		// Save guest
-		guestRef.child(string).set({
-			fname: this.refs.fName.getDOMNode().value,
-			lname: this.refs.lName.getDOMNode().value,
-        	email: this.refs.guestEmail.getDOMNode().value,
-        	date_created: timeInMs,
-        	events: choices,
-        	meals: false,
-        	dietary: false,
-        	spotify_song: false,
-        	side: false
-        }, function(error) {
-
-  		// ERROR GUEST
-  		if (error) { console.log("Guest could not be saved" + error); } else {
-  			console.log("Guest saved");
-
-  			this.refs.fName.getDOMNode().value = "";
-				this.refs.lName.getDOMNode().value = "";
-  			this.refs.guestEmail.getDOMNode().value = "";
-  			this.setState({eventChoices: []});
-
-  		}
-
-		}.bind(this));
+		// Dev
+		// logging("Fname",this.refs.fName.getDOMNode().value,false);
+		// logging("Lname",this.refs.lName.getDOMNode().value,false);
+		// logging("Email",this.refs.email.getDOMNode().value,false);
+		// logging(false,this.state.eventChoices,"obj");
 
 	},
 	handleChoice: function(choice,id,truth) {
@@ -225,7 +171,7 @@ module.exports = React.createClass({
 		}
 
 		// DEV CHOICES
-		// console.log(this.state.eventChoices);
+		//  console.log(this.state.eventChoices);
 
 	},
 	onToggleAddGuest: function() {

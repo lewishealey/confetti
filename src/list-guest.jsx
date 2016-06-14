@@ -4,6 +4,31 @@ var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ReactFire = require('reactfire');
 var Choice = require('./choice');
 
+function logging(name,object,type) {
+	if(type == "obj") {
+		console.log(object);
+	} else {
+		console.log(name + ": " + object);
+	}
+}
+
+function date(timestamp) {
+	var date = new Date(timestamp);
+
+	var year = date.getUTCFullYear();
+	var month = date.getUTCMonth();
+	var day = date.getUTCDate();
+
+	//month 2 digits
+	month = ("0" + (month + 1)).slice(-2);
+
+	//year 2 digits
+	year = year.toString().substr(2,2);
+
+	return formattedDate = day + '/' + month + "/" + year;
+}
+
+
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
@@ -16,14 +41,10 @@ module.exports = React.createClass({
     }
   },
   componentWillMount: function() {
-      this.fb = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.props.guest.key);
-      var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/");
-      this.bindAsObject(eventRef, 'events');
+    if(this.props.user && this.props.user.guests[this.props.id].events) {
+      this.setState({ eventChoices: this.props.user.guests[this.props.id].events });
+    }
 
-      userRef = new Firebase(rootUrl + 'users/' + this.props.userId);
-      this.bindAsObject(userRef, 'user');
-
-      this.setState({ guest: this.props.guest })
   },
   render: function() {
   return <div>
@@ -33,70 +54,78 @@ module.exports = React.createClass({
   },
   renderList: function() {
 
-    if(this.state.events) {
+
+    if(this.props.user.events) {
           // Loop through event choices object for simple toggle
-          var eventOptions = Object.keys(this.state.events).map(function (key, i) {
-            return <div><Choice key={key} id={key} value={i} name={this.state.events[key].name} handleChoice={this.handleChoice} active={this.state.guest.events ? (this.state.guest.events[key] ? true : false) : ''}/></div>
+          var eventOptions = Object.keys(this.props.user.events).map(function (key, i) {
+            return <div><Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} active={this.props.guest.events ? (this.props.guest.events[key] ? true : false) : ''}/></div>
           }.bind(this));
         } else {
           var eventOptions = "Not set";
     }
 
     if(this.state.edit) {
-      return <div className="cont">
+      return <div className="cont cont__flex-column">
 
-        <div className="guest__column-half">
-          <input type="text" className="form-control" defaultValue={this.state.guest.fname} onChange={this.handleInputChange.bind(this,"fname")} />
+        <div className="row">
+          <div className="col-md-6">
+          <label>First name</label>
+            <input type="text" className="form-control" defaultValue={this.props.guest.fname} ref="fName" />
+          </div>
+          <div className="col-md-6">
+            <label>Last name</label>
+            <input type="text" className="form-control" defaultValue={this.props.guest.lname} ref="lName" />
         </div>
+      </div>
+      <div className="row">
 
-        <div className="guest__column-half">
-          <input type="text" className="form-control" defaultValue={this.state.guest.lname} onChange={this.handleInputChange.bind(this,"lname")} />
-        </div>
-
-        <div className="guest__column">
-          <input type="text" className="form-control" defaultValue={this.state.guest.email} onChange={this.handleInputChange.bind(this,"email")} />
-        </div>
-
-        <div className="guest__column">
-
-          <input type="text" className="form-control" defaultValue={this.state.guest.address} onChange={this.handleInputChange.bind(this,"address")} />
-          <input type="text" className="form-control" defaultValue={this.state.guest.postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
-        </div>
-
-        <div className="guest__column">
-          {eventOptions}
-        </div>
-
-
-        <div className="guest__column">
-          <a onClick={this.handleEditClick}>Save</a>
+        <div className="col-md-12">
+          <label>Email</label>
+          <input type="text" className="form-control" defaultValue={this.props.guest.email} ref="email" />
         </div>
 
       </div>
 
+				<div className="col-md-12">
+          {eventOptions}
+        </div>
+
+        <div className="col-md-12">
+          <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn-default">Cancel</button>
+        </div>
+
+    </div>
     } else {
 
-      return <div className="cont row">
+      return <div className="row">
 
-        <div className="column">
-          {this.props.guest.fname + " " + this.props.guest.lname} <span className="column--rev-hover">{this.props.guest.email}</span>
-        </div>
+				<div className="guest">
+					<div className="col-md-4">
+	          {this.props.guest.fname + " " + this.props.guest.lname} <span className="column--rev-hover">{this.props.guest.email}</span>
+	        </div>
 
-        <div className={this.props.attending ? "column column__double" : "column"} >
-          {this.props.guest.events &&
-            Object.keys(this.props.guest.events).map(function (event) {
-              return <span>{this.state.events[event] ? this.state.events[event].name : null} </span>
-            }.bind(this))
-          }
-        </div>
+					<div className="col-md-6">
+						Updated: {date(this.props.guest.date_updated)} | Created: {date(this.props.guest.date_created)}
+					</div>
 
-        {this.props.attending == false &&
-          <div className="column guest__edit">
-            <a href={"/confetti_app/#/page/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a>
-            <a onClick={this.handleEditClick}> Edit </a>
-            <a onClick={this.handleDeleteClick}>Delete</a>
-          </div>
-        }
+					{this.props.attending == false &&
+		        <div className="col-md-4">
+		          {this.props.guest.events &&
+		            Object.keys(this.props.guest.events).map(function (event) {
+		              return <span>{this.props.user.events[event] ? this.props.user.events[event].name : null} </span>
+		            }.bind(this))
+		          }
+		        </div>
+					}
+
+	        {this.props.attending == false &&
+	          <div className="col-md-4">
+	            <a href={"/confetti_app/#/page/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a>
+	            <a onClick={this.handleEditClick}> Edit </a>
+	            <a onClick={this.handleDeleteClick}>Delete</a>
+	          </div>
+	        }
+				</div>
 
       </div>
     }
@@ -104,92 +133,37 @@ module.exports = React.createClass({
 
   },
   handleEditClick: function() {
-    this.setState({ edit: ! this.state.edit }) 
+    this.setState({ edit: ! this.state.edit })
   },
-  handleDeleteClick: function(e) {
-    e.preventDefault();
-
-    // Remove guest
-    this.fb.remove();
-
-    userRef.child("attending/" + this.state.guest.key).remove();
-    userRef.child("notattending/" + this.state.guest.key).remove();
-    userRef.child("invited/" + this.state.guest.key).remove();
-
-    Object.keys(this.props.guest.events).map(function (event) {
-
-      // Remove guest from event
-      userRef.child("events/" + event + "/guests/" + this.state.guest.key).remove();
-      userRef.child("events/" + event + "/attending/" + this.state.guest.key).remove();
-      userRef.child("events/" + event + "/notattending/" + this.state.guest.key).remove();
-
-    }.bind(this))
-
+  handleDeleteClick: function() {
+    var id = this.props.guest.key;
+    this.props.handleDeleteGuest(id);
   },
-  handleInputChange: function(string, event) {
-    var value = event.target.value;
+  handleChange: function() {
+    var fname = this.refs.fName.getDOMNode().value;
+		var lname = this.refs.lName.getDOMNode().value;
+		var email = this.refs.email.getDOMNode().value;
+		var choices = this.state.eventChoices;
+    var id = this.props.id;
 
-    this.fb.update({
-          [string]: value
-        }, function(error) { if (error) {
-          console.log("Could not " + value + error);
-        } else {
-          console.log("Set " + value + " to " + string);
-        }
-    });
+    // logging("Fname",this.refs.fName.getDOMNode().value,false);
+    // logging("Lname",this.refs.lName.getDOMNode().value,false);
+    // logging("Email",this.refs.email.getDOMNode().value,false);
+    //logging(false,this.state.eventChoices,"obj");
 
+    this.props.handleEditGuest(fname,lname,email,choices,id);
+    this.setState({ edit: ! this.state.edit });
   },
   handleChoice: function(choice,id,truth) {
-    console.log(choice + id + truth);
-    var eventRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/events/" + id + "/guests/" + this.state.guest.key);
-    var attendingRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/invited/");
 
+    var choices = this.state.eventChoices;
+
+    //Toggle - If true then add to state if nto remove
     if(truth == true) {
-
-    // Add referent to guest
-    eventRef.update({
-          attending: truth
-        }, function(error) { if (error) {
-          console.log("Could not " + id + error);
-        } else {
-          console.log("Set " + id + " to " + truth);
-        }
-    });
-
-    // Add reference to event
-    this.fb.child("events").update({
-          [id]: truth
-        }, function(error) { if (error) {
-          console.log("Could not " + id + error);
-        } else {
-          console.log("Set " + id + " to " + truth);
-        }
-    });
-
-
-    // Add reference to attending
-    attendingRef.child(this.state.guest.key).update({
-          [id]: truth
-        }, function(error) { if (error) {
-          console.log("Could not " + id + error);
-        } else {
-          console.log("Set attending" + id + " to " + truth);
-        }
-    });
-
-
+      choices[id] = true;
     } else {
-      var guestRef = new Firebase(rootUrl + 'users/' + this.props.userId + "/guests/" + this.state.guest.key);
-
-      // Remove Event from guest
-      this.fb.child("/events/" + id).remove();
-
-      attendingRef.child(this.state.guest.key + "/" + id).remove();
-
-      // Remove guest from event
-      eventRef.remove();
-
-
+      delete choices[id];
+      this.setState({eventChoices: choices});
     }
 
   }

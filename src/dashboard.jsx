@@ -3,7 +3,9 @@ var ReactFire = require('reactfire');
 var Firebase = require('firebase');
 rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var Guests = require('./guests');
+var Events = require('./events');
 var Attending = require('./attending');
+var Settings = require('./settings');
 var JQuery = require('jquery');
 
 // Upload file shiz
@@ -25,6 +27,15 @@ var Link = require('react-router').Link
 
 date = Date.now();
 
+function logging(name,object,type) {
+	if(type == "obj") {
+		console.log(object);
+	} else {
+		console.log(name + ": " + object);
+	}
+}
+
+
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
@@ -35,58 +46,60 @@ module.exports = React.createClass({
 			authId: false,
 			guests: false,
 			files: [],
-			sendingInvites: false
+			sendingInvites: false,
+			menu: false
 		}
 	},
 	componentWillMount: function() {
 		// Get user data
-		var authData = ref.getAuth();
-		firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
-    	this.bindAsObject(firebaseRef, 'users');
-
-    	this.setState({ authId: authData.uid});
 	},
 	componentDidUpdate: function() {
-		if(this.state.users.guests) {
+		if(this.props.user.guests) {
 
 		}
+	},
+	handleMenu: function(type) {
+		this.setState({ menu: type});
 	},
 	render: function() {
 
-		var attending = this.state.users.attending;
-
-		// Count the guests
-		if(attending) {
-			var countAttending = 0;
-			for ( attend in attending )   {
-			   if(attending.hasOwnProperty(attend)) {
-			      countAttending++;
-			   }
-			}
+		if(this.props.user && this.props.user.attending) {
+			var attending = this.props.user.attending;
+				var countAttending = 0;
+				for ( attend in attending )   {
+				   if(attending.hasOwnProperty(attend)) {
+				      countAttending++;
+				   }
+				}
 		} else {
 			var countAttending = 0;
 		}
 
-
-		var guests = this.state.users.guests;
-
-		// Count the guests
-		if(guests) {
-			var countGuests = 0;
-			for ( guest in guests )   {
-			   if(guests.hasOwnProperty(guest)) {
-			      countGuests++;
-			   }
-			}
+		if(this.props.user && this.props.user.guests) {
+			var guests = this.props.user.guests;
+				var countGuests = 0;
+				for ( guest in guests )   {
+					 if(guests.hasOwnProperty(guest)) {
+							countGuests++;
+					 }
+				}
 		} else {
 			var countGuests = 0;
 		}
 
-		var events = this.state.users.events;
+		if(this.props.user && this.props.user.events) {
+			var events = this.props.user.events;
+			// console.info(events);
+		}
 
-		function countEvents(id) {
+		function countEvents(id,type) {
+			var eventData;
 
-			var eventData = events[id].guests;
+			if(type === "guests") {
+				var eventData = events[id].guests;
+			} else {
+				var eventData = events[id].attending;
+			}
 
 			if(eventData) {
 				var countEvent = 0;
@@ -101,72 +114,76 @@ module.exports = React.createClass({
 
 		}
 
-		if(this.state.users.events) {
-			var userEvents = Object.keys(this.state.users.events).map(function(key, i) {
+		if(this.props.user && this.props.user.events) {
+			var userEvents = Object.keys(this.props.user.events).map(function(key, i) {
 
       		return (
-		        	<span key={i} className="count"><span className="count--blue">{countEvents(key) ? countEvents(key) : "0"}</span> {this.state.users.events[key].name}</span>
+						<span key={i} className="count"><span className="count--blue">{countEvents(key,"guests") ? countEvents(key,"guests") : "0"}</span> {this.props.user.events[key].name}</span>
 		      );
 		    }.bind(this));
+
+
+					var attendingEvents = Object.keys(this.props.user.events).map(function(key, i) {
+
+		      		return (
+				        	<span key={i} className="count"><span className="count--blue">{countEvents(key,"attending") ? countEvents(key,"attending") : "0"}</span> {this.props.user.events[key].name}</span>
+				      );
+				    }.bind(this));
+
 		}
+
 
 		return <div className="dashboard">
 					<div className="dashboard__header">
-						<Link to={`/dashboard`}>
-							<img src="http://localhost/confetti_app/img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
-						</Link>
+						<div className="dashboard__container cont">
 
-						<a onClick={this.handleLogout}>Logout</a>
+							<div className="menu">
+								<ul>
+									<li><button onClick={this.handleMenu.bind(this,"home")}>Home</button></li>
+									<li><button onClick={this.handleMenu.bind(this,"guests")}>Guests</button></li>
+									<li><button onClick={this.handleMenu.bind(this,"events")}>Events</button></li>
+									<li><button onClick={this.handleMenu.bind(this,"settings")}>Settings</button></li>
+								</ul>
+							</div>
+
+							<Link to={`/dashboard`}>
+								<img src="http://localhost/confetti_app/img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
+							</Link>
+
+							<div className="dashboard__welcome">
+								Welcome, <a onClick={this.handleLogout}>Logout</a>
+							</div>
+
+						</div>
 					</div>
 					<div className="dashboard-grid">
 
 						<div className="dashboard-grid__column">
-							<div className="dashboard-grid--nest dashboard-grid--dark column__flex-column">
+							<div className="dashboard-grid--nest dashboard-grid--dark column__flex-column dashboard-grid-breakdown">
 
-								<div className="column">
-									<span className="badge badge--large">{countGuests}</span>
-									<span className="badge--text-large">Guests</span>
+								<div>
+									<h4 className="dashboard-grid__title">Your Breakdown</h4>
 								</div>
-								<div className="column">
-									<span>{userEvents}</span>
-								</div>
-								<div className="column">
-									<span className="badge badge--large">{countAttending}</span>
-									<span className="badge--text-large">Attending</span>
-								</div>
-							</div>
-						</div>
 
-						<div className="dashboard-grid__column-grid">
+								<div>
 
-							<div className="dashboard-grid__column-half">
-								<div className="dashboard-grid--nest">
-									<Link to={`/`}>Dashboard</Link>
+									<div className="row">
+										<div className="col-md-4">
+											<span className="badge--text-large">{countGuests} Guest{countGuests > 1 ? "s" : ""}</span>
+											<span className="dashboard-grid-count__events">{userEvents}</span>
+										</div>
+										<div className="col-md-4">
+											<span className="badge--text-large">{countAttending} Attending</span>
+											<span className="dashboard-grid-count__events">{attendingEvents}</span>
+										</div>
+									</div>
+
 								</div>
-							</div>
 
-							<div className="dashboard-grid__column-half">
-								<div className="dashboard-grid--nest">
-									<Link to={`/guests/`}>Guests</Link>
+								<div>
+									<span>Link: {"http://app.cnftti.com/#/page/" + this.props.user.username}</span>
 								</div>
-							</div>
 
-							<div className="dashboard-grid__column-half">
-								<div className="dashboard-grid--nest">
-									<Link to={`/events/`}>Events</Link>
-								</div>
-							</div>
-							<div className="dashboard-grid__column-half">
-								<div className="dashboard-grid--nest">
-									<Link to={`/settings/`}>Settings</Link>
-								</div>
-							</div>
-
-						</div>
-
-						<div className="dashboard-grid__column">
-							<div className="dashboard-grid--nest">
-								<button className="btn btn--invite" onClick={this.handleMail}>{this.state.sendingInvites ? "Sending" : "Send Invites"}</button>
 							</div>
 						</div>
 
@@ -175,24 +192,75 @@ module.exports = React.createClass({
 					<div className="dashboard__content">
 						<div className="dashboard-grid--nest">
 
-							{this.props.children ? this.props.children : <Attending />}
+							{this.renderComponent()}
 
 						</div>
 					</div>
 
 		</div>
 	},
-	handleOnb1: function(datastring, moment) {
-		console.log(datastring);
+	handleAction: function(action,type) {
+		this.props.handleAction(action,type);
+	},
+	renderComponent: function() {
 
-		firebaseRef.update({
-          onb1_wdate: datastring
-        });
+		if(this.state.menu) {
+			if(this.state.menu == "events") {
+       	return <Events user={this.props.user} handleEvent={this.handleEvent} handleEditGuest={this.handleEditEvent} handleDeleteGuest={this.handleDeleteEvent} handleAction={this.handleAction} />
+    	}
+			if(this.state.menu == "guests") {
+       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
+    	}
+			if(this.state.menu == "settings") {
+       	return <Settings user={this.props.user} />
+    	}
+			return <Attending user={this.props.user}  handleAction={this.handleAction} />
+
+		} else {
+			if(window.location.href.indexOf("events") > -1) {
+       	return <Events />
+    	}
+			if(window.location.href.indexOf("guests") > -1) {
+       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
+    	}
+			if(window.location.href.indexOf("settings") > -1) {
+       	return <Settings user={this.props.user}/>
+    	}
+			return <Attending user={this.props.user} handleAction={this.handleAction} />
+		}
 
 	},
+	handleDeleteEvent: function() {
+		// Pass props up
+
+	},
+	handleEditEvent: function() {
+		// Pass props up
+
+	},
+	handleEvent: function() {
+		// Pass props up
+
+	},
+	handleDeleteGuest: function(id,action) {
+		// Pass props up
+		this.props.handleGuest(null,null,null,null,id,action);
+	},
+	handleEditGuest: function(fname,lname,email,choices,id,action) {
+		// Pass props up
+		this.props.handleGuest(fname,lname,email,choices,id,action);
+	},
+	handleGuest: function(fname,lname,email,choices,id,action) {
+		// Pass props up
+		this.props.handleGuest(fname,lname,email,choices,id,action);
+	},
+	handleOnb1: function() {
+		var username = this.refs.step_1.getDOMNode().value;
+		// console.log(username);
+		this.props.handleUsername(username);
+	},
 	handleLogout: function() {
-    	ref.unauth();
-    	this.setState({ loggedIn: false });
+			this.props.handleLogout();
   	},
   	handleDrop: function (files) {
   		var authData = ref.getAuth();
@@ -200,7 +268,7 @@ module.exports = React.createClass({
   		var req = request.post('upload/');
         files.forEach((file)=> {
             req.attach(file.name, file);
-            console.log(file.name);
+            // console.log(file.name);
 
    //          firebaseRef.child("settings").update({
 			// 	image: file.name
@@ -210,7 +278,7 @@ module.exports = React.createClass({
 
         req.end(function(err, res){
     		// Do something
-    		console.log(err);
+    		// console.log(err);
 		});
 
 
@@ -229,7 +297,7 @@ module.exports = React.createClass({
 			data: dataString,
 			cache: false,
 			success: function(result){
-				console.log(result);
+				// console.log(result);
 				this.setState({ sendingInvites: false });
 			}.bind(this)
 		});

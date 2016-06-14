@@ -4,12 +4,13 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ref = new Firebase(rootUrl);
 
-var ListEvent = require('./list-event'); 
+var ListEvent = require('./list-event');
+
 
 module.exports = React.createClass({
 	mixins: [ReactFire],
 	getInitialState: function() {
-	return { 
+	return {
 			authId: false,
 			events: false,
 			guests: false,
@@ -19,15 +20,10 @@ module.exports = React.createClass({
 		}
 	},
 	componentWillMount: function() {
+		console.log(this.props.user)
 
 		// Preload guest & event data
 		var authData = ref.getAuth();
-		var firebaseRef = new Firebase(rootUrl + 'users/' + authData.uid);
-		var eventRef = new Firebase(rootUrl + 'users/' + authData.uid + "/events/");
-
-		// Bind Events to states
-	  	this.bindAsObject(eventRef, 'events'); 
-	  	this.bindAsObject(firebaseRef, 'users');
 
 	  	// Set auth as a state
 		this.setState({ authId: authData.uid});
@@ -35,22 +31,56 @@ module.exports = React.createClass({
 	},
 	render: function() {
 
+		if(this.props.user && this.props.user.events) {
+			var events = this.props.user.events;
+			// console.info(events);
+		}
+
+		function countEvents(id,type) {
+		  var eventData;
+
+		  if(type === "guests") {
+		    var eventData = events[id].guests;
+		  } else {
+		    var eventData = events[id].attending;
+		  }
+
+		  if(eventData) {
+		    var countEvent = 0;
+		    for ( event in eventData )   {
+		       if(eventData.hasOwnProperty(event)) {
+		          countEvent++;
+		       }
+		    }
+		  }
+
+		  return countEvent;
+
+		}
+
 	return <div>
 
-			{this.state.users &&
-	          <h4>{this.state.users.onb2_event ? "Events" : "Edit your events below" }</h4>
-	      	} 
-	       
-					{this.state.events &&
+			{this.props.user &&
+				<div className="row">
+					<div className="col-md-6">
+						<h4>{this.props.user.onb2_event ? "Events" : "Edit your events below" }</h4>
+					</div>
+					<div className="col-md-6 tar">
+						<button onClick={this.onToggleAddEvent.bind(this,"add","event")} className="btn btn-success">Add event</button>
+					</div>
+				</div>
+			}
 
-						<div className="cont column--space-between">
+					{this.props.user.events &&
 
-							{Object.keys(this.state.events).map(function (key, i) {
-								return <ListEvent event={this.state.events[key]} key={i} id={key} userId={this.state.authId} edit={this.state.edit} />
-								
+						<div className="row">
+
+							{Object.keys(this.props.user.events).map(function (key, i) {
+								return <ListEvent event={this.props.user.events[key]} user={this.props.user} key={i} id={key} userId={this.state.authId} edit={this.state.edit} countAttending={countEvents(key,"attending")} countGuests={countEvents(key,"guests")}/>
+
 							}.bind(this))}
 
-						<div className="column">
+						<div className="col-md-4">
 						{this.state.addEvent &&
 							<div>
 								<h4>Add Event</h4>
@@ -69,13 +99,13 @@ module.exports = React.createClass({
 
 								<label>Postcode</label>
 								<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
-								
+
 
 								<h5>Add meals</h5>
 								{this.state.meals &&
 									this.state.meals.map(function(meal, i) {
 										return <div key={i}>{meal} <a onClick={this.deleteMeal.bind(this, i) }>Delete</a></div>
-									}.bind(this)) 
+									}.bind(this))
 								}
 								<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" /><a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
 
@@ -84,7 +114,6 @@ module.exports = React.createClass({
 
 						}
 
-							<a onClick={this.onToggleAddEvent} className="btn">{this.state.addEvent ? "Hide Event Add" : "Add Event"}</a>
 						</div>
 
  						</div>
@@ -92,7 +121,7 @@ module.exports = React.createClass({
 
 
 
-	       </div> 
+	       </div>
 	},
 	handleEvent: function(e) {
 		e.preventDefault();
@@ -104,7 +133,7 @@ module.exports = React.createClass({
 		// Unique ID
 		var string = (this.refs.eventName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
 
-		// Times - need a date 
+		// Times - need a date
 		var fromTime = this.refs.eventFTime.getDOMNode().value;
 		var toTime = this.refs.eventTTime.getDOMNode().value;
 
@@ -178,7 +207,7 @@ module.exports = React.createClass({
 		this.setState({ meals: mealsState });
 		console.log(this.state.meals);
 	},
-	onToggleAddEvent: function() {
-		this.setState({ addEvent: ! this.state.addEvent });
+	onToggleAddEvent: function(action,type) {
+		this.props.handleAction(action,type);
 	}
 });

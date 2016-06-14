@@ -1,13 +1,26 @@
 var React = require('react');
 var ViewGuest = require('./view-guest');
 
+// Spotify
+var SpotifyWebApi = require('spotify-web-api-js');
+
+
+// credentials are optional
+var spotifyApi = new SpotifyWebApi({
+  clientId : '2888525482b94ccb86ae7ee9469bab07',
+  clientSecret : '6df8e93ea2ba49c6ae90951fea0e2f9e',
+  redirectUri : 'http://localhost/confetti_app/#/page/'
+});
+
 count = 1;
 
 module.exports = React.createClass({
   getInitialState: function() {
     return {
       loaded: false,
-      step: 1
+      step: 1,
+      emailState: false,
+      editTrack: false
     }
   },
   componentWillMount: function() {
@@ -32,12 +45,9 @@ module.exports = React.createClass({
 
     return <div className="guest-select">
 
-      <h4>Step {this.state.step} of 3</h4>
       <button onClick={this.onClearSearch}>Clear search</button>
 
-      {(!this.state.guest && this.state.step == 1) &&
         <input onChange={this.onSearchGuest} className="form-control" placeholder="Enter your name" ref="input-guest" required autoComplete="fname" />
-      }
 
       {this.state.guestSearch  &&
 
@@ -53,24 +63,23 @@ module.exports = React.createClass({
       }
 
       <div className="cont cont__flex-column">
-
+      {(this.state.guest_id) && //&& !this.state.guest.email
         <div className="column">
-          {(this.state.guest_id && this.state.step == 2) &&
             <div>
               <h4>Please enter your email address</h4>
               <p>This is so the happy couple can make announcements about anything important with the wedding.</p>
-                <input onChange={this.onHandleEmail} className={"form-control " + (this.props.handleEmailState && this.props.handleEmailState == true ? 'success' : 'error')}  placeholder="Enter your email address" ref="input-guest" name="email" />
+                <input onChange={this.onInputEmail} className={"form-control " + (this.state.emailState && this.state.emailState == true ? 'success' : 'error')}  placeholder="Enter your email address" ref="guestEmail" name="email" />
                 <small>We DO NOT use your email address for anything apart from communicating with the happy couple. We will actually delete your email from our records post-wedding.</small>
+                  <button onClick={this.onHandleEmail}>Proceed</button>
             </div>
-          }
           {this.props.handleEmailState ? this.props.handleEmailState : ''}
         </div>
 
-        {(this.state.step == 3) &&
+      }
+
           <div className="column">
             {content}
           </div>
-        }
 
         <div className="column">
           {this.state.guest_id &&
@@ -78,21 +87,78 @@ module.exports = React.createClass({
           }
         </div>
 
+        {(this.state.guest_id && !this.state.editTrack) &&
+          <div className="cont cont__flex-row">
+            Add a song to spotify
+            <input type="text" className="form-control" placeholder="Search for a track" onChange={this.searchTrack}/>
+          </div>
+        }
+
+          {(this.state.tracks && this.state.guest_id) &&
+
+            Object.keys(this.state.tracks).map(function (key, i) {
+              if(i < 10) {
+              return <div className="cont cont__flex-row">
+                  <div className="column">
+                    {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
+                  </div>
+                  <div className="column">
+                    <button onClick={this.handleTrack.bind(this,this.state.tracks[key])}>Choose</button>
+                  </div>
+                </div>
+              }
+
+            }.bind(this))
+
+          }
+
+          {(this.props.user.playlist && this.state.guest_id && this.props.user.playlist[this.state.guest_id]) &&
+            <div>
+              <h4>Added a track!</h4>
+              <div className="row">
+                <div className="col-md-3">
+                  <img src={this.props.user.playlist[this.state.guest_id].album_image} style={{width: "100%"}}/>
+                </div>
+                <div className="col-md-9">
+                  {this.props.user.playlist[this.state.guest_id].artist_name} - {this.props.user.playlist[this.state.guest_id].track_name}
+                </div>
+              </div>
+
+              <button onClick={this.onEditTrack}>Change your suggestion</button>
+
+            </div>
+          }
+
       </div>
 
     </div>
   },
+  onInputEmail: function(e) {
+
+    var value = e.target.value;
+    if(isEmail(value)) {
+      this.setState({ emailState: true });
+    } else {
+      this.setState({ emailState: "Not valid" });
+    }
+
+  },
   onHandleEmail: function(e) {
     // Pass email address and guest ID up to source of truth
-    var value = e.target.value;
+    var value = this.refs.guestEmail.getDOMNode().value;
 
-    // Pass data up to be saved
-    this.props.handleEmail(value,this.state.guest_id);
+    if(isEmail(value)) {
+        // Pass data up to be saved
+        this.props.handleEmail(value,this.state.guest_id);
 
-    // Set the step
-    this.setState({
-      step: 3
-    });
+        // Set the step
+        this.setState({
+          step: 3
+        });
+
+     } else {
+       alert("Incorrect email address");
+     }
 
   },
   onClearSearch: function() {
@@ -151,6 +217,29 @@ module.exports = React.createClass({
       step: 2
     });
 
+  },
+  onEditTrack: function() {
+    this.setState({ editTrack: !this.state.editTrack });
+  },
+  handleTrack: function(trackData) {
+    this.setState({ editTrack: !this.state.editTrack });
+
+    //Pass props up
+    this.props.handleTrack(this.state.guest_id,trackData.artists[0].name,trackData.name,trackData.album.images[0].url,trackData.external_urls.spotify,trackData.id,trackData.uri);
+  },
+  searchTrack: function(event) {
+
+    spotifyApi.searchTracks(event.target.value).then(function(data) {
+        if( data ) {
+          this.setState({ tracks: data.tracks.items });
+        }
+    }.bind(this));
+
   }
 
 });
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}

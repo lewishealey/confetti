@@ -4,6 +4,7 @@ var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ReactFire = require('reactfire');
 var Choice = require('./choice');
 
+
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
@@ -12,7 +13,8 @@ module.exports = React.createClass({
       edit: false,
       meals: false,
       user: false,
-      editCourse: false
+      editCourse: false,
+      course: false
     }
   },
   componentWillMount: function() {
@@ -25,6 +27,10 @@ module.exports = React.createClass({
 
     this.bindAsObject(userRef, 'user');
 
+    if(this.props.user && this.props.user.courses && this.props.user.courses[this.props.id]) {
+      this.setState({ course: this.props.user.courses[this.props.id] });
+    }
+
     this.setState({
       edit : this.props.edit
     });
@@ -32,137 +38,77 @@ module.exports = React.createClass({
   },
   render: function() {
       return (
-        <div className="column column--border">
+        <div className="col-md-4 column--border">
           {this.renderList()}
         </div>
       )
 
   },
   renderList: function() {
-    // console.log(this.props.id);
-
-    var countGuests = 0;
-    // Count the guests
-    // if(this.state.user.event[this.props.id] && this.state.user.event[this.props.id].guests) {
-    //   var guests = this.state.user.events[this.props.id].guests;
-    //   var countGuests = 0;
-    //   for ( guest in guests )   {
-    //      if(guests.hasOwnProperty(guest)) {
-    //         countGuests++;
-    //      }
-    //   }
-
-    // }.bind(this)
 
     if(this.state.edit) {
-      return <div className="cont__flex-column">
+      return <div>
 
-        <div className="column__half">
-          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].name} onChange={this.handleInputChange.bind(this,"name")} />
+        <div className="row">
+          <div className="col-md-12">
+            <label>Event name</label>
+            <input type="text" className="form-control" ref="eventName" defaultValue={this.state.user.events[this.props.id].name} />
+          </div>
         </div>
 
-        <div className="column">
-          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].address} onChange={this.handleInputChange.bind(this,"address")} />
-          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].postcode} onChange={this.handleInputChange.bind(this,"postcode")} />
-        </div>
-
-        <div className="column">
-          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : ''} onChange={this.handleInputChange.bind(this,"from")} />
-          <input type="text" className="form-control" defaultValue={this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : ''} onChange={this.handleInputChange.bind(this,"to")} />
-        </div>
-
-        <div className="column">
-
-        {this.state.user.events[this.props.id].meals &&
-
-          Object.keys(this.state.user.events[this.props.id].meals).map(function (event, i) {
-                return <span key={i}> {this.state.user.meals[event] ? this.state.user.meals[event].name : null}
-                <span onClick={this.handleDeleteMeal.bind(this,event)}>Delete</span></span>
-            }.bind(this))
-
-        }
-
-        </div>
-
-        <div className="column">
-
-          {(this.state.user.courses && this.state.user.courses[this.props.id]) &&
-
-            Object.keys(this.state.user.courses[this.props.id]).map(function (course, i) {
-
-              return <div>
-
-                {this.state.editField == course &&
-                  <div>
-                    <input type="text" className="form-control" defaultValue={this.state.user.courses[this.props.id][course].name} onChange={this.handleEditCourse.bind(this, course)} />
-                    <button onClick={this.handleFinishEdit}>Finish editing</button>
-                  </div>
-                }
-
-
-                <h4 key={i}>{this.state.user.courses[this.props.id][course].name} <span onClick={this.onEditField.bind(this,course,"course")}>Edit</span> <span onClick={this.handleDeleteCourse.bind(this,course)}>x</span></h4>
-
-
-              {(this.state.user.courses[this.props.id][course] && this.state.user.courses[this.props.id][course].meals) &&
-
-                Object.keys(this.state.user.courses[this.props.id][course].meals).map(function (meal, i) {
-
-                  return <div>
-
-                    {this.state.editField == meal &&
-                      <div>
-                        <input type="text" className="form-control" defaultValue={this.state.user.courses[this.props.id][course].meals[meal].name} onChange={this.handleEditMeal.bind(this,meal, course)} />
-                        <button onClick={this.handleFinishEdit}>Finish editing</button>
-                      </div>
-                    }
-
-                    <h5>{this.state.user.courses[this.props.id][course].meals[meal].name} <span onClick={this.onEditField.bind(this,meal,"meal")}>Edit</span> <span onClick={this.handleDeleteMeal.bind(this,meal, course)}>x</span></h5>
-                  </div>
-
-                }.bind(this))
-
-              }
-
-
-              </div>
-
-
-            }.bind(this))
-
-          }
-
-        {(! this.state.editCourse && ! this.state.editField  ) &&
-
-        <div>
-
-          <h5>Add a course</h5>
-
-            <p><input type="text" className="form-control" placeholder="Course name" ref="courseName" /></p>
-            <p><small>Eg, Main course, Dessert</small></p>
-            <p><a className="btn btn-info" onClick={this.handleCourse}>Add course</a></p>
-
-        </div>
-
-        }
-
-        {this.state.editCourse &&
-
-          <div>
-
-            <h5>Add meals</h5>
-
-              <p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
-              <a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
-
+        <div className="row">
+          <div className="col-md-6">
+            <label>From</label>
+            <input type="text" className="form-control" ref="eventFTime" defaultValue={this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : "From"} />
           </div>
 
-        }
-
+          <div className="col-md-6">
+            <label>To</label>
+            <input type="text" className="form-control" ref="eventTTime" defaultValue={this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : "To"} />
+          </div>
         </div>
 
+          <div className="row">
+            <div className="col-md-12">
+              <label>Address</label>
+              <input type="text" className="form-control" ref="eventAddress" name="address" defaultValue={this.state.user.events[this.props.id].address ? this.state.user.events[this.props.id].address : "Address"} />
+            </div>
+          </div>
 
-        <div className="column">
-            <a onClick={this.handleEditClick}>Save</a>
+          <div className="row">
+            <div className="col-md-12">
+              <label>Postcode</label>
+              <input type="text" className="form-control" ref="eventPostcode" name="postcode" defaultValue={this.state.user.events[this.props.id].postcode ? this.state.user.events[this.props.id].postcode : "Postcode"} />
+            </div>
+          </div>
+
+          {this.state.course &&
+            Object.keys(this.state.course).map(function (course, i) {
+
+              return <div>
+                <h5>{this.state.course[course].name} <span className="event-list__meal--delete" onClick={this.handleDeleteCourse.bind(this,course)}>Delete</span></h5>
+                  {this.state.course[course].meals &&
+                  <div>
+                    {Object.keys(this.state.course[course].meals).map(function (meal, i) {
+                      return <li>{this.state.course[course].meals[meal].name} <span className="event-list__meal--delete" onClick={this.deleteMeal.bind(this,meal,course)}>Delete</span></li>
+                    }.bind(this))}
+                  </div>
+                }
+              </div>
+
+            }.bind(this))
+          }
+
+          <h5>Add a course</h5>
+  				<p><input type="text" className="form-control" placeholder="Enter course name" ref="courseName" />
+  				<a className="btn btn-default" onClick={this.handleCourse}>Add course</a></p>
+
+          <h5>Add a course</h5>
+  				<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
+  				<a className="btn btn-default" onClick={this.handleMeal}>Add Meal</a></p>
+
+        <div className="col-md-12">
+          <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn--rose-o">Cancel</button>
         </div>
 
       </div>
@@ -170,6 +116,8 @@ module.exports = React.createClass({
     } else {
 
       return <div className="column--nest">
+
+        {this.props.countAttending}
            <h4>{this.state.user.events[this.props.id].name}</h4>
            <p>{this.state.user.events[this.props.id].address ? this.state.user.events[this.props.id].address : ''}</p>
            <p>{this.state.user.events[this.props.id].postcode ? this.state.user.events[this.props.id].postcode : ''}</p>
@@ -183,15 +131,24 @@ module.exports = React.createClass({
               </p>
             }
 
-
-            <p>{countGuests ? countGuests + " guests" : "No guests" }</p>
-
             <a className="btn btn--blue" onClick={this.handleEditClick}>Edit</a> <a onClick={this.handleDeleteClick}>Delete</a>
 
           </div>
 
     }
 
+
+  },
+  deleteCourse: function(course) {
+    var courseData = this.state.course;
+    alert(course)
+
+  },
+  deleteMeal: function(meal,course) {
+    var courseData = this.state.course;
+    delete courseData[course].meals[meal];
+
+    this.setState({ course: courseData })
 
   },
   onEditField: function(id,type) {
@@ -207,6 +164,23 @@ module.exports = React.createClass({
   },
   handleEditClick: function() {
     this.setState({ edit: ! this.state.edit })
+  },
+  handleChange: function() {
+    var eventName = this.refs.eventName.getDOMNode().value;
+		var fromTime = this.refs.eventFTime.getDOMNode().value;
+		var toTime = this.refs.eventTTime.getDOMNode().value;
+		var eventAddress = this.refs.eventAddress.getDOMNode().value;
+		var eventPostcode = this.refs.eventPostcode.getDOMNode().value;
+
+    console.log(eventName);
+    console.log(fromTime);
+    console.log(toTime);
+    console.log(eventAddress );
+    console.log(eventPostcode);
+    console.log(this.state.course);
+
+		// this.props.handleEvent(eventName,eventAddress,eventPostcode,fromTime,toTime,this.state.course,"edit");
+    this.setState({ edit: ! this.state.edit });
   },
   handleDeleteClick: function(e) {
     // e.preventDefault();
@@ -229,23 +203,6 @@ module.exports = React.createClass({
       editCourse: false
     })
   },
-  handleEditMeal: function(meal, course, event) {
-    var value = event.target.value;
-    // console.log(value)
-
-    userRef.child("courses/" + this.props.id + "/" + course + "/meals/" + meal).update({
-        name: value
-    });
-
-    // alert("Changing " + meal + " from " + course);
-
-  },
-  handleDeleteMeal: function(meal, course) {
-
-    userRef.child("courses/" + this.props.id + "/" + course + "/meals/" + meal).set(null);
-    alert("Deleting " + meal + " from " + course);
-
-  },
   handleEditCourse: function(course, event) {
     var value = event.target.value;
     // console.log(value)
@@ -258,8 +215,13 @@ module.exports = React.createClass({
   },
   handleDeleteCourse: function(course) {
 
-    userRef.child("courses/" + this.props.id + "/" + course).set(null);
-    alert("Deleting " + course);
+    var course = this.state.course;
+
+    delete course[course];
+
+    this.setState({course: course});
+
+    console.log(this.state.course)
 
   },
   handleCourse: function() {
@@ -271,15 +233,18 @@ module.exports = React.createClass({
     // Unique ID
     var string = (value + randomNo).replace(/ /g,'').toLowerCase();
 
-    userRef.child("courses/" + this.props.id + "/" + string).set({
-      name: value,
-      date_created: timeInMs
-    });
+    var course = this.state.course;
+
+    course[string] = {
+      date_created: timeInMs,
+      name: value
+    }
 
     this.setState({
-      editCourse: string
+      course : course
     });
 
+    console.log(this.state.course);
 
   },
   handleMeal: function() {

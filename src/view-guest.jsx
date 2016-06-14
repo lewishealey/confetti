@@ -32,11 +32,11 @@ module.exports = React.createClass({
           var eventKey = key;
           eventClass[eventKey] = false;
 
-          if(this.props.user.attending && this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId][key]) {
+          if(this.props.user.attending && this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events && this.props.user.attending[this.props.guestId].events[key]) {
             eventClass[eventKey] = "attending";
           }
 
-          if(this.props.user.notattending && this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId][key]) {
+          if(this.props.user.notattending && this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events && this.props.user.notattending[this.props.guestId].events[key]) {
             eventClass[eventKey] = "nattending";
           }
 
@@ -105,7 +105,7 @@ module.exports = React.createClass({
                         <p>Thanks for attending! A notification has been sent to Lewis & Lucy to let them know you'll be at the big day.</p>
                         <a onClick={this.handleAttending.bind(this,this.props.guestId,key,false)}>I cannot attend</a> <a>Add to calendar</a>
 
-                      {this.props.user.courses[key] &&
+                      {this.props.user.courses && this.props.user.courses[key] &&
                         <div>
                           has meals
 

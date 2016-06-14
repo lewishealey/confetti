@@ -17,7 +17,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return <a className={"btn btn--choice" + ((this.state.active) ? " active" : "")} onClick={this.handleClick.bind(this,this.props.name,this.props.id)}>
-      {this.props.name} 
+      {this.props.name}
       </a>
   },
   handleClick: function(name,id) {

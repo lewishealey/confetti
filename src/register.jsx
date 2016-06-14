@@ -11,7 +11,7 @@ module.exports = React.createClass({
 
     if(this.props.loaded) {
       this.setState({ loading: false });
-    } 
+    }
 
     if(this.props.loaded == false) {
       this.setState({ loading: false });
@@ -25,7 +25,8 @@ module.exports = React.createClass({
       event.preventDefault();
       var email = this.refs.regEmail.getDOMNode().value;
       var password = this.refs.regPassword.getDOMNode().value;
-      this.props.register(email,password);
+      var user = this.refs.regUser.getDOMNode().value;
+      this.props.register(email,password,user);
     }
 
     this.setState({ loading: true });
@@ -33,26 +34,29 @@ module.exports = React.createClass({
   },
   handleRegister: function() {
     this.setState({ register: ! this.state.register })
-  }, 
+  },
   render: function() {
 
     return <div className="column">
 
       <button type="submit" className="btn btn--outline" onClick={this.handleRegister}>{this.state.loading ? "Loading" : "Register"}</button>
 
-      {this.state.register && 
+      {this.state.register &&
 
         <div>
 
         <h4>Register</h4>
         <form>
 
+          <label>Username</label>
+          <input type="text" className="form-control" ref="regUser" name="username" required/>
+
           <label>Email</label>
           <input type="email" className="form-control" ref="regEmail" name="email" required/>
-   
+
           <label>Password</label>
           <input type="password" className="form-control" ref="regPassword" name="password" required/>
-   
+
           <button type="submit" className="btn btn-default" onClick={this.handleClick.bind(this,"button")}>Register</button>
         </form>
 
