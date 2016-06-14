@@ -42,17 +42,17 @@ foreach($user->attending as $key => $guest) {
       $events_table;
 
 
-      // $data = array(
-      //           "id" => 1,
-      //             "to" => "hello@lewi.sh",
-      //             "attr" => array(
-      //               "FNAME"=>$user->guests->$key->fname,
-      //               "LNAME"=>$user->guests->$key->lname,
-      //               "EVENT_LOOP"=> "<h1>Hello</h1>"
-      //             )
-      // );
-      //
-      // var_dump($mailin->send_transactional_template($data));
+      $data = array(
+                "id" => 1,
+                  "to" => "hello@lewi.sh",
+                  "attr" => array(
+                    "FNAME"=>$user->guests->$key->fname,
+                    "LNAME"=>$user->guests->$key->lname,
+                    "EVENT_LOOP"=> "<h1>Hello</h1>"
+                  )
+      );
+
+      var_dump($mailin->send_transactional_template($data));
 
 
 
