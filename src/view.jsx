@@ -219,7 +219,7 @@ module.exports = React.createClass({
     // console.info(mealName + "/" + courseName + "/" + eventName + "/" + guestName)
     var timeInMs = Date.now();
 
-    this.fb.child("attending/" + guestName + "/events/" + eventName + "/" + courseName).update({
+    this.fb.child("attending/" + guestName + "/events/" + eventName + "/courses/" + courseName).update({
         date_created: timeInMs,
         meal_name: mealName
     });
