@@ -118,7 +118,7 @@ module.exports = React.createClass({
                             {(this.props.user.courses[key][course] && this.props.user.courses[key][course].meals) &&
 
                               <select className="form-control" onChange={this.handleCourseMeal.bind(this,course,key,this.props.guestId )}>
-                                <option>{this.props.user.attending[this.props.guestId].events[key].courses[course] ? this.props.user.courses[key][course].meals[this.props.user.attending[this.props.guestId].events[key].courses[course].meal_name].name  : "Select a meal option"}</option>
+                                <option>{(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course]) ? this.props.user.courses[key][course].meals[this.props.user.attending[this.props.guestId].events[key].courses[course].meal_name].name  : "Select a meal option"}</option>
                                 {Object.keys(this.props.user.courses[key][course].meals).map(function (meal, i) {
                                   return <option key={meal} value={meal}>{this.props.user.courses[key][course].meals[meal].name}</option>
                                 }.bind(this))}

@@ -24,13 +24,36 @@ foreach($user->attending as $key => $guest) {
 
   if(($guest->date_created / 1000) > $before) {
 
-    foreach($user->attending->$key->events as $id => $event) {
+    $events_table = "";
 
-      echo $user->events->$id->name;
+    foreach($user->attending->$key->events as $id => $event) {
+      $event_id = $id;
+
+      $events_table .= "<table>";
+
+      $events_table .= "<tr><td><h4>" . $user->events->$id->name . "</h4></td></tr>";
+
+      // If courses, echo through
 
       if(!empty($user->attending->$key->events->$id->courses)) {
-        echo "<p>has courses</p>";
+
+        foreach($user->attending->$key->events->$id->courses as $course_id => $course) {
+          $meal_id = $course->meal_name;
+
+          $events_table .= "<tr>";
+
+          $events_table .= "<td>" . $user->courses->$event_id->$course_id->name  . ":</td>";
+
+          $events_table .= "<td>" . $user->courses->$event_id->$course_id->meals->$meal_id->name  . "</td>";
+
+          $events_table .= "</tr>";
+
+        }
+
       }
+
+      $events_table .= "</table>
+      <hr>";
 
     }
 
@@ -42,21 +65,17 @@ foreach($user->attending as $key => $guest) {
 
       echo "<p>Created: " . date('F j, Y, g:i a', ($guest->date_created / 1000)) . "</p>";
 
-      $events_table;
+      $data = array(
+                "id" => 1,
+                  "to" => "hello@lewi.sh",
+                  "attr" => array(
+                    "FNAME"=>$user->guests->$key->fname,
+                    "LNAME"=>$user->guests->$key->lname,
+                    "EVENT_LOOP"=> $events_table
+                  )
+      );
 
-      //
-      // $data = array(
-      //           "id" => 1,
-      //             "to" => "hello@lewi.sh",
-      //             "attr" => array(
-      //               "FNAME"=>$user->guests->$key->fname,
-      //               "LNAME"=>$user->guests->$key->lname,
-      //               "EVENT_LOOP"=> "<h1>Hello</h1>"
-      //             )
-      // );
-      //
-      // var_dump($mailin->send_transactional_template($data));
-
+      var_dump($mailin->send_transactional_template($data));
 
 
     }

@@ -9,7 +9,7 @@ var axios = require('axios');
 var ViewUser = require('./view-user');
 var ViewGuest = require('./view-new');
 
-var root = "http://localhost:8888/confetti/";
+var root = "http://localhost:8888/confettiapp/";
 
 //https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
 
