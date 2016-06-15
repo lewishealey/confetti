@@ -16,7 +16,7 @@ $firebase = new \Firebase\FirebaseLib(DEFAULT_URL, DEFAULT_TOKEN);
 $userData = $firebase->get(DEFAULT_PATH);
 $user = json_decode($userData);
 
-$before = strtotime("-2 hours");
+$before = strtotime("-10 minute");
 
 $mailin = new Mailin('https://api.sendinblue.com/v2.0','RAKxVhObvYnN318W');
 
@@ -26,44 +26,115 @@ foreach($user->attending as $key => $guest) {
 
     $events_table = "";
 
+    $notice = '
+    <table align="center">
+      <tr>
+        <td style="padding-left: 20px; color: #8B9299;">
+          <img src="' . $user->playlist->$key->album_image . '" width="75">
+        </td>
+        <td style="padding-left: 20px; text-align: left;">
+          <span style="font-size: 18px; line-height: 1.44; color: #8B9299; display: block;">' . $user->playlist->$key->artist_name . '</span>
+          <span style="font-size: 18px; line-height: 1.44; color: #233332; display: block; padding-bottom: 5px;">' . $user->playlist->$key->track_name . '</span>
+          <a href="https://play.spotify.com/track/' . $user->playlist->$key->id. '">
+            <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="130">
+          </a>
+        </td>
+      </tr>
+    </table>';
+
     foreach($user->attending->$key->events as $id => $event) {
       $event_id = $id;
 
-      $events_table .= "<table>";
+      $events_table .= "<table width='100%' cellspacing='0' cellpadding='0'>";
 
-      $events_table .= "<tr><td><h4>" . $user->events->$id->name . "</h4></td></tr>";
+      $events_table .= '
+      <tr cellspacing="0" cellpadding="0">
+        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
+          <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466018779/tick_fu3uab.png" height="16" style="height: 12px; padding-right: 20px;"> ' . $user->events->$id->name . '
+        </td>
+        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: right; font-size: 16px; padding: 20px 20px 20px 20px;">
+        ';
 
-      // If courses, echo through
+        if(!empty($user->attending->$key->events->$id->courses)) {
 
-      if(!empty($user->attending->$key->events->$id->courses)) {
+          $events_table .= '
+            <table align="right">
+              <tr>';
 
-        foreach($user->attending->$key->events->$id->courses as $course_id => $course) {
-          $meal_id = $course->meal_name;
+          foreach($user->attending->$key->events->$id->courses as $course_id => $course) {
+            $meal_id = $course->meal_name;
 
-          $events_table .= "<tr>";
+            $events_table .= '
+                  <td style="padding-left: 20px; color: #8B9299;">
+                    ' . $user->courses->$event_id->$course_id->meals->$meal_id->name . '
+                  </td>';
 
-          $events_table .= "<td>" . $user->courses->$event_id->$course_id->name  . ":</td>";
+            // $events_table .= "<td>" . $user->courses->$event_id->$course_id->name  . ":</td>";
 
-          $events_table .= "<td>" . $user->courses->$event_id->$course_id->meals->$meal_id->name  . "</td>";
+          }
 
-          $events_table .= "</tr>";
+          $events_table .= "
+            </tr>
+          </table>";
 
         }
 
-      }
-
-      $events_table .= "</table>
-      <hr>";
+      $events_table .= '
+        </td>
+      </tr>
+      </table>';
 
     }
 
-      echo "<p>Created" . $guest->date_created / 1000 . "</p>";
+    foreach($user->notattending->$key->events as $id => $event) {
+      $event_id = $id;
 
-      echo "<p>Before " . date('F j, Y, g:i a', strtotime("-1 minute")) . "</p>";
+      $events_table .= "<table width='100%' cellspacing='0' cellpadding='0'>";
 
-      echo "<p>Now: " . date('F j, Y, g:i a', strtotime("now")) . "</p>";
+      $events_table .= '
+      <tr cellspacing="0" cellpadding="0">
+        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
+          <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466018778/close_bq3f29.png" height="16" style="height: 12px; padding-right: 20px; "> ' . $user->events->$id->name . '
+        </td>
+        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: right; font-size: 16px; padding: 20px 20px 20px 20px;">
+        ';
 
-      echo "<p>Created: " . date('F j, Y, g:i a', ($guest->date_created / 1000)) . "</p>";
+        if(!empty($user->attending->$key->events->$id->courses)) {
+
+          $events_table .= '
+            <table align="right">
+              <tr>';
+
+          foreach($user->attending->$key->events->$id->courses as $course_id => $course) {
+            $meal_id = $course->meal_name;
+
+            $events_table .= '
+                  <td style="padding-left: 20px; color: #8B9299;">
+                    ' . $user->courses->$event_id->$course_id->meals->$meal_id->name . '
+                  </td>';
+
+            // $events_table .= "<td>" . $user->courses->$event_id->$course_id->name  . ":</td>";
+
+          }
+
+          $events_table .= "
+            </tr>
+          </table>";
+
+        }
+
+      $events_table .= '
+        </td>
+      </tr>
+      </table>';
+
+    }
+
+
+      // echo "<p>Created" . $guest->date_created / 1000 . "</p>";
+      // echo "<p>Before " . date('F j, Y, g:i a', strtotime("-1 minute")) . "</p>";
+      // echo "<p>Now: " . date('F j, Y, g:i a', strtotime("now")) . "</p>";
+      // echo "<p>Created: " . date('F j, Y, g:i a', ($guest->date_created / 1000)) . "</p>";
 
       $data = array(
                 "id" => 1,
@@ -71,7 +142,11 @@ foreach($user->attending as $key => $guest) {
                   "attr" => array(
                     "FNAME"=>$user->guests->$key->fname,
                     "LNAME"=>$user->guests->$key->lname,
-                    "EVENT_LOOP"=> $events_table
+                    "EVENT_LOOP"=> $events_table,
+                    "TRACK" => $notice,
+                    "DATE" => date('F j, Y, g:i a', ($guest->date_created / 1000)),
+                    "NOTICE" => "Amazing!",
+                    "LINK" => "http://localhost:8888/confettiapp/"
                   )
       );
 

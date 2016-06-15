@@ -153,18 +153,6 @@ module.exports = React.createClass({
       // Set state for new view
       this.setState({ responded: "attending" });
 
-      axios.post(root + 'server/mail/notification_attending.php', {
-        firstName: 'Fred',
-        lastName: 'Flintstone'
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-
-
     } else {
       this.fb.child("events/" + event + "/attending/").remove();
       this.fb.child("attending/" + guest + "/events/" + event).remove();
