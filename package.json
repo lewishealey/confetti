@@ -1,32 +1,37 @@
 {
-  "name": "react-starter",
+  "name": "confetti",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Welcome to the Confetti Repo!",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lewishealey/confetti.git"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "browserify": "^9.0.3",
-    "firebase": "^2.3.2",
-    "gulp": "^3.8.11",
-    "gulp-concat": "^2.5.2",
-    "gulp-react": "^3.0.1",
-    "gulp-sass": "^2.0.1",
-    "gulp-server-livereload": "^1.3.0",
-    "gulp-util": "^3.0.4",
-    "gulp-watch": "^4.2.4",
-    "node-notifier": "^4.2.1",
-    "react": "^0.13.1",
-    "react-dropzone": "^2.2.4",
-    "react-router": "^1.0.0-beta2",
-    "reactfire": "^0.4.0",
-    "reactify": "^1.1.0",
-    "spotify-web-api-js": "^0.15.0",
-    "spotify-web-api-node": "^2.2.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^2.4.0"
+  "bugs": {
+    "url": "https://github.com/lewishealey/confetti/issues"
   },
-  "devDependencies": {}
+  "homepage": "https://github.com/lewishealey/confetti#readme",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-register": "^6.9.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "gulp": "^3.9.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
 }
