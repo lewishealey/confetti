@@ -67,12 +67,33 @@ module.exports = React.createClass({
 
   },
   render: function() {
-    console.log(this.state.user);
+    // console.log(this.state.user);
 
-    if(this.props.params.userId && this.props.params.guestId) {
-    } else {
-      var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail}  step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack}/>
+    var now = Date.now();
+
+    // If cutoff has passed
+    if(this.state.user) {
+      console.info(this.state.user.cutoff_date);
+      console.info(now);
+
+      if(this.state.user.cutoff_date < now) {
+
+        var content = "Sorry, the cuttoff date has passed"
+
+      } else {
+
+          // If has data
+          if(this.props.params.userId && this.props.params.guestId) {
+            var content = "Sorry! No data";
+          } else {
+            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail}  step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
+          }
+
+      }
+
     }
+
+
 
   return <div className="view">
 
