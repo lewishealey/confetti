@@ -7,7 +7,7 @@ var JQuery = require('jquery');
 var axios = require('axios');
 
 var ViewUser = require('./view-user');
-var ViewGuest = require('./view-new');
+var ViewGuest = require('./view-guest');
 
 var root = "http://localhost:8888/confettiapp/";
 
@@ -83,7 +83,8 @@ module.exports = React.createClass({
 
           // If has data
           if(this.props.params.userId && this.props.params.guestId) {
-            var content = "Sorry! No data";
+
+            var content = <ViewGuest user={this.state.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.props.params.guestId} onChange={this.handleGuest} />
           } else {
             var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail}  step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
           }

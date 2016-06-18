@@ -27,6 +27,8 @@ module.exports = React.createClass({
       var eventClass = {};
 
       return <div className="cont">
+
+        <h4>{this.props.user.guests[this.props.guestId].fname} + {this.props.user.guests[this.props.guestId].lname}</h4>
         {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
 
           var eventKey = key;
