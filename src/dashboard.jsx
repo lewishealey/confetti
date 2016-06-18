@@ -13,7 +13,6 @@ var Dropzone = require('react-dropzone');
 var request = require('superagent');
 
 // Onboarding
-var DatePicker = require('react-date-picker');
 
 var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill('4gS7S9jS9Ef7rt8Hq5jtFg');
@@ -212,7 +211,7 @@ module.exports = React.createClass({
        	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
     	}
 			if(this.state.menu == "settings") {
-       	return <Settings user={this.props.user} />
+       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} />
     	}
 			return <Attending user={this.props.user}  handleAction={this.handleAction} />
 
@@ -224,7 +223,7 @@ module.exports = React.createClass({
        	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
     	}
 			if(window.location.href.indexOf("settings") > -1) {
-       	return <Settings user={this.props.user}/>
+       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} />
     	}
 			return <Attending user={this.props.user} handleAction={this.handleAction} />
 		}
@@ -238,10 +237,25 @@ module.exports = React.createClass({
 		// Pass props up
 
 	},
-	handleEvent: function() {
+	handleEvent: function(eventName,eventAddress,eventPostcode,fromTime,toTime,course,status,id) {
+
 		// Pass props up
+		this.props.handleEvent(eventName,eventAddress,eventPostcode,fromTime,toTime,course,status,id);
+
+		// console.log(eventName);
+    // console.log(fromTime);
+    // console.log(toTime);
+    // console.log(eventAddress);
+    // console.log(eventPostcode);
+    // console.log(course);
+		// console.log(status);
 
 	},
+	handleCutoff: function(cutoff) {
+
+    this.props.handleCutoff(cutoff);
+
+  },
 	handleDeleteGuest: function(id,action) {
 		// Pass props up
 		this.props.handleGuest(null,null,null,null,id,action);

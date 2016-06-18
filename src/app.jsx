@@ -192,7 +192,7 @@ var App = React.createClass({
     if (this.state.loggedIn && this.state.user) {
       return <div>
 				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleOpen={this.handleOpen} open={this.state.open}/>
-				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction}>{this.props.children}</Dashboard></div>
+				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction} handleEvent={this.handleEvent} handleCutoff={this.handleCutoff}>{this.props.children}</Dashboard></div>
             // return <div><h4>Logged in</h4></div>
     } else {
 
@@ -215,40 +215,80 @@ var App = React.createClass({
 		})
 
 	},
-	handleEvent: function(eventName,eventAddress,eventPostcode,fromTime,toTime,courseData) {
+	handleCutoff: function(cutoff) {
+
+    console.log(cutoff)
+
+		this.fb.child("settings/").update({
+			cutoff_date: cutoff
+		});
+
+  },
+	handleEvent: function(eventName,eventAddress,eventPostcode,fromTime,toTime,courseData,status,id) {
 		var timeInMs = Date.now();
-		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
-		// Unique ID
-		var string = (eventName + randomNo).replace(/ /g,'').toLowerCase();
+		// console.log(eventName);
+		// console.log(fromTime);
+		// console.log(toTime);
+		// console.log(eventAddress);
+		// console.log(eventPostcode);
+		// console.log(courseData);
+		// console.log(status);
 
-			// Add guest
-			this.fb.child("events/" + string).set({
+		if(status == "edit") {
 
-				// Dates
-				date_created: timeInMs,
-				date_updated: false,
-
-				// Personal info
+			this.fb.child("events/" + id).update({
+				date_updated: timeInMs,
 				from: fromTime,
 				to: toTime,
 				name: eventName,
 				address: eventAddress,
 				postcode: eventPostcode,
-				courses: courseData,
-
-				// False for later
-				invited: false, attending: false
-
+				courses: courseData
 			});
 
 			this.fb.child("courses").update({
-				[string]: courseData
+				[id]: courseData
 			});
 
-			this.setState({
-				type: false
-			})
+		}
+
+		if(status == "add") {
+
+			// Unique ID
+			var randomNo = Math.floor(Math.random() * 1000) + 1;
+			var string = (eventName + randomNo).replace(/ /g,'').toLowerCase();
+
+				// Add guest
+				this.fb.child("events/" + string).set({
+
+					// Dates
+					date_created: timeInMs,
+					date_updated: false,
+
+					// Personal info
+					from: fromTime,
+					to: toTime,
+					name: eventName,
+					address: eventAddress,
+					postcode: eventPostcode,
+					courses: courseData,
+
+					// False for later
+					invited: false, attending: false
+
+				});
+
+				this.fb.child("courses").update({
+					[string]: courseData
+				});
+
+				this.setState({
+					type: false
+				});
+
+		}
+
 
 	},
   onLoginSubmit: function(userEmail,userPassword) {

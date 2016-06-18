@@ -29,7 +29,6 @@ module.exports = React.createClass({
   componentWillMount: function() {
 
       this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.params.userId);
-
       this.bindAsObject(this.fb, "user");
 
   },
@@ -73,10 +72,10 @@ module.exports = React.createClass({
 
     // If cutoff has passed
     if(this.state.user) {
-      console.info(this.state.user.cutoff_date);
+      console.info(this.state.user.settings.cutoff_date);
       console.info(now);
 
-      if(this.state.user.cutoff_date < now) {
+      if(this.state.user.settings && this.state.user.settings.cutoff_date < now) {
 
         var content = "Sorry, the cuttoff date has passed"
 

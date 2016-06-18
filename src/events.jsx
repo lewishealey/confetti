@@ -76,7 +76,7 @@ module.exports = React.createClass({
 						<div className="row">
 
 							{Object.keys(this.props.user.events).map(function (key, i) {
-								return <ListEvent event={this.props.user.events[key]} user={this.props.user} key={i} id={key} userId={this.state.authId} edit={this.state.edit} countAttending={countEvents(key,"attending")} countGuests={countEvents(key,"guests")}/>
+								return <ListEvent event={this.props.user.events[key]} handleEvent={this.handleEvent} user={this.props.user} key={i} id={key} userId={this.state.authId} edit={this.state.edit} countAttending={countEvents(key,"attending")} countGuests={countEvents(key,"guests")}/>
 
 							}.bind(this))}
 
@@ -123,71 +123,18 @@ module.exports = React.createClass({
 
 	       </div>
 	},
-	handleEvent: function(e) {
-		e.preventDefault();
-		var timeInMs = Date.now();
-		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.state.authId +"/events");
-		var mealRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.state.authId + "/meals");
-		var randomNo = Math.floor(Math.random() * 1000) + 1;
+	handleEvent: function(eventName,eventAddress,eventPostcode,fromTime,toTime,course,status,id) {
 
-		// Unique ID
-		var string = (this.refs.eventName.getDOMNode().value + randomNo).replace(/ /g,'').toLowerCase();
+		// Pass props up
+		this.props.handleEvent(eventName,eventAddress,eventPostcode,fromTime,toTime,course,status,id);
 
-		// Times - need a date
-		var fromTime = this.refs.eventFTime.getDOMNode().value;
-		var toTime = this.refs.eventTTime.getDOMNode().value;
-
-		// Meal loop
-		var mealsArray = {};
-
-		// If meals then add, if not show false
-		if(this.state.meals.map) {
-			this.state.meals.map(function(meal, i) {
-				var mealId = (meal + randomNo).replace(/ /g,'').toLowerCase()
-				mealsArray[mealId] = true;
-
-				// Save meal
-				mealRef.child(mealId).set({
-					date_created: timeInMs,
-					name: meal,
-			    	event: string
-			    }, function(error) {
-						// Error report event
-						if (error) {
-						console.log("Meal could not be saved" + error);
-					} else {
-						console.log(mealId + " meal saved");
-					}
-
-				});
-
-			}.bind(this));
-
-		} else {
-			mealsArray = false;
-		}
-
-
-		// Save event
-		firebaseRef.child(string).set({
-			date_created: timeInMs,
-			name: this.refs.eventName.getDOMNode().value,
-	    	from: fromTime,
-	    	to: toTime,
-	    	address: this.refs.eventAddress.getDOMNode().value,
-	    	postcode: this.refs.eventPostcode.getDOMNode().value,
-	    	attending: false,
-	    	invited: false,
-	    	meals: mealsArray
-	    }, function(error) {
-				// Error report event
-				if (error) {
-				console.log("Event could not be saved" + error);
-			} else {
-				console.log(string + " event saved");
-			}
-
-		});
+		// console.log(eventName);
+		// console.log(fromTime);
+		// console.log(toTime);
+		// console.log(eventAddress);
+		// console.log(eventPostcode);
+		// console.log(course);
+		// console.log(status);
 
 
 	},

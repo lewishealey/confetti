@@ -4,10 +4,10 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ref = new Firebase(rootUrl);
 
-var DatePicker = require('react-datepicker');
-var moment = require('moment');
-
-require('react-datepicker/dist/react-datepicker.css');
+function toTimestamp(strDate){
+ var datum = Date.parse(strDate);
+ return datum;
+}
 
 module.exports = React.createClass({
   mixins: [ReactFire],
@@ -24,20 +24,29 @@ module.exports = React.createClass({
 
   },
   handleCutoff: function() {
-    var date = this.refs.cutoffDate.getDOMNode().value;
-    var d = new Date(date);
+  // toTimestamp('02/13/2009' + '23:59:59');
 
-    console.info(d);
+    var date = toTimestamp(this.refs.cutoffDate.getDOMNode().value + " 00:00:01");
+    // console.info(date);
+
+    this.props.handleCutoff(date);
 
   },
   render: function() {
+
+    if(this.props.user.settings.cutoff_date ) {
+      var date = new Date(this.props.user.settings.cutoff_date );
+    } else {
+      var date = "Not set"
+    }
+
     return <div>
 
-      <h4>When do you want your cutoff?</h4>
-      <input type="text" ref="cutoffDate"/>
+      <h4>When do you want your cutoff? (MM/DD/YYYY)</h4>
+      <input type="text" ref="cutoffDate" defaultValue={date ? date : "MM/DD/YYYY"} placeholder="MM/DD/YYYY"/>
       <button onClick={this.handleCutoff}>Save</button>
-      
-        <DatePicker selected={this.state.startDate} onChange={this.handleChange} />
+
+
 
       {Object.keys(this.props.user.playlist).map(function (track, i) {
 

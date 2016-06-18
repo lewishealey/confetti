@@ -14,7 +14,7 @@ module.exports = React.createClass({
       meals: false,
       user: false,
       editCourse: false,
-      course: false
+      course: {}
     }
   },
   componentWillMount: function() {
@@ -42,7 +42,6 @@ module.exports = React.createClass({
           {this.renderList()}
         </div>
       )
-
   },
   renderList: function() {
 
@@ -86,7 +85,7 @@ module.exports = React.createClass({
             Object.keys(this.state.course).map(function (course, i) {
 
               return <div>
-                <h5>{this.state.course[course].name} <span className="event-list__meal--delete" onClick={this.handleDeleteCourse.bind(this,course)}>Delete</span></h5>
+                <h5>{this.state.course[course].name} <span className="event-list__meal--delete" onClick={this.deleteCourse.bind(this,course)}>Delete</span></h5>
                   {this.state.course[course].meals &&
                   <div>
                     {Object.keys(this.state.course[course].meals).map(function (meal, i) {
@@ -100,12 +99,20 @@ module.exports = React.createClass({
           }
 
           <h5>Add a course</h5>
-  				<p><input type="text" className="form-control" placeholder="Enter course name" ref="courseName" />
+  				<p><input type="text" className="form-control" placeholder="Enter meal name" ref="courseName" />
   				<a className="btn btn-default" onClick={this.handleCourse}>Add course</a></p>
 
-          <h5>Add a course</h5>
-  				<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
-  				<a className="btn btn-default" onClick={this.handleMeal}>Add Meal</a></p>
+  				<div>
+  					<h5>Add meals to course</h5>
+  					<select className="form-control" ref="courseSelect">
+  						{Object.keys(this.state.course).map(function (key, i) {
+  							return <option key={i} value={key}>{this.state.course[key].name}</option>
+  						}.bind(this))}
+  					</select>
+  					<input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
+  					<a className="btn btn-default" onClick={this.handleMeal}>Add meal</a>
+  				</div>
+
 
         <div className="col-md-12">
           <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn--rose-o">Cancel</button>
@@ -141,7 +148,9 @@ module.exports = React.createClass({
   },
   deleteCourse: function(course) {
     var courseData = this.state.course;
-    alert(course)
+    delete courseData[course];
+
+    this.setState({ course: courseData })
 
   },
   deleteMeal: function(meal,course) {
@@ -172,14 +181,14 @@ module.exports = React.createClass({
 		var eventAddress = this.refs.eventAddress.getDOMNode().value;
 		var eventPostcode = this.refs.eventPostcode.getDOMNode().value;
 
-    console.log(eventName);
-    console.log(fromTime);
-    console.log(toTime);
-    console.log(eventAddress );
-    console.log(eventPostcode);
-    console.log(this.state.course);
+    // console.log(eventName);
+    // console.log(fromTime);
+    // console.log(toTime);
+    // console.log(eventAddress );
+    // console.log(eventPostcode);
+    // console.log(this.state.course);
 
-		// this.props.handleEvent(eventName,eventAddress,eventPostcode,fromTime,toTime,this.state.course,"edit");
+    this.props.handleEvent(eventName,eventAddress,eventPostcode,fromTime,toTime,this.state.course,"edit",this.props.id);
     this.setState({ edit: ! this.state.edit });
   },
   handleDeleteClick: function(e) {
@@ -213,62 +222,49 @@ module.exports = React.createClass({
     // alert("Changing " + course);
 
   },
-  handleDeleteCourse: function(course) {
-
-    var course = this.state.course;
-
-    delete course[course];
-
-    this.setState({course: course});
-
-    console.log(this.state.course)
-
-  },
   handleCourse: function() {
+		var timeInMs = Date.now();
+		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
-    var timeInMs = Date.now();
-    var randomNo = Math.floor(Math.random() * 1000) + 1;
-    var value = this.refs.courseName.getDOMNode().value;
+		var courseName = this.refs.courseName.getDOMNode().value;
+		var string = (courseName+ randomNo).replace(/ /g,'').toLowerCase();
 
-    // Unique ID
-    var string = (value + randomNo).replace(/ /g,'').toLowerCase();
+		var course = this.state.course;
 
-    var course = this.state.course;
+		course[string] = {
+			date_created: timeInMs,
+			name: courseName,
+			meals: {}
+		}
 
-    course[string] = {
-      date_created: timeInMs,
-      name: value
-    }
-
-    this.setState({
-      course : course
-    });
+		this.setState({
+			course : course
+		});
 
     console.log(this.state.course);
 
-  },
-  handleMeal: function() {
+	},
+	handleMeal: function() {
+		var timeInMs = Date.now();
+		var randomNo = Math.floor(Math.random() * 1000) + 1;
 
-    var timeInMs = Date.now();
-    var randomNo = Math.floor(Math.random() * 1000) + 1;
-    var value = this.refs.mealName.getDOMNode().value;
+		var courseSelect = this.refs.courseSelect.getDOMNode().value;
+		var mealName = this.refs.mealName.getDOMNode().value;
 
-    // Unique ID
-    var string = (value + randomNo).replace(/ /g,'').toLowerCase();
+		var string = (mealName+ randomNo).replace(/ /g,'').toLowerCase();
 
-      userRef.child("courses/" + this.props.id + "/" + this.state.editCourse + "/meals/" + string).set({
-            name: value,
-            date_created: timeInMs
-      }, function(error) { if (error) {
-        alert("error with meal");
-      } else {
-        alert("added " + value);
-        this.refs.mealName.getDOMNode().value = "";
-      }
+		var course = this.state.course;
 
-      });
+		course[courseSelect].meals[string] = {
+			date_created: timeInMs,
+			name: mealName
+		}
 
-  },
+		this.setState({
+			course: course
+		});
+
+	},
   handleInputChange: function(string, event) {
     var value = event.target.value;
 
