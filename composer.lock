@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ktamas77/firebase-php.git",
-                "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b"
+                "reference": "915fcac8a3e4e1ba457ab0cd0801255ce41445c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/95b4d9b70b418cc6071b44ec1f44f7f0e6d36a53",
-                "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b",
+                "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/915fcac8a3e4e1ba457ab0cd0801255ce41445c5",
+                "reference": "915fcac8a3e4e1ba457ab0cd0801255ce41445c5",
                 "shasum": ""
             },
             "require": {
@@ -445,7 +445,7 @@
                 "rest",
                 "wrapper"
             ],
-            "time": "2015-05-08 02:43:44"
+            "time": "2016-06-14 20:11:14"
         },
         {
             "name": "mailin-api/mailin-api-php",
