@@ -16,7 +16,7 @@ $firebase = new \Firebase\FirebaseLib(DEFAULT_URL, DEFAULT_TOKEN);
 $userData = $firebase->get(DEFAULT_PATH);
 $user = json_decode($userData);
 
-$before = strtotime("-1 minute");
+$before = strtotime("-10 minute");
 
 $mailin = new Mailin('https://api.sendinblue.com/v2.0','RAKxVhObvYnN318W');
 
