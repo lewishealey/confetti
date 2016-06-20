@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 require('Mailin.php');
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 const DEFAULT_URL = 'https://boiling-fire-2669.firebaseio.com/';
 const DEFAULT_TOKEN = 'P5Ofkmp3suKfnJWbWOtQimj5SqzC0tuWBdSz9UQh';
