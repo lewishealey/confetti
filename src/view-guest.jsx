@@ -245,7 +245,6 @@ module.exports = React.createClass({
 
       </div>
 
-
     } else {
       return <div>
         Sorry you are not invited to anything yet
