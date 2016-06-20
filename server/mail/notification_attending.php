@@ -25,7 +25,7 @@ foreach($user->attending as $key => $guest) {
   if(($guest->date_created / 1000) > $before) {
 
     $events_table = "";
-
+ 
     if($user->playlist->$key) {
 
       $notice = '
