@@ -1,10 +1,10 @@
 # Spotify Web API PHP
 
+[![Latest Stable Version](https://poser.pugx.org/jwilsson/spotify-web-api-php/v/stable.svg)](https://packagist.org/packages/jwilsson/spotify-web-api-php)
 [![Build Status](https://travis-ci.org/jwilsson/spotify-web-api-php.svg?branch=master)](https://travis-ci.org/jwilsson/spotify-web-api-php)
 [![Coverage Status](https://coveralls.io/repos/jwilsson/spotify-web-api-php/badge.svg?branch=master)](https://coveralls.io/r/jwilsson/spotify-web-api-php?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/jwilsson/spotify-web-api-php/v/stable.svg)](https://packagist.org/packages/jwilsson/spotify-web-api-php)
 
-This is a PHP implementation of the [Spotify Web API](https://developer.spotify.com/web-api/). It includes the following:
+This is a PHP wrapper for [Spotify's Web API](https://developer.spotify.com/web-api/). It includes the following:
 
 * Helper methods for all API methods:
     * Information about artists, albums, tracks, and users.
@@ -175,11 +175,14 @@ $tracks = $api->getArtistTopTracks('6v8FB84lnmJs434UJf2Mrm', array(
 print_r($tracks);
 ```
 
-Get Spotify featured playlists
+Get track audio features
 ```php
-$playlists = $api->getFeaturedPlaylists();
+$features = $api->getAudioFeatures(array(
+    '0eGsygTp906u18L0Oimnem',
+    '1lDWb6b6ieDQ2xT7ewTC3G',
+));
 
-print_r($playlists);
+print_r($features);
 ```
 
 Get Spotify list of categories
@@ -209,6 +212,20 @@ $playlists = $api->getCategoryPlaylists('dinner', array(
 print_r($playlists);
 ```
 
+Get Spotify featured playlists
+```php
+$playlists = $api->getFeaturedPlaylists();
+
+print_r($playlists);
+```
+
+Get a list of possible seed genres
+```php
+$genres = $api->getGenreSeeds();
+
+print_r($genres);
+```
+
 Get new releases
 ```php
 $items = $api->getNewReleases(array(
@@ -230,6 +247,24 @@ Get the current user's saved albums
 $albums = $api->getMySavedAlbums();
 
 print_r($albums);
+```
+
+Get the current user's top tracks or artists
+```php
+$tracks = $api->getMyTop('tracks', array(
+    'limit' => 10,
+));
+
+print_r($tracks);
+```
+
+Get recommendations based on artists, tracks, or genres
+```php
+$recommendations = $api->getRecommendations(array(
+    'seed_tracks' => array('0eGsygTp906u18L0Oimnem', '1lDWb6b6ieDQ2xT7ewTC3G'),
+));
+
+print_r($recommendations);
 ```
 
 Get the current user's saved tracks

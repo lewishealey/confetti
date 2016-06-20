@@ -87,6 +87,8 @@ class Request
      * @param array $parameters Optional. Query parameters.
      * @param array $headers Optional. HTTP headers.
      *
+     * @throws SpotifyWebAPIException
+     *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by Request::setReturnAssoc().
      * - array headers Response headers.
@@ -158,14 +160,14 @@ class Request
 
         if ($status < 200 || $status > 299) {
             $errorBody = json_decode($rawBody);
-            $error = $errorBody->error;
+            $error = (isset($errorBody->error)) ? $errorBody->error : null;
 
             if (isset($error->message) && isset($error->status)) {
                 // API call error
                 throw new SpotifyWebAPIException($error->message, $error->status);
             } elseif (isset($errorBody->error_description)) {
                 // Auth call error
-                throw new SpotifyWebAPIException($body->error_description, $status);
+                throw new SpotifyWebAPIException($errorBody->error_description, $status);
             } else {
                 // Something went really wrong
                 throw new SpotifyWebAPIException('An unknown error occurred.', $status);

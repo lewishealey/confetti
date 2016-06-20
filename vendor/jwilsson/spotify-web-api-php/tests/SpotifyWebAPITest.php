@@ -12,11 +12,11 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $stub->expects($this->once())
                  ->method('api')
                  ->with(
-                    $this->equalTo($expectedMethod),
-                    $this->equalTo($expectedUri),
-                    $this->equalTo($expectedParameters),
-                    $this->equalTo($expectedHeaders)
-                )
+                     $this->equalTo($expectedMethod),
+                     $this->equalTo($expectedUri),
+                     $this->equalTo($expectedParameters),
+                     $this->equalTo($expectedHeaders)
+                 )
                 ->willReturn($expectedReturn);
 
         return $stub;
@@ -665,16 +665,15 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('tracks', $response);
     }
 
-    public function testGetFeaturedPlaylists()
+    public function testGetAudioFeatures()
     {
-        $options = array(
-            'country' => 'SE',
-            'limit' => 10,
+        $tracks = array(
+            '0eGsygTp906u18L0Oimnem',
+            '1lDWb6b6ieDQ2xT7ewTC3G',
         );
 
         $expected = array(
-            'country' => 'SE',
-            'limit' => 10,
+            'ids' => '0eGsygTp906u18L0Oimnem,1lDWb6b6ieDQ2xT7ewTC3G',
         );
 
         $headers = array(
@@ -682,12 +681,12 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         );
 
         $return = array(
-            'body' => get_fixture('featured-playlists'),
+            'body' => get_fixture('audio-features'),
         );
 
         $stub = $this->setupStub(
             'GET',
-            '/v1/browse/featured-playlists',
+            '/v1/audio-features',
             $expected,
             $headers,
             $return
@@ -695,9 +694,9 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
         $api->setAccessToken($this->accessToken);
-        $response = $api->getFeaturedPlaylists($options);
+        $response = $api->getAudioFeatures($tracks);
 
-        $this->assertObjectHasAttribute('playlists', $response);
+        $this->assertObjectHasAttribute('audio_features', $response);
     }
 
     public function testGetCategoriesList()
@@ -798,6 +797,66 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $response = $api->getCategoryPlaylists('party', $options);
 
         $this->assertObjectHasAttribute('playlists', $response);
+    }
+
+    public function testGetFeaturedPlaylists()
+    {
+        $options = array(
+            'country' => 'SE',
+            'limit' => 10,
+        );
+
+        $expected = array(
+            'country' => 'SE',
+            'limit' => 10,
+        );
+
+        $headers = array(
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        );
+
+        $return = array(
+            'body' => get_fixture('featured-playlists'),
+        );
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/browse/featured-playlists',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getFeaturedPlaylists($options);
+
+        $this->assertObjectHasAttribute('playlists', $response);
+    }
+
+    public function testGetGenreSeeds()
+    {
+        $headers = array(
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        );
+
+        $return = array(
+            'body' => get_fixture('available-genre-seeds'),
+        );
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/recommendations/available-genre-seeds',
+            array(),
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getGenreSeeds();
+
+        $this->assertObjectHasAttribute('genres', $response);
     }
 
     public function testGetLastResponse()
@@ -958,6 +1017,76 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $response = $api->getMySavedTracks($options);
 
         $this->assertObjectHasAttribute('items', $response);
+    }
+
+    public function testGetMyTop()
+    {
+        $options = array(
+            'limit' => 10,
+            'time_range' => 'long_term',
+        );
+
+        $expected = array(
+            'limit' => 10,
+            'time_range' => 'long_term',
+        );
+
+        $headers = array(
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        );
+
+        $return = array(
+            'body' => get_fixture('top-artists-and-tracks'),
+        );
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/me/top/artists',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getMyTop('artists', $options);
+
+        $this->assertObjectHasAttribute('items', $response);
+    }
+
+    public function testGetRecommendations()
+    {
+        $options = array(
+            'limit' => 10,
+            'seed_tracks' => array('0eGsygTp906u18L0Oimnem', '1lDWb6b6ieDQ2xT7ewTC3G'),
+        );
+
+        $expected = array(
+            'limit' => 10,
+            'seed_tracks' => '0eGsygTp906u18L0Oimnem,1lDWb6b6ieDQ2xT7ewTC3G',
+        );
+
+        $headers = array(
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        );
+
+        $return = array(
+            'body' => get_fixture('recommendations'),
+        );
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/recommendations',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getRecommendations($options);
+
+        $this->assertObjectHasAttribute('seeds', $response);
     }
 
     public function testGetReturnAssoc()

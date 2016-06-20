@@ -12,8 +12,6 @@ class SpotifyWebAPI
      * Set up Request object.
      *
      * @param Request $request Optional. The Request object to use.
-     *
-     * @return void
      */
     public function __construct($request = null)
     {
@@ -525,24 +523,23 @@ class SpotifyWebAPI
     }
 
     /**
-     * Get Spotify featured playlists.
+     * Get track audio features.
      * Requires a valid access token.
-     * https://developer.spotify.com/web-api/get-list-featured-playlists/
+     * https://developer.spotify.com/web-api/get-several-audio-features/
      *
-     * @param array|object $options Optional. Options for the playlists.
-     * - string locale Optional. Language to show playlists in, for example sv_SE.
-     * - string country Optional. An ISO 3166-1 alpha-2 country code. Show playlists from this country.
-     * - string timestamp Optional. A ISO 8601 timestamp. Show playlists relevant to this date and time.
-     * - int limit Optional. Limit the number of playlists.
-     * - int offset Optional. Number of playlists to skip.
+     * @param array $trackIds IDs of the tracks.
      *
-     * @return array|object The featured playlists. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     * @return array|object The tracks' audio features. Type is controlled by SpotifyWebAPI::setReturnAssoc().
      */
-    public function getFeaturedPlaylists($options = array())
+    public function getAudioFeatures($trackIds)
     {
+        $options = array(
+            'ids' => implode(',', $trackIds),
+        );
+
         $headers = $this->authHeaders();
 
-        $uri = '/v1/browse/featured-playlists';
+        $uri = '/v1/audio-features';
 
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
 
@@ -618,6 +615,49 @@ class SpotifyWebAPI
         $uri = '/v1/browse/categories/' . $categoryId . '/playlists';
 
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get Spotify featured playlists.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-list-featured-playlists/
+     *
+     * @param array|object $options Optional. Options for the playlists.
+     * - string locale Optional. Language to show playlists in, for example sv_SE.
+     * - string country Optional. An ISO 3166-1 alpha-2 country code. Show playlists from this country.
+     * - string timestamp Optional. A ISO 8601 timestamp. Show playlists relevant to this date and time.
+     * - int limit Optional. Limit the number of playlists.
+     * - int offset Optional. Number of playlists to skip.
+     *
+     * @return array|object The featured playlists. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getFeaturedPlaylists($options = array())
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/browse/featured-playlists';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get a list of possible seed genres.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-recommendations/#available-genre-seeds
+     *
+     * @return array|object All possible seed genres. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getGenreSeeds()
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/recommendations/available-genre-seeds';
+
+        $this->lastResponse = $this->request->api('GET', $uri, array(), $headers);
 
         return $this->lastResponse['body'];
     }
@@ -720,6 +760,66 @@ class SpotifyWebAPI
         $headers = $this->authHeaders();
 
         $uri = '/v1/me/tracks';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get the current user's top tracks or artists.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/
+     *
+     * @param string $type The type of entity to fetch.
+     * @param array $options. Optional. Options for the results.
+     * - int limit Optional. Limit the number of tracks.
+     * - int offset Optional. Number of tracks to skip.
+     * - mixed time_range Optional. Over what time frame the data is calculated. See Spotify API docs for more info.
+     *
+     * @return array|object A list with the requested top entity. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getMyTop($type, $options = array())
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/me/top/' . $type;
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get recommendations based on artists, tracks, or genres.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-recommendations/
+     *
+     * @param array|object $options Optional. Options for the recommendations.
+     * - int limit Optional. Limit the number of recommendations.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+     * - mixed max_* Optional. Max value for one of the tunable track attributes.
+     * - mixed min_* Optional. Min value for one of the tunable track attributes.
+     * - array seed_artists Artist IDs to seed by.
+     * - array seed_genres Genres to seed by. Call SpotifyWebAPI::getGenreSeeds() for a complete list.
+     * - array seed_tracks Track IDs to seed by.
+     * - mixed target_* Optional. Target value for one of the tunable track attributes.
+     *
+     * @return array|object The requested recommendations. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getRecommendations($options = array())
+    {
+        $options = (array) $options;
+
+        array_walk($options, function (&$value, $key) {
+            if (substr($key, 0, 5) == 'seed_') {
+                $value = implode(',', $value);
+            }
+        });
+
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/recommendations';
 
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
 

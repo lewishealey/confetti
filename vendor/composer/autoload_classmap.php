@@ -6,8 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Firebase\\Error' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseStub.php',
-    'Firebase\\FirebaseInterface' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseInterface.php',
-    'Firebase\\FirebaseLib' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseLib.php',
-    'Firebase\\FirebaseStub' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseStub.php',
+    'BeforeValidException' => $vendorDir . '/firebase/php-jwt/Exceptions/BeforeValidException.php',
+    'ExpiredException' => $vendorDir . '/firebase/php-jwt/Exceptions/ExpiredException.php',
+    'JWT' => $vendorDir . '/firebase/php-jwt/Authentication/JWT.php',
+    'SignatureInvalidException' => $vendorDir . '/firebase/php-jwt/Exceptions/SignatureInvalidException.php',
 );
