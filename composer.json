@@ -3,7 +3,6 @@
         "jwilsson/spotify-web-api-php": "^1.0.0",
         "ktamas77/firebase-php": "dev-master",
         "facebook/php-sdk-v4": "^5.1",
-        "aws/aws-sdk-php": "^3.18",
         "mailin-api/mailin-api-php": "^1.0",
         "php-amqplib/php-amqplib": "^2.6"
     }

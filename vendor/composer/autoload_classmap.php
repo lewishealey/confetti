@@ -6,11 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Firebase\\Error' => $vendorDir . '/ktamas77/firebase-php/src/firebaseStub.php',
-    'Firebase\\FirebaseInterface' => $vendorDir . '/ktamas77/firebase-php/src/firebaseInterface.php',
-    'Firebase\\FirebaseLib' => $vendorDir . '/ktamas77/firebase-php/src/firebaseLib.php',
-    'Firebase\\FirebaseStub' => $vendorDir . '/ktamas77/firebase-php/src/firebaseStub.php',
-    'SimpleEmailService' => $vendorDir . '/daniel-zahariev/php-aws-ses/src/SimpleEmailService.php',
-    'SimpleEmailServiceMessage' => $vendorDir . '/daniel-zahariev/php-aws-ses/src/SimpleEmailServiceMessage.php',
-    'SimpleEmailServiceRequest' => $vendorDir . '/daniel-zahariev/php-aws-ses/src/SimpleEmailServiceRequest.php',
+    'Firebase\\Error' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseStub.php',
+    'Firebase\\FirebaseInterface' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseInterface.php',
+    'Firebase\\FirebaseLib' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseLib.php',
+    'Firebase\\FirebaseStub' => $vendorDir . '/ktamas77/firebase-php/src/FirebaseStub.php',
 );
