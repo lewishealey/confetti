@@ -1,247 +1,5 @@
 [
     {
-        "name": "mandrill/mandrill",
-        "version": "1.0.55",
-        "version_normalized": "1.0.55.0",
-        "source": {
-            "type": "git",
-            "url": "https://bitbucket.org/mailchimp/mandrill-api-php.git",
-            "reference": "da3adc10042eafac2e53de141b358a52b8e53596"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://bitbucket.org/mailchimp/mandrill-api-php/get/da3adc10042eafac2e53de141b358a52b8e53596.zip",
-            "reference": "da3adc10042eafac2e53de141b358a52b8e53596",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.0"
-        },
-        "time": "2015-09-22 13:58:03",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Mandrill": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Mandrill Devs",
-                "email": "community@mandrill.com",
-                "homepage": "http://mandrill.com",
-                "role": "Developer"
-            }
-        ],
-        "description": "API client library for the Mandrill email as a service platform",
-        "homepage": "https://bitbucket.org/mailchimp/mandrill-api-php",
-        "keywords": [
-            "api",
-            "email"
-        ]
-    },
-    {
-        "name": "jwilsson/spotify-web-api-php",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-            "reference": "225c3fdc8775382b5c97c9f67a00c5af726c30b2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/225c3fdc8775382b5c97c9f67a00c5af726c30b2",
-            "reference": "225c3fdc8775382b5c97c9f67a00c5af726c30b2",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "php": ">=5.5"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*",
-            "satooshi/php-coveralls": "dev-master",
-            "squizlabs/php_codesniffer": "2.*"
-        },
-        "time": "2015-12-01 19:53:07",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "SpotifyWebAPI\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jonathan Wilsson",
-                "email": "jonathan.wilsson@gmail.com"
-            }
-        ],
-        "description": "PHP implementation of Spotify's Web API.",
-        "homepage": "http://jwilsson.github.io/spotify-web-api-php/",
-        "keywords": [
-            "spotify"
-        ]
-    },
-    {
-        "name": "ktamas77/firebase-php",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/ktamas77/firebase-php.git",
-            "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/95b4d9b70b418cc6071b44ec1f44f7f0e6d36a53",
-            "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2015-05-08 02:43:44",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "src"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Tamas Kalman",
-                "email": "ktamas77@gmail.com"
-            }
-        ],
-        "description": "Firebase PHP Client",
-        "homepage": "https://github.com/ktamas77/firebase-php",
-        "keywords": [
-            "firebase",
-            "rest",
-            "wrapper"
-        ]
-    },
-    {
-        "name": "facebook/php-sdk-v4",
-        "version": "5.1.2",
-        "version_normalized": "5.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
-            "reference": "2c42fb3002953355f12d3c6e8003a9fd5af563d9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/2c42fb3002953355f12d3c6e8003a9fd5af563d9",
-            "reference": "2c42fb3002953355f12d3c6e8003a9fd5af563d9",
-            "shasum": ""
-        },
-        "require": {
-            "ext-mbstring": "*",
-            "php": ">=5.4.0"
-        },
-        "require-dev": {
-            "guzzlehttp/guzzle": "~5.0",
-            "mockery/mockery": "~0.8",
-            "phpunit/phpunit": "~4.0"
-        },
-        "suggest": {
-            "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client"
-        },
-        "time": "2015-11-19 21:07:36",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "5.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Facebook\\": "src/Facebook/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Facebook Platform"
-        ],
-        "authors": [
-            {
-                "name": "Facebook",
-                "homepage": "https://github.com/facebook/facebook-php-sdk-v4/contributors"
-            }
-        ],
-        "description": "Facebook SDK for PHP",
-        "homepage": "https://github.com/facebook/facebook-php-sdk-v4",
-        "keywords": [
-            "facebook",
-            "sdk"
-        ]
-    },
-    {
-        "name": "daniel-zahariev/php-aws-ses",
-        "version": "0.8.7",
-        "version_normalized": "0.8.7.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/daniel-zahariev/php-aws-ses.git",
-            "reference": "3b132db49a90b44b6c56d1b9058594d27bb543db"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/daniel-zahariev/php-aws-ses/zipball/3b132db49a90b44b6c56d1b9058594d27bb543db",
-            "reference": "3b132db49a90b44b6c56d1b9058594d27bb543db",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "php": ">=5.0.0"
-        },
-        "time": "2016-03-22 11:16:38",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD"
-        ],
-        "authors": [
-            {
-                "name": "Daniel Zahariev",
-                "role": "developer"
-            }
-        ],
-        "description": "Send emails via Amazon Simple Email Service (SES) with REST-like interface",
-        "homepage": "https://github.com/daniel-zahariev/php-aws-ses",
-        "keywords": [
-            "amazon",
-            "api",
-            "aws",
-            "email",
-            "rest",
-            "ses"
-        ]
-    },
-    {
         "name": "mtdowling/jmespath.php",
         "version": "2.3.0",
         "version_normalized": "2.3.0.0",
@@ -296,59 +54,6 @@
         "keywords": [
             "json",
             "jsonpath"
-        ]
-    },
-    {
-        "name": "guzzlehttp/promises",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/guzzle/promises.git",
-            "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/promises/zipball/c10d860e2a9595f8883527fa0021c7da9e65f579",
-            "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2016-05-18 16:56:05",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "GuzzleHttp\\Promise\\": "src/"
-            },
-            "files": [
-                "src/functions_include.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            }
-        ],
-        "description": "Guzzle promises library",
-        "keywords": [
-            "promise"
         ]
     },
     {
@@ -460,6 +165,59 @@
             "message",
             "stream",
             "uri"
+        ]
+    },
+    {
+        "name": "guzzlehttp/promises",
+        "version": "1.2.0",
+        "version_normalized": "1.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/promises.git",
+            "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/promises/zipball/c10d860e2a9595f8883527fa0021c7da9e65f579",
+            "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2016-05-18 16:56:05",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "GuzzleHttp\\Promise\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle promises library",
+        "keywords": [
+            "promise"
         ]
     },
     {
@@ -609,6 +367,203 @@
         ]
     },
     {
+        "name": "daniel-zahariev/php-aws-ses",
+        "version": "0.8.7",
+        "version_normalized": "0.8.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/daniel-zahariev/php-aws-ses.git",
+            "reference": "3b132db49a90b44b6c56d1b9058594d27bb543db"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/daniel-zahariev/php-aws-ses/zipball/3b132db49a90b44b6c56d1b9058594d27bb543db",
+            "reference": "3b132db49a90b44b6c56d1b9058594d27bb543db",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.0.0"
+        },
+        "time": "2016-03-22 11:16:38",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Daniel Zahariev",
+                "role": "developer"
+            }
+        ],
+        "description": "Send emails via Amazon Simple Email Service (SES) with REST-like interface",
+        "homepage": "https://github.com/daniel-zahariev/php-aws-ses",
+        "keywords": [
+            "amazon",
+            "api",
+            "aws",
+            "email",
+            "rest",
+            "ses"
+        ]
+    },
+    {
+        "name": "facebook/php-sdk-v4",
+        "version": "5.1.2",
+        "version_normalized": "5.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
+            "reference": "2c42fb3002953355f12d3c6e8003a9fd5af563d9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/2c42fb3002953355f12d3c6e8003a9fd5af563d9",
+            "reference": "2c42fb3002953355f12d3c6e8003a9fd5af563d9",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "guzzlehttp/guzzle": "~5.0",
+            "mockery/mockery": "~0.8",
+            "phpunit/phpunit": "~4.0"
+        },
+        "suggest": {
+            "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client"
+        },
+        "time": "2015-11-19 21:07:36",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Facebook\\": "src/Facebook/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Facebook Platform"
+        ],
+        "authors": [
+            {
+                "name": "Facebook",
+                "homepage": "https://github.com/facebook/facebook-php-sdk-v4/contributors"
+            }
+        ],
+        "description": "Facebook SDK for PHP",
+        "homepage": "https://github.com/facebook/facebook-php-sdk-v4",
+        "keywords": [
+            "facebook",
+            "sdk"
+        ]
+    },
+    {
+        "name": "jwilsson/spotify-web-api-php",
+        "version": "1.2.0",
+        "version_normalized": "1.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jwilsson/spotify-web-api-php.git",
+            "reference": "225c3fdc8775382b5c97c9f67a00c5af726c30b2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/225c3fdc8775382b5c97c9f67a00c5af726c30b2",
+            "reference": "225c3fdc8775382b5c97c9f67a00c5af726c30b2",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.*",
+            "satooshi/php-coveralls": "dev-master",
+            "squizlabs/php_codesniffer": "2.*"
+        },
+        "time": "2015-12-01 19:53:07",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SpotifyWebAPI\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jonathan Wilsson",
+                "email": "jonathan.wilsson@gmail.com"
+            }
+        ],
+        "description": "PHP implementation of Spotify's Web API.",
+        "homepage": "http://jwilsson.github.io/spotify-web-api-php/",
+        "keywords": [
+            "spotify"
+        ]
+    },
+    {
+        "name": "ktamas77/firebase-php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ktamas77/firebase-php.git",
+            "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/95b4d9b70b418cc6071b44ec1f44f7f0e6d36a53",
+            "reference": "31ab40dd01b1e0024841d7701d51927c711ec56b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2015-05-08 02:43:44",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "src"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Tamas Kalman",
+                "email": "ktamas77@gmail.com"
+            }
+        ],
+        "description": "Firebase PHP Client",
+        "homepage": "https://github.com/ktamas77/firebase-php",
+        "keywords": [
+            "firebase",
+            "rest",
+            "wrapper"
+        ]
+    },
+    {
         "name": "mailin-api/mailin-api-php",
         "version": "v1.0.3",
         "version_normalized": "1.0.3.0",
@@ -651,6 +606,51 @@
         ],
         "description": "Official SendinBlue provided API V2 wrapper",
         "homepage": "https://github.com/mailin-api/mailin-api-php"
+    },
+    {
+        "name": "mandrill/mandrill",
+        "version": "1.0.55",
+        "version_normalized": "1.0.55.0",
+        "source": {
+            "type": "git",
+            "url": "https://bitbucket.org/mailchimp/mandrill-api-php.git",
+            "reference": "da3adc10042eafac2e53de141b358a52b8e53596"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://bitbucket.org/mailchimp/mandrill-api-php/get/da3adc10042eafac2e53de141b358a52b8e53596.zip",
+            "reference": "da3adc10042eafac2e53de141b358a52b8e53596",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.0"
+        },
+        "time": "2015-09-22 13:58:03",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Mandrill": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Mandrill Devs",
+                "email": "community@mandrill.com",
+                "homepage": "http://mandrill.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "API client library for the Mandrill email as a service platform",
+        "homepage": "https://bitbucket.org/mailchimp/mandrill-api-php",
+        "keywords": [
+            "api",
+            "email"
+        ]
     },
     {
         "name": "php-amqplib/php-amqplib",
