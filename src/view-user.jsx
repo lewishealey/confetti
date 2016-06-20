@@ -167,7 +167,7 @@ module.exports = React.createClass({
     } else {
       var currentGuest = {};
       this.setState({ guestSearch : {} });
-    }
+    } 
 
 
   },
