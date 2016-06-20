@@ -107,7 +107,7 @@ module.exports = React.createClass({
 					    </div>
 
 							{guestOptions}
-						<p><a onClick={this.onToggleAddGuest} className="btn btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
+						<p><a onClick={this.onToggleAddGuest} className="btn btn--default btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
 					</div>
 
 				</div>

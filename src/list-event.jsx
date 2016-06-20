@@ -200,8 +200,8 @@ module.exports = React.createClass({
     // Remove from all guest record
     {Object.keys(this.state.user.guests).map(function (guest, i) {
       userRef.child("guests/" + guest + "/events/" + this.props.id).remove();
-      userRef.child("attending/" + guest + "/" + this.props.id).remove();
-      userRef.child("notattending/" + guest + "/" + this.props.id).remove();
+      userRef.child("attending/" + guest + "/events/" + this.props.id).remove();
+      userRef.child("notattending/" + guest + "/events/" + this.props.id).remove();
       userRef.child("invited/" + guest + "/" + this.props.id).remove();
     }.bind(this))}
 

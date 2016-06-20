@@ -101,11 +101,22 @@ module.exports = React.createClass({
 
 				<div className="guest">
 					<div className="col-md-4">
-	          {this.props.guest.fname + " " + this.props.guest.lname} <span className="column--rev-hover">{this.props.guest.email}</span>
+	          {this.props.guest.fname + " " + this.props.guest.lname}
+
+						{date(this.props.guest.date_created) == date(Date.now()) &&
+							<span className="badge badge-danger">New</span>
+						}
+
+						{date(this.props.guest.date_updated) == date(Date.now()) &&
+							<span className="badge badge-info">Updated</span>
+						}
+						
 	        </div>
 
 					<div className="col-md-6">
-						Updated: {date(this.props.guest.date_updated)} | Created: {date(this.props.guest.date_created)}
+
+						{this.props.guest.email}
+
 					</div>
 
 					{this.props.attending == false &&
@@ -120,7 +131,7 @@ module.exports = React.createClass({
 
 	        {this.props.attending == false &&
 	          <div className="col-md-4">
-	            <a href={"/confetti_app/#/page/" + this.props.userId + "/guest/" + this.props.guest.key} target="blank">View as guest</a>
+	            <a href={"/confettiapp/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">View as guest</a>
 	            <a onClick={this.handleEditClick}> Edit </a>
 	            <a onClick={this.handleDeleteClick}>Delete</a>
 	          </div>

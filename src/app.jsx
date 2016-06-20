@@ -8,6 +8,7 @@ var HashHistory = require('react-router/lib/hashhistory');
 var Router = require('react-router').Router
 var Route = require('react-router').Route
 var Link = require('react-router').Link
+var browserHistory = require('react-router').browserHistory
 
 var View = require('./view');
 var ViewMain = require('./view-main');

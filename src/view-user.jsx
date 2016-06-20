@@ -1,17 +1,6 @@
 var React = require('react');
 var ViewGuest = require('./view-guest');
 
-// Spotify
-var SpotifyWebApi = require('spotify-web-api-js');
-
-
-// credentials are optional
-var spotifyApi = new SpotifyWebApi({
-  clientId : '2888525482b94ccb86ae7ee9469bab07',
-  clientSecret : '6df8e93ea2ba49c6ae90951fea0e2f9e',
-  redirectUri : 'http://localhost/confetti_app/#/page/'
-});
-
 count = 1;
 
 module.exports = React.createClass({
@@ -36,100 +25,77 @@ module.exports = React.createClass({
     this.props.onChange(guest, event, truth);
   },
   render: function() {
+    //
+    // console.log(this.props.step)
 
     if(this.state.guest) {
-      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} />
+      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} />
     } else {
       var content = "Choose your guest";
     }
 
     return <div className="guest-select">
 
-      <button onClick={this.onClearSearch}>Clear search</button>
+    <div className="container">
 
-        <input onChange={this.onSearchGuest} className="form-control" placeholder="Enter your name" ref="input-guest" required autoComplete="fname" />
+      {this.props.step === 1 &&
 
-      {this.state.guestSearch  &&
+        <div className="col-md-6 col-md-offset-3">
+          <h4>Firstly, What is your name?</h4>
+          <input onChange={this.onSearchGuest} className="form-control" placeholder="Enter your first name or surname" ref="input-guest" required autoComplete="fname" />
+            {this.state.guestSearch  &&
 
-        <ul className="guest-list">
-        {Object.keys(this.state.guestSearch).map(function (key, i) {
+              <ul className="guest-list">
+              {Object.keys(this.state.guestSearch).map(function (key, i) {
 
-          return <li className="guest-list__item" onClick={this.onSelectGuest.bind(this, this.state.guestSearch[key], key)}>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname} <span className="guest-list__select">That's me</span></li>
+                return <li className="guest-list__item" onClick={this.onSelectGuest.bind(this, this.state.guestSearch[key], key)}>{this.state.guestSearch[key].fname + " " + this.state.guestSearch[key].lname} <span className="guest-list__select">That's me</span></li>
 
-        }.bind(this))}
+              }.bind(this))}
 
-      </ul>
+            </ul>
 
-      }
-
-      <div className="cont cont__flex-column">
-      {(this.state.guest_id) && //&& !this.state.guest.email
-        <div className="column">
-            <div>
-              <h4>Please enter your email address</h4>
-              <p>This is so the happy couple can make announcements about anything important with the wedding.</p>
-                <input onChange={this.onInputEmail} className={"form-control " + (this.state.emailState && this.state.emailState == true ? 'success' : 'error')}  placeholder="Enter your email address" ref="guestEmail" name="email" />
-                <small>We DO NOT use your email address for anything apart from communicating with the happy couple. We will actually delete your email from our records post-wedding.</small>
-                  <button onClick={this.onHandleEmail}>Proceed</button>
-            </div>
-          {this.props.handleEmailState ? this.props.handleEmailState : ''}
+            }
         </div>
 
       }
+
+      {this.props.step === 2 && (this.props.user.guests && this.props.user.guests[this.state.guest_id] && !this.props.user.guests[this.state.guest_id].email) &&
+        <div className="col-md-6 col-md-offset-3">
+
+        {this.state.guest_id &&
+
+            <div>
+              <h4>James & Seph would like to contact you via email</h4>
+              <p>This is so the happy couple can make announcements about anything important with the wedding.</p>
+                <input onChange={this.onInputEmail} className={"form-control " + (this.state.emailState && this.state.emailState == true ? 'success' : 'error')}  placeholder={this.props.user.guests[this.state.guest_id].email ? this.props.user.guests[this.state.guest_id].email : "Enter your email address"} ref="guestEmail" name="email" />
+                <p><small>This email will not be used for spam, we promise.</small></p>
+                <p><button className="btn btn--invite" onClick={this.onHandleEmail}>Proceed</button></p>
+          {this.props.handleEmailState ? this.props.handleEmailState : ''}
+          </div>
+
+        }
+
+        </div>
+
+      }
+
+    </div>
+
+
+      <div className="container">
+
+        {this.props.step === 3 &&
 
           <div className="column">
             {content}
           </div>
 
-        <div className="column">
-          {this.state.guest_id &&
-            <p><strong>Tip: </strong>You can visit this link whenever you want to update your status if things change. Save this website {"http://localhost/confetti_app/#/" + this.props.userId + "/" + this.state.guest_id}</p>
-          }
-        </div>
-
-        {(this.state.guest_id && !this.state.editTrack) &&
-          <div className="cont cont__flex-row">
-            Add a song to spotify
-            <input type="text" className="form-control" placeholder="Search for a track" onChange={this.searchTrack}/>
-          </div>
         }
 
-          {(this.state.tracks && this.state.guest_id) &&
-
-            Object.keys(this.state.tracks).map(function (key, i) {
-              if(i < 10) {
-              return <div className="cont cont__flex-row">
-                  <div className="column">
-                    {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
-                  </div>
-                  <div className="column">
-                    <button onClick={this.handleTrack.bind(this,this.state.tracks[key])}>Choose</button>
-                  </div>
-                </div>
-              }
-
-            }.bind(this))
-
-          }
-
-          {(this.props.user.playlist && this.state.guest_id && this.props.user.playlist[this.state.guest_id]) &&
-            <div>
-              <h4>Added a track!</h4>
-              <div className="row">
-                <div className="col-md-3">
-                  <img src={this.props.user.playlist[this.state.guest_id].album_image} style={{width: "100%"}}/>
-                </div>
-                <div className="col-md-9">
-                  {this.props.user.playlist[this.state.guest_id].artist_name} - {this.props.user.playlist[this.state.guest_id].track_name}
-                </div>
-              </div>
-
-              <button onClick={this.onEditTrack}>Change your suggestion</button>
-
-            </div>
-          }
 
       </div>
+
+
 
     </div>
   },
@@ -208,7 +174,18 @@ module.exports = React.createClass({
   onCourseMealChange: function(mealName, courseName, eventName, guestName) {
     this.props.onCourseMealChange(mealName, courseName, eventName, guestName);
   },
+  handleTrack: function(guestId,artistName,trackName,albumImage,trackHref,trackId,trackUri) {
+
+    //Pass props up
+    this.props.handleTrack(guestId,artistName,trackName,albumImage,trackHref,trackId,trackUri);
+  },
   onSelectGuest: function(guestData, key) {
+
+      if(this.props.user.guests[key] && this.props.user.guests[key].email) {
+        this.props.onStep(3);
+      } else {
+        this.props.onStep(2);
+      }
 
     this.setState({
       guest : guestData,
@@ -216,24 +193,6 @@ module.exports = React.createClass({
       guestSearch: false,
       step: 2
     });
-
-  },
-  onEditTrack: function() {
-    this.setState({ editTrack: !this.state.editTrack });
-  },
-  handleTrack: function(trackData) {
-    this.setState({ editTrack: !this.state.editTrack });
-
-    //Pass props up
-    this.props.handleTrack(this.state.guest_id,trackData.artists[0].name,trackData.name,trackData.album.images[0].url,trackData.external_urls.spotify,trackData.id,trackData.uri);
-  },
-  searchTrack: function(event) {
-
-    spotifyApi.searchTracks(event.target.value).then(function(data) {
-        if( data ) {
-          this.setState({ tracks: data.tracks.items });
-        }
-    }.bind(this));
 
   }
 

@@ -66,7 +66,8 @@ module.exports = React.createClass({
 			var attending = this.props.user.attending;
 				var countAttending = 0;
 				for ( attend in attending )   {
-				   if(attending.hasOwnProperty(attend)) {
+					// If attending has events
+				   if(attending.hasOwnProperty(attend) && this.props.user.attending[attend].events) {
 				      countAttending++;
 				   }
 				}
@@ -180,7 +181,7 @@ module.exports = React.createClass({
 								</div>
 
 								<div>
-									<span>Link: {"http://app.cnftti.com/#/page/" + this.props.user.username}</span>
+									<span>Link: {"http://app.cnftti.com/#/page/" + this.props.user.authid}</span>
 								</div>
 
 							</div>

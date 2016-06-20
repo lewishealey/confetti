@@ -84,9 +84,9 @@ module.exports = React.createClass({
           // If has data
           if(this.props.params.userId && this.props.params.guestId) {
 
-            var content = <ViewGuest user={this.state.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.props.params.guestId} onChange={this.handleGuest} />
+            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} />
           } else {
-            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail}  step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
+            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
           }
 
       }
@@ -97,20 +97,20 @@ module.exports = React.createClass({
 
   return <div className="view">
 
-      <div className="column" style={{background : 'url("http://da-photo.co.uk/wp-content/uploads/2015/07/CS_PWS_BLOG_002.jpg")'}}>
-        Photo
+      <div className="view__header">
+
+        <div className="view__header-column">
+            <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/title.png?alt=media&token=cad8d380-4b02-4629-8618-d8b304f8935e" className="view__title" />
+        </div>
+
+        <div className="view__header-column" style={{background : 'url("https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/jeffwed.jpg?alt=media&token=95770959-fb7b-41b8-80cf-240de13a7b37")',backgroundSize: "100%"}}>
+
+        </div>
+
       </div>
 
       <div className="column view--white">
         <div className="column--nest">
-          <div className="cont cont__flex-row">
-            <div className="column"><h4>RSVP {this.state.user.fname ? this.state.user.fname : ''} & {this.state.user.spousefname ? this.state.user.spousefname + "'s" : ''} wedding</h4></div>
-            {this.state.user.wedding_date &&
-               <div className="column tar"><h4>{this.state.user.wedding_date}</h4></div>
-             }
-          </div>
-          <h1>Welcome! RSVP now</h1>
-          <p>Type in your last name to get going</p>
 
           <div className="cont cont__flex-row">
             {content}
@@ -168,14 +168,14 @@ module.exports = React.createClass({
 
       }.bind(this));
 
-      this.fb.child("events/" + event + "/notattending/").remove();
+      this.fb.child("events/" + event + "/notattending/" + guest).remove();
       this.fb.child("notattending/" + guest + "/events/" + event).remove();
 
       // Set state for new view
       this.setState({ responded: "attending" });
 
     } else {
-      this.fb.child("events/" + event + "/attending/").remove();
+      this.fb.child("events/" + event + "/attending/" + guest).remove();
       this.fb.child("attending/" + guest + "/events/" + event).remove();
 
       // Add attending object to event
@@ -246,11 +246,17 @@ module.exports = React.createClass({
 
       }.bind(this));
 
+        this.setState({ step: 3 });
+
     } else {
       // Error
     }
 
 
+  },
+  handleStep: function(step) {
+
+    this.setState({ step: step });
   }
 
 });
