@@ -175,7 +175,7 @@ module.exports = React.createClass({
 
 	        {this.props.attending == false &&
 	          <div className="col-md-4 tar">
-	            <a href={"/confettiapp/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">View as guest</a>
+	            <a href={"/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">View as guest</a>
 	            <a onClick={this.handleEditClick}> Edit </a>
 							<a onClick={this.handleDeleteClick}> Delete </a>
 	          </div>

@@ -48,7 +48,7 @@ module.exports = React.createClass({
 
 	        <div className="column">
 
-		        <div className="guest">
+		        <div>
 					{this.state.addGuest &&
 						<div className="column column--spacing-r">
 							<h4>Add Guest</h4>

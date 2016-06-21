@@ -67,8 +67,8 @@ module.exports = React.createClass({
               }
             }.bind(this))
           }
-          <div className="event-bar__item event-bar__item--add">
-            <a onClick={this.onToggleAddEvent.bind(this,"add","event")}>Add a new event</a>
+          <div className="event-bar__item event-bar__item--add"  onClick={this.onToggleAddEvent.bind(this,"add","event")}>
+            Add a new event
           </div>
         </div>
 

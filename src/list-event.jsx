@@ -113,12 +113,11 @@ module.exports = React.createClass({
   					<a className="btn btn-default" onClick={this.handleMeal}>Add meal</a>
   				</div>
 
+          <div className="col-md-12 add__cta">
+            <button onClick={this.handleChange} className="btn btn--gold">Save</button> <button onClick={this.handleEditClick} className="btn">Cancel</button>
+          </div>
 
-        <div className="col-md-12">
-          <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn--rose-o">Cancel</button>
-        </div>
-
-        <a className="btn btn--rose-o" onClick={this.handleDeleteClick}>Delete</a>
+          <p><a onClick={this.handleDeleteClick}>Delete event</a></p>
 
       </div>
 
