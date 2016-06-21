@@ -595,6 +595,9 @@ label {
 .list-event__title {
   margin-top: 0; }
 
+.list-track__image {
+  width: 100%; }
+
 .list__meal {
   margin-right: 10px; }
 

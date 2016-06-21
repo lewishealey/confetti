@@ -50,9 +50,16 @@ module.exports = React.createClass({
 
       {Object.keys(this.props.user.playlist).map(function (track, i) {
 
-        return <div>
+        return <div className="row">
+
+          <div className="col-md-4">
             <h4>{this.props.user.playlist[track].artist_name} - {this.props.user.playlist[track].track_name} - {track} </h4>
-            <img src={this.props.user.playlist[track].album_image} />
+          </div>
+
+          <div className="col-md-2">
+            <img src={this.props.user.playlist[track].album_image} className="list-track__image"/>
+          </div>
+
         </div>
 
 
