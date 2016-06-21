@@ -19,7 +19,8 @@ module.exports = React.createClass({
   getInitialState: function() {
     return({
       loaded: false,
-      editTrack: false
+      editTrack: false,
+      addSpotify: false
     })
   },
   componentWillMount: function() {
@@ -37,21 +38,22 @@ module.exports = React.createClass({
 
       var eventClass = {};
 
-      return <div className="container">
+      return <div>
 
-        <div className="row">
+            <div className="row">
 
-          <div className="col-md-6">
-            <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, please tell us the events you can attend.</h4>
-          </div>
+              <div className="col-md-6">
+                <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below</h4>
+              </div>
 
-          <div className="col-md-6 tar">
-            Unique link: {"http://jephwed.co.uk/" + this.props.guestId}
-          </div>
+              <div className="col-md-6 tar view__unique-link">
+                Unique link: {"http://jephwed.co.uk/" + this.props.guestId}
+              </div>
 
-        </div>
+            </div>
 
-        <div className="cont">
+
+        <div className="row flex">
 
         {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
 
@@ -68,7 +70,7 @@ module.exports = React.createClass({
 
           // console.log(eventClass);
 
-            return <div className={"column__half-width event__single " + eventClass[key]} key={i}>
+            return <div className={"col-md-6 event__single flex " + eventClass[key]} key={i}>
 
               {! eventClass[eventKey] &&
 
@@ -121,11 +123,11 @@ module.exports = React.createClass({
                                   {this.props.user.events[key].to + " - " + this.props.user.events[key].from}
                                 </p>
                                 }
-                              <p>How exciting! We've notified James and Seph you'll be at the big day. We also sent you a summary too.</p>
+                              <p>How exciting! We've sent you and the couple an email to clarify everything.</p>
                             </div>
                           </div>
 
-                          <div className="column__half-width event__attending-icon">
+                          <div className="event__attending-icon">
                             <i className="material-icons">done</i>
                           </div>
 
@@ -178,7 +180,7 @@ module.exports = React.createClass({
                             <h4 className="event__title event--nattending">Not Attending</h4>
                           </div>
 
-                          <div className="column__half-width event__nattending-icon">
+                          <div className="event__nattending-icon">
                             <i className="material-icons">clear</i>
                           </div>
 
@@ -197,49 +199,69 @@ module.exports = React.createClass({
 
         </div>
 
+        <span className="line"></span>
+
         <div className="row">
 
           <div className="col-md-6">
-            <h4>Suggest a song! <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="110" /></h4>
-            <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
+            <h4 className="title title--no-margin">Suggest a song <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="110" /></h4>
+            <button className="btn btn--spotify" onClick={this.addSpotify}>Add song to wedding playlist</button>
+
+          {this.state.addSpotify &&
+
+            <div className={"add " + (this.state.addSpotify ? "active" : "not")}>
+
+                <div className="add__main">
+                  <h4>Search for a track</h4>
+                <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
+
+                  {(this.state.tracks && this.props.guestId) &&
+
+                    <div className="guest-list">
+
+                      {Object.keys(this.state.tracks).map(function (key, i) {
+
+                        if(i < 10) {
+                        return <div className="guest-list__item" onClick={this.handleTrack.bind(this,this.state.tracks[key])}>
+                              {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
+                              <a> select</a>
+                          </div>
+                        }
+
+                      }.bind(this))}
+
+                    </div>
+
+                  }
+
+              </div>
+
+            </div>
+
+          }
+
           </div>
 
-          <div className="col-md-6">
-            {(this.state.tracks && this.props.guestId) &&
-
-              Object.keys(this.state.tracks).map(function (key, i) {
-                if(i < 10) {
-                return <div className="cont cont__flex-row">
-                    <div className="column">
-                      {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
-                    </div>
-                    <div className="column">
-                      <button onClick={this.handleTrack.bind(this,this.state.tracks[key])}>Choose</button>
-                    </div>
-                  </div>
-                }
-
-              }.bind(this))
-
-            }
-
+          <div className="col-md-6 view__chosen-track">
             {(this.props.user.playlist && this.props.guestId && this.props.user.playlist[this.props.guestId]) &&
               <div>
-                <h4>Added a track!</h4>
                 <div className="row">
-                  <div className="col-md-3">
+                  <div className="col-xs-6 col-md-3">
                     <img src={this.props.user.playlist[this.props.guestId].album_image} style={{width: "100%"}}/>
                   </div>
-                  <div className="col-md-9">
-                    {this.props.user.playlist[this.props.guestId].artist_name} - {this.props.user.playlist[this.props.guestId].track_name}
+                  <div className="col-xs-6 col-md-9">
+                    <span className="sub">Your track</span>
+                      <h4>{this.props.user.playlist[this.props.guestId].artist_name} - {this.props.user.playlist[this.props.guestId].track_name}</h4>
+                      <p><a onClick={this.addSpotify}>Change track</a></p>
                   </div>
                 </div>
 
-                <button onClick={this.onEditTrack}>Change your suggestion</button>
+
 
               </div>
             }
           </div>
+
 
         </div>
 
@@ -252,6 +274,9 @@ module.exports = React.createClass({
     }
 
   },
+  addSpotify: function() {
+    this.setState({ addSpotify: !this.state.addSpotify });
+  },
   handleCourseMeal: function(courseName, eventName, guestName , event) {
     var mealName = event.target.value;
 
@@ -260,11 +285,17 @@ module.exports = React.createClass({
   handleAttending: function(guest, event, truth) {
       this.props.onChange(guest, event, truth);
   },
-  onEditTrack: function() {
+  onEditTrack: function(event) {
+    event.preventDefault();
     this.setState({ editTrack: !this.state.editTrack });
   },
-  handleTrack: function(trackData) {
-    this.setState({ editTrack: !this.state.editTrack });
+  handleTrack: function(trackData,event) {
+    event.preventDefault();
+
+    this.setState({
+      editTrack: !this.state.editTrack,
+      addSpotify: !this.state.addSpotify
+    });
 
     // console.log(trackData)
 

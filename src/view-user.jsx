@@ -25,8 +25,6 @@ module.exports = React.createClass({
     this.props.onChange(guest, event, truth);
   },
   render: function() {
-    //
-    // console.log(this.props.step)
 
     if(this.state.guest) {
       var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} />
@@ -36,13 +34,13 @@ module.exports = React.createClass({
 
     return <div className="guest-select">
 
-    <div className="container">
+    <div className="row">
 
       {this.props.step === 1 &&
 
-        <div className="col-md-6 col-md-offset-3">
-          <h4>Firstly, What is your name?</h4>
-          <input onChange={this.onSearchGuest} className="form-control" placeholder="Enter your first name or surname" ref="input-guest" required autoComplete="fname" />
+        <div className="col-md-8 col-md-offset-2">
+          <h4>To RSVP, simply enter your name</h4>
+          <input onChange={this.onSearchGuest} className="form-control form-control--xl" placeholder="First name or Surname" ref="input-guest" required autoComplete="fname" />
             {this.state.guestSearch  &&
 
               <ul className="guest-list">
@@ -60,17 +58,17 @@ module.exports = React.createClass({
       }
 
       {this.props.step === 2 && (this.props.user.guests && this.props.user.guests[this.state.guest_id] && !this.props.user.guests[this.state.guest_id].email) &&
-        <div className="col-md-6 col-md-offset-3">
+        <div className="col-md-8 col-md-offset-2">
 
         {this.state.guest_id &&
 
             <div>
               <h4>James & Seph would like to contact you via email</h4>
-              <p>This is so the happy couple can make announcements about anything important with the wedding.</p>
-                <input onChange={this.onInputEmail} className={"form-control " + (this.state.emailState && this.state.emailState == true ? 'success' : 'error')}  placeholder={this.props.user.guests[this.state.guest_id].email ? this.props.user.guests[this.state.guest_id].email : "Enter your email address"} ref="guestEmail" name="email" />
+              <p>This is so they can make announcements about anything important with the wedding.</p>
+                <p><input onChange={this.onInputEmail} className={"form-control form-control--xl " + (this.state.emailState && this.state.emailState == true ? 'success' : '')}  placeholder={this.props.user.guests[this.state.guest_id].email ? this.props.user.guests[this.state.guest_id].email : "Enter your email address to proceed"} ref="guestEmail" name="email" /></p>
                 <p><small>This email will not be used for spam, we promise.</small></p>
-                <p><button className="btn btn--invite" onClick={this.onHandleEmail}>Proceed</button></p>
-          {this.props.handleEmailState ? this.props.handleEmailState : ''}
+                <p><button className="btn btn--dark" onClick={this.onHandleEmail}>Proceed</button></p>
+                {this.props.handleEmailState ? this.props.handleEmailState : ''}
           </div>
 
         }
@@ -82,8 +80,6 @@ module.exports = React.createClass({
     </div>
 
 
-      <div className="container">
-
         {this.props.step === 3 &&
 
           <div className="column">
@@ -91,11 +87,6 @@ module.exports = React.createClass({
           </div>
 
         }
-
-
-      </div>
-
-
 
     </div>
   },
@@ -167,7 +158,7 @@ module.exports = React.createClass({
     } else {
       var currentGuest = {};
       this.setState({ guestSearch : {} });
-    } 
+    }
 
 
   },

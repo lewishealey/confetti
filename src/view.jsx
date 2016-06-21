@@ -95,29 +95,31 @@ module.exports = React.createClass({
 
 
 
-  return <div className="view">
+  return <div className="container-fluid view">
 
-      <div className="view__header">
+      <div className="row flex">
 
-        <div className="view__header-column">
-            <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/title.png?alt=media&token=cad8d380-4b02-4629-8618-d8b304f8935e" className="view__title" />
-        </div>
-
-        <div className="view__header-column" style={{background : 'url("https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/jeffwed.jpg?alt=media&token=95770959-fb7b-41b8-80cf-240de13a7b37")',backgroundSize: "100%"}}>
+        <div className="col-md-4 view__header no-margin" style={{background : 'url("https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/jeffwed_port.jpg?alt=media&token=695b079e-3936-4c3e-a289-7ef90a8289b7") center center',backgroundSize: "cover"}}>
 
         </div>
 
-      </div>
-
-      <div className="column view--white">
-        <div className="column--nest">
-
-          <div className="cont cont__flex-row">
-            {content}
+        <div className="col-md-8 no-margin">
+          <div className="block">
+              <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/title.png?alt=media&token=cad8d380-4b02-4629-8618-d8b304f8935e" className="view__title"/>
+              <span className="line"></span>
+              <div className="row">
+                <div className="col-md-6 futura tar">
+                  You're invited to<br /> celebrate the wedding of<br />persephone and james
+                </div>
+                <div className="col-md-6 futura">
+                  5.11.2016<br /><br />
+                  #Jephwed
+                </div>
+              </div>
+              <span className="line"></span>
+              {content}
           </div>
-
         </div>
-
 
       </div>
 
