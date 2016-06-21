@@ -41,9 +41,14 @@ module.exports = React.createClass({
 
 		  if(type === "guests") {
 		    var eventData = events[id].guests;
-		  } else {
+		  }
+			if(type === "attending") {
 		    var eventData = events[id].attending;
 		  }
+
+			if(type === "notattending") {
+				var eventData = events[id].notattending;
+			}
 
 		  if(eventData) {
 		    var countEvent = 0;
@@ -76,45 +81,8 @@ module.exports = React.createClass({
 						<div className="row">
 
 							{Object.keys(this.props.user.events).map(function (key, i) {
-								return <ListEvent event={this.props.user.events[key]} handleEvent={this.handleEvent} user={this.props.user} key={i} id={key} userId={this.state.authId} edit={this.state.edit} countAttending={countEvents(key,"attending")} countGuests={countEvents(key,"guests")}/>
-
+								return <ListEvent event={this.props.user.events[key]} handleEvent={this.handleEvent} user={this.props.user} key={i} id={key} userId={this.state.authId} edit={this.state.edit} countAttending={countEvents(key,"attending")} countGuests={countEvents(key,"guests")} countNot={countEvents(key,"notattending")}  />
 							}.bind(this))}
-
-						<div className="col-md-4">
-						{this.state.addEvent &&
-							<div>
-								<h4>Add Event</h4>
-								<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" /><br />
-								<p>
-									<label>From</label>
-									<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
-								</p>
-								<p>
-									<label>To</label>
-									<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
-								</p>
-
-								<label>Address</label>
-								<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
-
-								<label>Postcode</label>
-								<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
-
-
-								<h5>Add meals</h5>
-								{this.state.meals &&
-									this.state.meals.map(function(meal, i) {
-										return <div key={i}>{meal} <a onClick={this.deleteMeal.bind(this, i) }>Delete</a></div>
-									}.bind(this))
-								}
-								<p><input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" /><a className="btn btn-info" onClick={this.handleMeal}>+</a></p>
-
-								<p><a className="btn btn-primary" onClick={this.handleEvent}>Add Event</a></p>
-							</div>
-
-						}
-
-						</div>
 
  						</div>
 					}

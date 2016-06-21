@@ -172,6 +172,7 @@ module.exports = React.createClass({
 
       this.fb.child("events/" + event + "/notattending/" + guest).remove();
       this.fb.child("notattending/" + guest + "/events/" + event).remove();
+      this.fb.child("events/" + event + "/notattending/" + guest).remove();
 
       // Set state for new view
       this.setState({ responded: "attending" });
@@ -179,6 +180,7 @@ module.exports = React.createClass({
     } else {
       this.fb.child("events/" + event + "/attending/" + guest).remove();
       this.fb.child("attending/" + guest + "/events/" + event).remove();
+      this.fb.child("events/" + event + "/attending/" + guest).remove();
 
       // Add attending object to event
       this.fb.child("notattending/" + guest + "/events/").update({

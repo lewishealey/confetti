@@ -25,8 +25,7 @@ module.exports = React.createClass({
       event.preventDefault();
       var email = this.refs.regEmail.getDOMNode().value;
       var password = this.refs.regPassword.getDOMNode().value;
-      var user = this.refs.regUser.getDOMNode().value;
-      this.props.register(email,password,user);
+      this.props.register(email,password);
     }
 
     this.setState({ loading: true });
@@ -47,9 +46,6 @@ module.exports = React.createClass({
 
         <h4>Register</h4>
         <form>
-
-          <label>Username</label>
-          <input type="text" className="form-control" ref="regUser" name="username" required/>
 
           <label>Email</label>
           <input type="email" className="form-control" ref="regEmail" name="email" required/>

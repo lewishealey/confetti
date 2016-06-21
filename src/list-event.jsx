@@ -38,7 +38,7 @@ module.exports = React.createClass({
   },
   render: function() {
       return (
-        <div className="col-md-4 column--border">
+        <div className="col-md-6">
           {this.renderList()}
         </div>
       )
@@ -118,17 +118,39 @@ module.exports = React.createClass({
           <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn--rose-o">Cancel</button>
         </div>
 
+        <a className="btn btn--rose-o" onClick={this.handleDeleteClick}>Delete</a>
+
       </div>
 
     } else {
 
-      return <div className="column--nest">
+      return <div className="list-event border">
 
-        {this.props.countAttending}
-           <h4>{this.state.user.events[this.props.id].name}</h4>
-           <p>{this.state.user.events[this.props.id].address ? this.state.user.events[this.props.id].address : ''}</p>
-           <p>{this.state.user.events[this.props.id].postcode ? this.state.user.events[this.props.id].postcode : ''}</p>
-           <p>{this.state.user.events[this.props.id].from || this.state.user.events[this.props.id].to ? (this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : '') + " - " + (this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : '') : ''}</p>
+        <div className="row">
+
+          <div className="col-md-8">
+            <h4 className="list-event__title">{this.state.user.events[this.props.id].name}</h4>
+            <p>{this.state.user.events[this.props.id].from || this.state.user.events[this.props.id].to ? (this.state.user.events[this.props.id].from ? this.state.user.events[this.props.id].from : '') + " - " + (this.state.user.events[this.props.id].to ? this.state.user.events[this.props.id].to : '') : ''}</p>
+          </div>
+          <div className="col-md-4 tar">
+            <a onClick={this.handleEditClick}>Edit</a>
+          </div>
+
+        </div>
+
+        <div className="row">
+          <div className="col-md-8">
+            <p>{this.state.user.events[this.props.id].address ? this.state.user.events[this.props.id].address : ''}</p>
+            <p>{this.state.user.events[this.props.id].postcode ? this.state.user.events[this.props.id].postcode : ''}</p>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-8">
+            {this.props.countAttending} Attending - {this.props.countGuests} Guests - {this.props.countNot ? " - " + this.props.countNot + "not attending" : ""}
+          </div>
+        </div>
+
 
            {this.state.user.events[this.props.id].meals &&
               <p>Meals:
@@ -137,8 +159,6 @@ module.exports = React.createClass({
               }.bind(this))}
               </p>
             }
-
-            <a className="btn btn--blue" onClick={this.handleEditClick}>Edit</a> <a onClick={this.handleDeleteClick}>Delete</a>
 
           </div>
 

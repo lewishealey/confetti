@@ -21,6 +21,7 @@ var Settings = require('./settings');
 var Login = require('./login');
 var Register = require('./register');
 var ref = new Firebase(rootUrl);
+var Choice = require('./choice');
 
 function logging(name,object,type) {
 	if(type == "obj") {
@@ -30,12 +31,17 @@ function logging(name,object,type) {
 	}
 }
 
+function notification(status,text) {
+	alert(status + " " + text);
+}
+
 var Add = React.createClass({
 	mixins: [ ReactFire ],
   getInitialState: function() {
     return({
       loaded: false,
-			course: {}
+			course: {},
+			eventChoices: []
     })
   },
 	handleAddEvent: function() {
@@ -89,64 +95,170 @@ var Add = React.createClass({
 		});
 
 	},
+	handleGuest: function(e) {
+		// Prevent anchor firing
+		e.preventDefault();
+
+		// Vars
+		var fname = this.refs.fName.getDOMNode().value;
+		var lname = this.refs.lName.getDOMNode().value;
+		var choices = this.state.eventChoices;
+
+		// Validation
+		if(!fname) { alert("enter fname"); }
+		if(!lname) { alert("enter lname"); }
+		// if(choices.length < 1) { alert("Please select an event"); }
+		if (choices === "[]") {
+			alert("Please select an event");
+		}
+
+		// console.log(choices);
+
+		if(fname && lname && choices) {
+			this.props.handleGuest(fname,lname,choices,null,"add");
+
+			// Resets
+			this.refs.fName.getDOMNode().value = "";
+			this.refs.lName.getDOMNode().value = "";
+			this.setState({eventChoices: [] });
+		}
+
+		// Dev
+		logging("Fname",this.refs.fName.getDOMNode().value,false);
+		logging("Lname",this.refs.lName.getDOMNode().value,false);
+		logging(false,this.state.eventChoices,"obj");
+
+	},
+	handleChoice: function(choice,id,truth) {
+		var choices = this.state.eventChoices;
+
+		// Toggle - If true then add to state if nto remove
+		if(truth == true) {
+			choices[id] = true;
+		} else {
+			delete choices[id];
+			this.setState({eventChoices: choices});
+		}
+
+		// DEV CHOICES
+		//  console.log(this.state.eventChoices);
+
+	},
 	handleOpen: function() {
 		this.props.handleOpen(false);
 	},
   render: function() {
+
+		if(this.props.user.events) {
+			// Loop through event choices object for simple toggle
+			var eventOptions = Object.keys(this.props.user.events).map(function (key, i) {
+				return <Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} />
+			}.bind(this));
+		} else {
+			var eventOptions = "Not set";
+		}
+
+
+		var type;
+
+		if(this.props.type == "guest") {
+			type = "Guest";
+		}
+
+		if(this.props.type == "event") {
+			type = "Event";
+		}
+
 		return <div className={"add " + (this.props.open ? "active" : "not")}>
 			<div className="add__main">
 
 				<div className="row">
 					<div className="col-md-6">
-						<h2>Add Event</h2>
+						<h2 className="add__title">Add {type}</h2>
 					</div>
-					<div className="col-md-6">
-						<button className="btn btn-error" onClick={this.handleOpen}>Close</button>
-					</div>
+						<img className="add__close" src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" onClick={this.handleOpen} />
 				</div>
 
-				<div className="row">
-					<div className="col-md-12">
-							<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" />
+				{this.props.type == "guest" &&
+
+					<div>
+						<div className="row">
+							<div className="col-md-12">
+									<p><input type="text" className="form-control" placeholder="Enter First Name" ref="fName" name="fname" /></p>
+							</div>
+							<div className="col-md-12">
+									<p><input type="text" className="form-control" placeholder="Enter Surname" ref="lName" name="lname" /></p>
+							</div>
+
+							<div className="col-md-12">
+								<h5>What event/s are they invited to?</h5>
+								{eventOptions}
+							</div>
+
+							<div className="col-md-12 add__cta">
+								<a className="btn btn--gold" onClick={this.handleGuest}>Add Guest</a><a className="btn btn--trans" onClick={this.handleOpen}>Cancel</a>
+							</div>
+
+						</div>
 					</div>
-				</div>
+				}
 
-				<div className="row">
-					<div className="col-md-6">
-						<label>From</label>
-						<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
-					</div>
-					<div className="col-md-6">
-						<label>To</label>
-						<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
-					</div>
-				</div>
+				{this.props.type == "event" &&
 
-				<label>Address</label>
-				<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
+					<div>
+						<div className="row">
+							<div className="col-md-12">
+									<input type="text" className="form-control" placeholder="Enter event name" ref="eventName" />
+							</div>
+						</div>
 
-				<label>Postcode</label>
-				<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
+						<div className="row">
+							<div className="col-md-6">
+								<label>From</label>
+								<input type="text" className="form-control" placeholder="00:00" ref="eventFTime" />
+							</div>
+							<div className="col-md-6">
+								<label>To</label>
+								<input type="text" className="form-control" placeholder="06:00" ref="eventTTime" />
+							</div>
+						</div>
 
-				<h5>Add a course</h5>
-				<p><input type="text" className="form-control" placeholder="Enter meal name" ref="courseName" />
-				<a className="btn btn-default" onClick={this.handleCourse}>Add course</a></p>
+						<label>Address</label>
+						<input type="text" className="form-control" placeholder="Address" ref="eventAddress" name="address" /><br />
 
-				<div>
-					<h5>Add meals to course</h5>
-					<select className="form-control" ref="courseSelect">
-						{Object.keys(this.state.course).map(function (key, i) {
-							return <option key={i} value={key}>{this.state.course[key].name}</option>
-						}.bind(this))}
-					</select>
-					<input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
-					<a className="btn btn-default" onClick={this.handleMeal}>Add meal</a>
-				</div>
+						<label>Postcode</label>
+						<input type="text" className="form-control" placeholder="Postcode" ref="eventPostcode" name="postcode" /><br />
 
-				<button className="btn btn-primary" onClick={this.handleAddEvent}>Add Event</button>
+						<h5>Add a course</h5>
+						<p><input type="text" className="form-control" placeholder="Enter meal name" ref="courseName" />
+						<a className="btn btn-default" onClick={this.handleCourse}>Add course</a></p>
+
+						<div>
+							<h5>Add meals to course</h5>
+							<select className="form-control" ref="courseSelect">
+								{Object.keys(this.state.course).map(function (key, i) {
+									return <option key={i} value={key}>{this.state.course[key].name}</option>
+								}.bind(this))}
+							</select>
+							<input type="text" className="form-control" placeholder="Enter meal name" ref="mealName" />
+							<a className="btn btn-default" onClick={this.handleMeal}>Add meal</a>
+						</div>
+
+						<div className="row">
+
+							<div className="col-md-12 add__cta">
+								<button className="btn btn--gold" onClick={this.handleAddEvent}>Add Event</button><a className="btn btn--trans" onClick={this.handleOpen}>Cancel</a>
+							</div>
+
+						</div>
+
+			</div>
+		}
+
 
 			</div>
 		</div>
+
 	}
 });
 
@@ -192,7 +304,7 @@ var App = React.createClass({
     // If user is logged in show dashboard
     if (this.state.loggedIn && this.state.user) {
       return <div>
-				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleOpen={this.handleOpen} open={this.state.open}/>
+				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleGuest={this.handleGuest} handleOpen={this.handleOpen} open={this.state.open}/>
 				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction} handleEvent={this.handleEvent} handleCutoff={this.handleCutoff}>{this.props.children}</Dashboard></div>
             // return <div><h4>Logged in</h4></div>
     } else {
@@ -317,7 +429,7 @@ var App = React.createClass({
     }.bind(this));
 
   },
-  onRegisterSubmit: function(regEmail,regPassword, username) {
+  onRegisterSubmit: function(regEmail,regPassword) {
     var timeInMs = Date.now();
     var randomNo = Math.floor(Math.random() * 1000) + 1;
 
@@ -361,13 +473,9 @@ var App = React.createClass({
           events: initialEvents,
           wedding_date: false,
           settings: false,
-          onboard: this.state.onboard,
-          username: username
+          onboard: this.state.onboard
         });
 
-        ref.child("links").child(username).set({
-          authid: userData.uid
-        });
         // console.log("Successfully created user account with uid:", userData.uid);
 
         // Create a callback to handle the result of the authentication
@@ -399,7 +507,7 @@ var App = React.createClass({
   handleRegister: function(){
     this.setState({register: true});
   },
-  handleGuest: function(fname,lname,email,choices,id,action) {
+  handleGuest: function(fname,lname,choices,id,action) {
 
     // Unique ID
     var timeInMs = Date.now();
@@ -411,9 +519,9 @@ var App = React.createClass({
 
     // logging("Fname",fname,false);
 		// logging("Lname",lname,false);
-		// logging("Email",email,false);
+		// // logging("Email",email,false);
 		// logging(false,choices,"obj");
-		// logging("Action",action,false);
+		logging("Action",action,false);
 		// logging("Id",id,false);
 
     if(action == "add") {
@@ -428,7 +536,7 @@ var App = React.createClass({
         // Personal info
         fname: fname,
         lname: lname,
-        email: email,
+        // email: email,
         events: choices,
 
         // False for later
@@ -445,6 +553,8 @@ var App = React.createClass({
 
         // Add to invited
         this.fb.child("invited/" + string).update({ [key]: true });
+
+				notification("success","Added!");
 
       }.bind(this))};
       // End event loop
@@ -476,12 +586,10 @@ var App = React.createClass({
 					if(choices[key]) {
 						// console.log("Attending " + key);
 						this.fb.child("events/" + key + "/guests/").update({ [id]: true });
-		        this.fb.child("invited/" + id).update({ [key]: true });
 						this.fb.child("guests/" + id + "/events/").update({ [key]: true });
 					} else {
 						// console.log("Not " + key);
 						this.fb.child("events/" + key + "/guests/" + id).remove();
-		        this.fb.child("invited/" + id + "/" + key).remove();
 						this.fb.child("guests/" + id + "/events/" + key).remove();
 					}
 
@@ -489,27 +597,31 @@ var App = React.createClass({
 	    //   End event loop
 
     }
+		alert(action);
 
-    if(action == "delete") {
-      if (window.confirm("Are you sure?")) {
+    if(action === "remove") {
+
         this.fb.child("guests/" + id).remove();
 
         // Add to each event - loop through events and add
         var events = {};
-        {Object.keys(this.state.events).map(function(key) {
+        {Object.keys(this.state.user.events).map(function(key) {
+
+					console.log(key)
 
           // Remove event
           this.fb.child("events/" + key + "/guests/" + id).remove();
+					this.fb.child("events/" + key + "/attending/" + id).remove();
+					this.fb.child("events/" + key + "/notattending/" + id).remove();
 
           // Remove invited
-          this.fb.child("invited/" + id).remove();
           this.fb.child("attending/" + id).remove();
           this.fb.child("nattending/" + id).remove();
+
 
         }.bind(this))};
         // End event loop
 
-      }
     }
 
   }

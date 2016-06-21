@@ -43,15 +43,6 @@ module.exports = React.createClass({
 			var eventOptions = "Not set";
 		}
 
-		if(this.props.user.guests) {
-			// Loop through event choices object for simple toggle
-			var guestOptions = Object.keys(this.props.user.guests).map(function (key, i) {
-				return <ListGuest guest={this.props.user.guests[key]} key={key + i} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={false}></ListGuest>
-			}.bind(this));
-		} else {
-			var guestOptions = "Add a guest to get started";
-		}
-
 		// Add guest and guest list content - comes from this.props.children in router
 		return <div className="cont__flex-column">
 
@@ -93,20 +84,16 @@ module.exports = React.createClass({
 					<div className="guest__column">
 
 						<div className="column column__half">
-		            		<h4>Invited Guests</h4>
-		            		<p>View your wonderful guests</p>
-		        		</div>
+            		<h4>Invited Guests</h4>
+            		<p>View your wonderful guests <a onClick={this.onToggleAddEvent.bind(this,"add","guest")}>Add more</a></p>
+        		</div>
 
-						<div className="cont">
-					      <div className="column">
-					        <strong>Name</strong>
-					      </div>
-					      <div className="column__double">
-					        <strong>Events</strong>
-					      </div>
-					    </div>
+							{this.props.user.guests &&
+			          Object.keys(this.props.user.guests).map(function (key, i) {
+			            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={false} meals={false} />
+			          }.bind(this))
+			        }
 
-							{guestOptions}
 						<p><a onClick={this.onToggleAddGuest} className="btn btn--default btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
 					</div>
 
@@ -116,8 +103,8 @@ module.exports = React.createClass({
 
 		</div>
 	},
-	handleDeleteGuest: function(id) {
-		this.props.handleDeleteGuest(id,"delete");
+	handleDeleteGuest: function(fname,lname,choices,id,action) {
+		this.props.handleGuest(fname,lname,choices,id,action);
 	},
 	handleEditGuest: function(fname,lname,email,choices,id) {
 		this.props.handleEditGuest(fname,lname,email,choices,id,"edit");
@@ -176,6 +163,10 @@ module.exports = React.createClass({
 	},
 	onToggleAddGuest: function() {
 		this.setState({ addGuest: ! this.state.addGuest })
+	},
+	onToggleAddEvent: function(action,type, event) {
+		event.preventDefault();
+		this.props.handleAction(action,type);
 	}
 
 });

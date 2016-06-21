@@ -135,24 +135,30 @@ module.exports = React.createClass({
 
 		return <div className="dashboard">
 					<div className="dashboard__header">
-						<div className="dashboard__container cont">
+						<div className="container">
 
-							<div className="menu">
+							<div className="row">
+
+							<div className="col-md-4 menu">
 								<ul>
-									<li><button onClick={this.handleMenu.bind(this,"home")}>Home</button></li>
-									<li><button onClick={this.handleMenu.bind(this,"guests")}>Guests</button></li>
-									<li><button onClick={this.handleMenu.bind(this,"events")}>Events</button></li>
-									<li><button onClick={this.handleMenu.bind(this,"settings")}>Settings</button></li>
+									<li><a onClick={this.handleMenu.bind(this,"home")}>Home</a></li>
+									<li><a onClick={this.handleMenu.bind(this,"guests")}>Guests</a></li>
+									<li><a onClick={this.handleMenu.bind(this,"events")}>Events</a></li>
+									<li><a onClick={this.handleMenu.bind(this,"settings")}>Settings</a></li>
 								</ul>
 							</div>
 
-							<Link to={`/dashboard`}>
-								<img src="http://localhost/confetti_app/img/confetti_logo.svg" alt="Confetti - A new digital tradition" />
-							</Link>
+							<div className="col-md-4 tac">
+								<Link to={`/dashboard`}>
+									<img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/confetti_logo.png?alt=media&token=694ca44e-28d4-40ad-9aaf-2ed3800f7c49" alt="Confetti - A new digital tradition" width="200" />
+								</Link>
+							</div>
 
-							<div className="dashboard__welcome">
+							<div className="col-md-4 dashboard__welcome">
 								Welcome, <a onClick={this.handleLogout}>Logout</a>
 							</div>
+
+						</div>
 
 						</div>
 					</div>
@@ -209,12 +215,12 @@ module.exports = React.createClass({
        	return <Events user={this.props.user} handleEvent={this.handleEvent} handleEditGuest={this.handleEditEvent} handleDeleteGuest={this.handleDeleteEvent} handleAction={this.handleAction} />
     	}
 			if(this.state.menu == "guests") {
-       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
+       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} handleAction={this.handleAction} />
     	}
 			if(this.state.menu == "settings") {
        	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} />
     	}
-			return <Attending user={this.props.user}  handleAction={this.handleAction} />
+			return <Attending user={this.props.user}  handleAction={this.handleAction} handleAction={this.handleAction} />
 
 		} else {
 			if(window.location.href.indexOf("events") > -1) {
@@ -257,17 +263,13 @@ module.exports = React.createClass({
     this.props.handleCutoff(cutoff);
 
   },
-	handleDeleteGuest: function(id,action) {
-		// Pass props up
-		this.props.handleGuest(null,null,null,null,id,action);
-	},
 	handleEditGuest: function(fname,lname,email,choices,id,action) {
 		// Pass props up
 		this.props.handleGuest(fname,lname,email,choices,id,action);
 	},
-	handleGuest: function(fname,lname,email,choices,id,action) {
+	handleGuest: function(fname,lname,choices,id,action) {
 		// Pass props up
-		this.props.handleGuest(fname,lname,email,choices,id,action);
+		this.props.handleGuest(fname,lname,choices,id,action);
 	},
 	handleOnb1: function() {
 		var username = this.refs.step_1.getDOMNode().value;
@@ -277,28 +279,6 @@ module.exports = React.createClass({
 	handleLogout: function() {
 			this.props.handleLogout();
   	},
-  	handleDrop: function (files) {
-  		var authData = ref.getAuth();
-  		var firebaseRef = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + authData.uid);
-  		var req = request.post('upload/');
-        files.forEach((file)=> {
-            req.attach(file.name, file);
-            // console.log(file.name);
-
-   //          firebaseRef.child("settings").update({
-			// 	image: file.name
-			// });
-
-        });
-
-        req.end(function(err, res){
-    		// Do something
-    		// console.log(err);
-		});
-
-
-
-    },
     handleMail: function(event) {
 		var dataString = 'user='+ this.state.authId;
 

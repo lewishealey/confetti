@@ -59,7 +59,6 @@ a:hover {
 .dashboard__header {
   background: #FFFFFF;
   padding: 30px 30px;
-  text-align: center;
   margin-bottom: 5px; }
 
 .dashboard__container {
@@ -356,6 +355,11 @@ a:hover {
   border-radius: 10px; }
   .badge--outline {
     background-color: transparent; }
+  .badge--updated {
+    color: white; }
+  .badge--new {
+    background-color: #F2514B;
+    color: white; }
   .badge--blue {
     color: #5DBBFD;
     border: 1px solid #5DBBFD; }
@@ -402,6 +406,7 @@ label {
   position: relative;
   color: white;
   background: #B0BEC5;
+  margin-right: 10px;
   webkit-transition: all 0.25s linear;
   -moz-transition: all 0.25s linear;
   -o-transition: all 0.25s linear;
@@ -427,9 +432,9 @@ label {
     font-size: 20px;
     line-height: 1; }
   .btn--choice {
-    border-color: #F2F5F5;
-    background-color: #F2F5F5;
-    color: #8B9299;
+    border-color: #ECEFF1;
+    background-color: #ECEFF1;
+    color: #536E7B;
     margin-right: 10px; }
     .btn--choice:hover {
       color: #FFFFFF;
@@ -446,6 +451,10 @@ label {
       color: #19B26B; }
     .btn--spotify:focus {
       color: #FFFFFF; }
+  .btn--default {
+    color: #8B9299;
+    border-color: #8B9299;
+    background: transparent; }
   .btn--invite {
     background-color: #6522FF;
     border-color: #6522FF;
@@ -464,6 +473,10 @@ label {
       background-color: #6522FF;
       border-color: #6522FF;
       color: white; }
+  .btn--delete {
+    border-color: #f44336;
+    background-color: transparent;
+    color: #f44336; }
   .btn--outline {
     border-width: 2px;
     border-color: #BAC3CC;
@@ -522,13 +535,17 @@ label {
   .event-bar__item {
     display: inline-block;
     color: #8B9299;
-    padding: 10px 20px;
+    padding: 10px 20px 20px;
     font-size: 18px;
     border-top-left-radius: 3px;
-    border-top-right-radius: 3px; }
+    border-top-right-radius: 3px;
+    margin-bottom: -3px; }
     .event-bar__item:hover {
       background: #FFFFFF;
       cursor: pointer; }
+    .event-bar__item a {
+      color: #8B9299;
+      text-decoration: none; }
     .event-bar__item.active {
       background: #FFFFFF; }
 
@@ -553,9 +570,35 @@ label {
   top: 0; }
   .add.active {
     display: flex; }
+  .add__title {
+    margin-top: 0; }
   .add__main {
+    position: relative;
     background: white;
-    padding: 20px;
+    padding: 20px 15px 0 15px;
     width: 600px;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     border-radius: 5px; }
+  .add__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 20px; }
+    .add__close:hover {
+      opacity: 0.5;
+      cursor: pointer; }
+  .add__cta {
+    background: #F2F5F5;
+    padding: 20px;
+    margin-top: 20px; }
+
+.list-event__title {
+  margin-top: 0; }
+
+.list__meal {
+  margin-right: 10px; }
+
+.border {
+  border-radius: 5px;
+  border: 2px solid #ECEFF1;
+  padding: 30px; }

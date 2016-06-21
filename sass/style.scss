@@ -129,7 +129,6 @@ a {
 	&__header {
 		background: $white;
 		padding: 30px 30px;
-		text-align: center;
 		margin-bottom: 5px;
 	}
 
@@ -615,6 +614,15 @@ a {
 		background-color: transparent;
 	}
 
+  &--updated {
+    color: white;
+  }
+
+  &--new {
+    background-color: #F2514B;
+    color: white;
+  }
+
 	&--blue {
 		color: $blue;
 		border: 1px solid $blue;
@@ -679,6 +687,7 @@ label {
 	position: relative;
 	color: white;
   background: $lwhite;
+  margin-right: 10px;
 
 	@include animation(all,0.25s,linear)
 
@@ -692,7 +701,6 @@ label {
 		background-color: $blue;
 		border-color: $blue;
 		color: $dark;
-
 	}
 
 	&:focus {
@@ -720,9 +728,9 @@ label {
 	}
 
 	&--choice {
-		border-color: #F2F5F5;
-		background-color: #F2F5F5;
-		color: #8B9299;
+		border-color: #ECEFF1;
+		background-color: #ECEFF1;
+		color: #536E7B;
 		margin-right: 10px;
 
 		&:hover {
@@ -748,6 +756,12 @@ label {
 			color: $white;
 		}
 	}
+
+  &--default {
+    color: #8B9299;
+    border-color: #8B9299;
+    background: transparent;
+  }
 
 
 	&--invite {
@@ -777,6 +791,12 @@ label {
       color: white;
     }
 
+  }
+
+  &--delete {
+    border-color: #f44336;
+    background-color: transparent;
+    color: #f44336;
   }
 
   &--outline {
@@ -861,15 +881,22 @@ label {
   &__item {
     display: inline-block;
     color: #8B9299;
-    padding: 10px 20px;
+    padding: 10px 20px 20px;
     font-size: 18px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+    margin-bottom: -3px;
 
     &:hover {
       background: $white;
       cursor: pointer;
     }
+
+    a {
+      color: #8B9299;
+      text-decoration: none;
+    }
+
 
     &.active {
       background: $white;
@@ -908,12 +935,58 @@ label {
     display: flex;
   }
 
+  &__title {
+    margin-top: 0;
+  }
+
   &__main {
+    position: relative;
     background: white;
-    padding: 20px;
+    padding: 20px 15px 0 15px;
     width: 600px;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     border-radius: 5px;
   }
 
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 20px;
+
+    &:hover {
+      opacity: 0.5;
+      cursor: pointer;
+    }
+
+  }
+
+  &__cta {
+    background: #F2F5F5;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+}
+
+.list {
+
+  &-event {
+
+    &__title {
+      margin-top: 0;
+    }
+
+  }
+
+  &__meal {
+    margin-right: 10px;
+  }
+
+}
+
+.border {
+  border-radius: 5px;
+  border: 2px solid #ECEFF1;
+  padding: 30px;
 }

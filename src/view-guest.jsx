@@ -212,29 +212,46 @@ module.exports = React.createClass({
             <div className={"add " + (this.state.addSpotify ? "active" : "not")}>
 
                 <div className="add__main">
-                  <h4>Search for a track</h4>
-                <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
 
-                  {(this.state.tracks && this.props.guestId) &&
+                  <img className="add__close" src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" onClick={this.addSpotify} />
 
-                    <div className="guest-list">
+                  <div className="row">
 
-                      {Object.keys(this.state.tracks).map(function (key, i) {
+                    <div className="col-md-8">
+                      <h4>Search for a track</h4>
+                      <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
 
-                        if(i < 10) {
-                        return <div className="guest-list__item" onClick={this.handleTrack.bind(this,this.state.tracks[key])}>
-                              {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
-                              <a> select</a>
-                          </div>
-                        }
+                      {(this.state.tracks && this.props.guestId) &&
 
-                      }.bind(this))}
+                        <div className="guest-list">
+
+                          {Object.keys(this.state.tracks).map(function (key, i) {
+
+                            if(i < 10) {
+                            return <div className="guest-list__item" onClick={this.handleTrack.bind(this,this.state.tracks[key])}>
+                                  {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
+                                  <a> select</a>
+                              </div>
+                            }
+
+                          }.bind(this))}
+
+                        </div>
+
+                      }
 
                     </div>
+                  </div>
 
-                  }
+                  <div className="row">
 
-              </div>
+                      <div className="col-md-12 add__cta">
+                        Search for anything you want!
+                      </div>
+
+                  </div>
+
+                </div>
 
             </div>
 

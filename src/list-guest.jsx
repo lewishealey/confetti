@@ -46,8 +46,12 @@ module.exports = React.createClass({
     }
 
   },
+	handleEditDelete: function() {
+		alert("hello")
+	},
   render: function() {
   return <div>
+
     {this.renderList()}
   </div>
 
@@ -101,23 +105,62 @@ module.exports = React.createClass({
 
 				<div className="guest">
 					<div className="col-md-4">
-	          {this.props.guest.fname + " " + this.props.guest.lname}
+	          {this.props.guest.fname + " " + this.props.guest.lname} {this.props.guest.email}
 
 						{date(this.props.guest.date_created) == date(Date.now()) &&
-							<span className="badge badge-danger">New</span>
+							<span className="badge badge--new">New</span>
 						}
 
 						{date(this.props.guest.date_updated) == date(Date.now()) &&
-							<span className="badge badge-info">Updated</span>
+							<span className="badge badge--updated">Updated</span>
 						}
-						
+
 	        </div>
 
-					<div className="col-md-6">
+						{(this.props.meals && this.props.user.attending[this.props.id] && this.props.user.attending[this.props.id].events[this.props.eventId].courses) &&
 
-						{this.props.guest.email}
+							<div className="col-md-4">
+								{Object.keys(this.props.user.attending[this.props.id].events[this.props.eventId].courses).map(function (courseId) {
+									var meal_uni = this.props.user.attending[this.props.id].events[this.props.eventId].courses[courseId].meal_name;
 
-					</div>
+									return <span className="list__meal">
+										{this.props.user.courses[this.props.eventId][courseId].name}: {this.props.user.courses[this.props.eventId][courseId].meals[meal_uni].name}
+									</span>
+
+								}.bind(this))}
+							</div>
+
+						}
+
+
+						{(this.props.all && this.props.user.attending[this.props.id]) &&
+								Object.keys(this.props.user.attending[this.props.id].events).map(function (eventId) {
+
+									return <div>
+
+
+									{this.props.user.attending[this.props.id].events[eventId].courses &&
+
+										<div>
+
+											{this.props.user.events[eventId].name} :
+
+											{Object.keys(this.props.user.attending[this.props.id].events[eventId].courses).map(function (courseId) {
+												var meal_uni = this.props.user.attending[this.props.id].events[eventId].courses[courseId].meal_name;
+
+												return <span>{this.props.user.courses[eventId][courseId].meals[meal_uni].name} </span>
+											}.bind(this))}
+
+										</div>
+
+									}
+
+
+								</div>
+
+								}.bind(this))
+						}
+
 
 					{this.props.attending == false &&
 		        <div className="col-md-4">
@@ -129,11 +172,12 @@ module.exports = React.createClass({
 		        </div>
 					}
 
+
 	        {this.props.attending == false &&
-	          <div className="col-md-4">
+	          <div className="col-md-4 tar">
 	            <a href={"/confettiapp/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">View as guest</a>
 	            <a onClick={this.handleEditClick}> Edit </a>
-	            <a onClick={this.handleDeleteClick}>Delete</a>
+							<a onClick={this.handleDeleteClick}> Delete </a>
 	          </div>
 	        }
 				</div>
@@ -147,8 +191,8 @@ module.exports = React.createClass({
     this.setState({ edit: ! this.state.edit })
   },
   handleDeleteClick: function() {
-    var id = this.props.guest.key;
-    this.props.handleDeleteGuest(id);
+    var id = this.props.id;
+    this.props.handleDeleteGuest(null,null,null,id,"remove");
   },
   handleChange: function() {
     var fname = this.refs.fName.getDOMNode().value;

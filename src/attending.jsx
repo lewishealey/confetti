@@ -48,7 +48,7 @@ module.exports = React.createClass({
 
         <div className="col-md-6">
             <h4>Whos attending</h4>
-            <p>See which guests are attending <a href="#">Add more guests</a></p>
+            <p>See which guests are attending <a onClick={this.onToggleAddEvent.bind(this,"add","guest")}>Add Guest</a></p>
         </div>
 
     </div>
@@ -68,13 +68,13 @@ module.exports = React.createClass({
             }.bind(this))
           }
           <div className="event-bar__item event-bar__item--add">
-            <button onClick={this.onToggleAddEvent.bind(this,"add","event")}><i className="material-icons">add</i> Add a new event</button>
+            <a onClick={this.onToggleAddEvent.bind(this,"add","event")}>Add a new event</a>
           </div>
         </div>
 
         {(this.state.eventId && this.props.user.events[this.state.eventId].attending) &&
           Object.keys(this.props.user.events[this.state.eventId].attending).map(function (key) {
-            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true}></ListGuest>
+            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} eventId={this.state.eventId} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true} meals={true} />
           }.bind(this))
         }
 
@@ -85,7 +85,8 @@ module.exports = React.createClass({
 
   </div>
 },
-  onToggleAddEvent: function(action,type) {
+  onToggleAddEvent: function(action,type, event) {
+    event.preventDefault();
 		this.props.handleAction(action,type);
 	}
 
