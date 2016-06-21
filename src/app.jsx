@@ -311,9 +311,13 @@ var App = React.createClass({
 
     // Else show login or register form
       return <div className="login">
-        <div className="column--nest">
+        <div className="login__main">
               <Login login={this.onLoginSubmit} loading={this.state.loaded} />
-              <Register register={this.onRegisterSubmit} loading={this.state.loaded} />
+
+								<div className="login__cta">
+			            <Register register={this.onRegisterSubmit} loading={this.state.loaded} />
+			          </div>
+
             </div>
         </div>
     }

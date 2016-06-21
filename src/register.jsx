@@ -36,9 +36,10 @@ module.exports = React.createClass({
   },
   render: function() {
 
-    return <div className="column">
+    return <div className="register">
 
-      <button type="submit" className="btn btn--outline" onClick={this.handleRegister}>{this.state.loading ? "Loading" : "Register"}</button>
+      <h4 className="register__title">Don't have an account? <br />Register below</h4>
+      <p><button type="submit" className="btn btn--dark" onClick={this.handleRegister}>{this.state.loading ? "Loading" : "Register now"}</button></p>
 
       {this.state.register &&
 
@@ -48,12 +49,12 @@ module.exports = React.createClass({
         <form>
 
           <label>Email</label>
-          <input type="email" className="form-control" ref="regEmail" name="email" required/>
+          <p><input type="email" className="form-control" ref="regEmail" name="email" required/></p>
 
           <label>Password</label>
-          <input type="password" className="form-control" ref="regPassword" name="password" required/>
+          <p><input type="password" className="form-control" ref="regPassword" name="password" required/></p>
 
-          <button type="submit" className="btn btn-default" onClick={this.handleClick.bind(this,"button")}>Register</button>
+          <button type="submit" className="btn btn--dark" onClick={this.handleClick.bind(this,"button")}>Register</button>
         </form>
 
         </div>

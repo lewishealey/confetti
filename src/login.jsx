@@ -10,7 +10,7 @@ module.exports = React.createClass({
 
     if(this.props.loaded) {
       this.setState({ loading: false });
-    } 
+    }
 
     if(this.props.loaded == false) {
       this.setState({ loading: false });
@@ -23,12 +23,14 @@ module.exports = React.createClass({
 
     this.props.login(email,password);
     this.setState({ loading: true });
-    
+
   },
   render: function() {
-    return <div className="column">
-    <img src="img/confetti_logo.png" width="169" />
-    <h4>Welcome! Please login</h4>
+    return <div>
+
+      <div className="login__header">
+        <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/logo-grey.png?alt=media&token=d19cc3bf-32fe-4744-a73a-0834c7798477" width="200" className="login__logo"/>
+      </div>
 
           <div className="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -38,9 +40,10 @@ module.exports = React.createClass({
             <label for="exampleInputPassword1">Password</label>
             <input type="password" className="form-control" ref="password" name="password"/>
           </div>
-          <button type="submit" className="btn btn--gold" onClick={this.handleClick}>{this.state.loading ? "Loading" : "Submit"}</button>
 
-        </div> 
+          <button type="submit" className="btn btn--gold" onClick={this.handleClick}>{this.state.loading ? "Loading" : "Login"}</button>
+
+        </div>
   }
 
 });
