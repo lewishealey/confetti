@@ -14,89 +14,125 @@ $userData = $fb->get("users/09a57e9a-6d0d-4587-8e2e-7867111a41a2");
 
 // print_r($userData);
 
-$before = strtotime("-10 minute");
+$before = strtotime("-10 minutes");
 
 $mailin = new Mailin('https://api.sendinblue.com/v2.0','RAKxVhObvYnN318W');
 
-foreach($userData["attending"] as $key => $guest) {
+foreach($userData["guests"] as $key => $guest) {
 
-  if(($guest["date_created"] / 1000) > $before) {
+  // If has attending or not attending
+  $hasAttending = isset($userData["attending"][$key]);
+  $hasNotAttending = isset($userData["notattending"][$key]);
 
-    $events_table = "";
 
-    if($userData["playlist"][$key]) {
+  if($hasAttending || $hasNotAttending) {
 
-      $notice = '
-      <table align="center">
-        <tr>
-          <td style="padding-left: 20px; color: #8B9299;">
-            <img src="' . $userData["playlist"][$key]["album_image"] . '" width="75">
-          </td>
-          <td style="padding-left: 20px; text-align: left;">
-            <span style="font-size: 18px; line-height: 1.44; color: #8B9299; display: block;">' . $userData["playlist"][$key]["artist_name"] . '</span>
-            <span style="font-size: 18px; line-height: 1.44; color: #233332; display: block; padding-bottom: 5px;">' . $userData["playlist"][$key]["track_name"] . '</span>
-            <a href="https://play.spotify.com/track/' . $userData["playlist"][$key]["id"]. '">
-              <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="130">
-            </a>
-          </td>
-        </tr>
-      </table>';
-    } else {
-      $notice = "Did not submit a track :(";
+    if($hasAttending) {
+      $a_incron =  $userData["attending"][$key]["date_created"] / 1000 > $before;
     }
 
-    echo $notice;
+    if($hasNotAttending) {
+      $na_incron =  $userData["notattending"][$key]["date_created"] / 1000 > $before;
+    }
 
 
-    foreach($userData["attending"][$key]["events"] as $id => $event) {
-      $event_id = $id;
+    //If attending or not attending is in cron
+    if($a_incron || $na_incron) {
+      $subject = $userData["guests"][$key]["fname"] . " " .$userData["guests"][$key]["lname"] . "";
 
-      $events_table .= "<table width='100%' cellspacing='0' cellpadding='0'>";
+      $events_table = "<table width='100%' cellspacing='0' cellpadding='0'>";
 
-      $events_table .= '
-      <tr cellspacing="0" cellpadding="0">
-        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
-          <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466018779/tick_fu3uab.png" height="16" style="height: 12px; padding-right: 20px;"> ' . $userData["events"][$id]["name"] . '
-        </td>
-        <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: right; font-size: 16px; padding: 20px 20px 20px 20px;">
-        ';
+        $hasAttendingEvents = isset($userData["attending"][$key]["events"]);
+        $hasNotAttendingEvents = isset($userData["notattending"][$key]["events"]);
 
-        if(!empty($userData["attending"][$key]["events"][$id]["courses"])) {
+          // echo date('F j, Y, g:i a', $before);
 
-          $events_table .= '
-            <table align="right">
-              <tr>';
+          if($hasAttendingEvents) {
+            // echo date('F j, Y, g:i a', ($userData["attending"][$key]["date_created"] / 1000));
 
-          foreach($userData["attending"][$key]["events"][$id]["courses"] as $course_id => $course) {
-            $meal_id = $course["meal_name"];
+            $subject .= " is attending ";
 
-            $events_table .= '
-                  <td style="padding-left: 20px; color: #8B9299;">
-                    ' . $userData["courses"][$event_id][$course_id]["meals"][$meal_id]["name"] . '
-                  </td>';
+            foreach($userData["attending"][$key]["events"] as $id => $event) {
+              $subject.=  $userData["events"][$id]["name"] . ", ";
 
-            // $events_table .= "<td>" . $user->courses->$event_id->$course_id->name  . ":</td>";
+              $events_table .= '<tr cellspacing="0" cellpadding="0">
+                <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
+                  <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/tick.png?alt=media&token=e41d9b12-d2a8-475b-8974-c86205c20e42" height="16" style="height: 12px; padding-right: 20px;"> ' . $userData["events"][$id]["name"] . '
+                </td>';
+
+                $eventHasMeals = isset($userData["attending"][$key]["events"][$id]["courses"]);
+
+                $events_table .= '<td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">';
+
+                if($eventHasMeals) {
+
+                    foreach($userData["attending"][$key]["events"][$id]["courses"] as $course_id => $meal) {
+                      $meal_id = $meal["meal_name"];
+                      $events_table .= $userData["courses"][$id][$course_id]["meals"][$meal_id]["name"] . " - ";
+                    }
+
+                }
+
+
+                $events_table .= '</td>';
+                $events_table.= "</tr>";
+
+
+                // var_dump($userData["attending"]);
+
+              }
 
           }
 
-          $events_table .= "
-            </tr>
-          </table>";
+          if($hasNotAttendingEvents) {
+            echo date('F j, Y, g:i a', ($userData["notattending"][$key]["date_created"] / 1000));
 
-        }
+            if($hasAttendingEvents) {
+              $subject .= " and not ";
+            } else {
+              $subject .= " is not attending ";
+            }
 
-      $events_table .= '
-        </td>
-      </tr>
-      </table>';
+            foreach($userData["notattending"][$key]["events"] as $id => $event) {
+              $subject.=  $userData["events"][$id]["name"] . ", ";
 
-    }
+              $events_table .= '<tr cellspacing="0" cellpadding="0">
+                <td colspan="2" cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
+                  <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" height="16" style="height: 12px; padding-right: 20px;"> ' . $userData["events"][$id]["name"] . '
+                </td>
+                </tr>';
+              }
+
+          }
+
+          if(isset($userData["playlist"][$key])) {
+
+            $notice = '<table align="center">
+              <tr>
+                <td style="padding-left: 20px; color: #8B9299;">
+                  <img src="' . $userData["playlist"][$key]["album_image"] . '" width="75">
+                </td>
+                <td style="padding-left: 20px; text-align: left;">
+                  <span style="font-size: 18px; line-height: 1.44; color: #8B9299; display: block;">' . $userData["playlist"][$key]["artist_name"] . '</span>
+                  <span style="font-size: 18px; line-height: 1.44; color: #233332; display: block; padding-bottom: 5px;">' . $userData["playlist"][$key]["track_name"] . '</span>
+                  <a href="https://play.spotify.com/track/' . $userData["playlist"][$key]["id"]. '">
+                    <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="130">
+                  </a>
+                </td>
+              </tr>
+            </table>';
+          } else {
+            $notice = "Did not submit a track :(";
+          }
 
 
-      // echo "<p>Created" . $guest->date_created / 1000 . "</p>";
-      // echo "<p>Before " . date('F j, Y, g:i a', strtotime("-1 minute")) . "</p>";
-      // echo "<p>Now: " . date('F j, Y, g:i a', strtotime("now")) . "</p>";
-      // echo "<p>Created: " . date('F j, Y, g:i a', ($guest->date_created / 1000)) . "</p>";
+      $events_table .= "</table>";
+
+      echo "<p>" . $subject . "</p>";
+
+      echo $events_table;
+      // echo $notice;
+
 
       $data = array(
                 "id" => 1,
@@ -108,17 +144,21 @@ foreach($userData["attending"] as $key => $guest) {
                     "TRACK" => $notice,
                     "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
                     "NOTICE" => "Amazing!",
-                    "LINK" => "http://localhost:8888/confettiapp/"
+                    "LINK" => "http://app.cnftti.com/",
+                    "SUBJECT" => $subject
                   )
       );
 
       var_dump($mailin->send_transactional_template($data));
 
-
     }
 
 
+  }
+
+
 }
+
 
 
 
