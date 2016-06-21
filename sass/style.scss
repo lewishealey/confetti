@@ -254,6 +254,7 @@ a {
 
   .block {
     padding: 60px;
+    min-height: 100%;
 
     @include phone {
       padding: 40px;

@@ -143,7 +143,8 @@ a:hover {
   line-height: 1.8; }
 
 .view .block {
-  padding: 60px; }
+  padding: 60px;
+  min-height: 100%; }
   @media (min-width: 320px) and (max-width: 767px) {
     .view .block {
       padding: 40px; } }
