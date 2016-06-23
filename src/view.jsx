@@ -37,7 +37,7 @@ module.exports = React.createClass({
 
       this.bindAsObject(this.public, "public");
 
-      this.public.child("lewishealey").on("value", function(snapshot) {
+      this.public.child(this.props.params.userId).on("value", function(snapshot) {
 
         this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + snapshot.val());
         this.bindAsObject(this.fb, "user");
