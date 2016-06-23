@@ -20,9 +20,16 @@ $mailin = new Mailin('https://api.sendinblue.com/v2.0','RAKxVhObvYnN318W');
 
 foreach($users as $user_id => $userData) {
 
+
+  if(isset($userData["cover_image"])) {
+    $cover_image = $userData["cover_image"];
+  } else {
+    $cover_image = "https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/hdr-default.jpg?alt=media&token=1d041103-ab06-40d4-a80f-7630806af022";
+  }
+
   if (is_array($userData["guests"])) {
 
-    echo $user_id;
+    // echo $user_id;
 
     foreach($userData["guests"] as $key => $guest) {
 
@@ -46,7 +53,10 @@ foreach($users as $user_id => $userData) {
 
         //If attending or not attending is in cron
         if($a_incron || $na_incron) {
-          $subject = $userData["guests"][$key]["fname"] . " " .$userData["guests"][$key]["lname"] . "";
+
+          $subject_guest = "You're ";
+
+          $subject = $userData["guests"][$key]["fname"] . " " . $userData["guests"][$key]["lname"] . "";
 
           $events_table = "<table width='100%' cellspacing='0' cellpadding='0'>";
 
@@ -59,9 +69,21 @@ foreach($users as $user_id => $userData) {
                 // echo date('F j, Y, g:i a', ($userData["attending"][$key]["date_created"] / 1000));
 
                 $subject .= " is attending ";
+                $subject_guest .= " attending ";
+
+                $i = 0;
 
                 foreach($userData["attending"][$key]["events"] as $id => $event) {
-                  $subject.=  $userData["events"][$id]["name"] . ", ";
+                  $i++;
+
+                  if($i > 1) {
+                    $subject.= ", ";
+                    $subject_guest.= ", ";
+                  }
+
+                  $subject.=  $userData["events"][$id]["name"];
+                  $subject_guest.=  $userData["events"][$id]["name"];
+
 
                   $events_table .= '<tr cellspacing="0" cellpadding="0">
                     <td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
@@ -97,12 +119,23 @@ foreach($users as $user_id => $userData) {
 
                 if($hasAttendingEvents) {
                   $subject .= " and not ";
+                  $subject_guest .= " and not ";
                 } else {
                   $subject .= " is not attending ";
                 }
 
+                $ii = 0;
+
                 foreach($userData["notattending"][$key]["events"] as $id => $event) {
-                  $subject.=  $userData["events"][$id]["name"] . ", ";
+                  $ii++;
+
+                  if($ii > 1) {
+                    $subject.= ", ";
+                    $subject_guest.= ", ";
+                  }
+
+                  $subject.=  $userData["events"][$id]["name"];
+                  $subject_guest.=  $userData["events"][$id]["name"];
 
                   $events_table .= '<tr cellspacing="0" cellpadding="0">
                     <td colspan="2" cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">
@@ -137,6 +170,7 @@ foreach($users as $user_id => $userData) {
           $events_table .= "</table>";
 
           echo "<p>" . $subject . "</p>";
+          echo "<p>" . $subject_guest . "</p>";
 
           echo $events_table;
           echo $notice;
@@ -153,11 +187,29 @@ foreach($users as $user_id => $userData) {
                         "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
                         "NOTICE" => "Amazing!",
                         "LINK" => "http://app.cnftti.com/",
-                        "SUBJECT" => $subject
+                        "SUBJECT" => $subject,
+                        "COVER_IMAGE" => $cover_image
                       )
           );
 
+          $data_guest = array(
+                    "id" => 6,
+                      "to" => $userData["guests"][$key]["email"],
+                      "attr" => array(
+                        "FNAME"=>$userData["guests"][$key]["fname"],
+                        "EVENT_LOOP"=> $events_table,
+                        "TRACK" => $notice,
+                        "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
+                        "NOTICE" => "Amazing!",
+                        "LINK" => "http://app.cnftti.com/",
+                        "SUBJECT" => $subject_guest,
+                        "COVER_IMAGE" => $cover_image
+                      )
+          );
+
+
           var_dump($mailin->send_transactional_template($data));
+          var_dump($mailin->send_transactional_template($data_guest));
 
         }
 
