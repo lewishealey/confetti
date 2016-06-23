@@ -62,7 +62,7 @@ module.exports = React.createClass({
     if(this.props.user.events) {
           // Loop through event choices object for simple toggle
           var eventOptions = Object.keys(this.props.user.events).map(function (key, i) {
-            return <div><Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} active={this.props.guest.events ? (this.props.guest.events[key] ? true : false) : ''}/></div>
+            return <Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} active={this.props.guest.events ? (this.props.guest.events[key] ? true : false) : ''}/>
           }.bind(this));
         } else {
           var eventOptions = "Not set";
@@ -74,11 +74,11 @@ module.exports = React.createClass({
         <div className="row">
           <div className="col-md-6">
           <label>First name</label>
-            <input type="text" className="form-control" defaultValue={this.props.guest.fname} ref="fName" />
+            <p><input type="text" className="form-control" defaultValue={this.props.guest.fname} ref="fName" /></p>
           </div>
           <div className="col-md-6">
             <label>Last name</label>
-            <input type="text" className="form-control" defaultValue={this.props.guest.lname} ref="lName" />
+            <p><input type="text" className="form-control" defaultValue={this.props.guest.lname} ref="lName" /></p>
         </div>
       </div>
       <div className="row">
@@ -91,11 +91,12 @@ module.exports = React.createClass({
       </div>
 
 				<div className="col-md-12">
+					<h5>What event/s are they invited to?</h5>
           {eventOptions}
         </div>
 
-        <div className="col-md-12">
-          <button onClick={this.handleChange} className="btn btn-success">Save</button> <button onClick={this.handleEditClick} className="btn btn-default">Cancel</button>
+        <div className="col-md-12 add__cta">
+          <button onClick={this.handleChange} className="btn btn--gold">Save</button> <button onClick={this.handleEditClick} className="btn btn-default">Cancel</button>
         </div>
 
     </div>
@@ -104,7 +105,7 @@ module.exports = React.createClass({
       return <div className="row">
 
 				<div className="guest">
-					<div className="col-md-4">
+					<div className="col-md-5">
 	          {this.props.guest.fname + " " + this.props.guest.lname} {this.props.guest.email}
 
 						{date(this.props.guest.date_created) == date(Date.now()) &&
@@ -119,7 +120,7 @@ module.exports = React.createClass({
 
 						{(this.props.meals && this.props.user.attending[this.props.id] && this.props.user.attending[this.props.id].events[this.props.eventId].courses) &&
 
-							<div className="col-md-4">
+							<div className="col-md-5">
 								{Object.keys(this.props.user.attending[this.props.id].events[this.props.eventId].courses).map(function (courseId) {
 									var meal_uni = this.props.user.attending[this.props.id].events[this.props.eventId].courses[courseId].meal_name;
 
@@ -137,7 +138,6 @@ module.exports = React.createClass({
 								Object.keys(this.props.user.attending[this.props.id].events).map(function (eventId) {
 
 									return <div>
-
 
 									{this.props.user.attending[this.props.id].events[eventId].courses &&
 
@@ -163,7 +163,7 @@ module.exports = React.createClass({
 
 
 					{this.props.attending == false &&
-		        <div className="col-md-4">
+		        <div className="col-md-5">
 		          {this.props.guest.events &&
 		            Object.keys(this.props.guest.events).map(function (event) {
 		              return <span>{this.props.user.events[event] ? this.props.user.events[event].name : null} </span>
@@ -174,10 +174,10 @@ module.exports = React.createClass({
 
 
 	        {this.props.attending == false &&
-	          <div className="col-md-4 tar">
-	            <a href={"/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">View as guest</a>
-	            <a onClick={this.handleEditClick}> Edit </a>
-							<a onClick={this.handleDeleteClick}> Delete </a>
+	          <div className="col-md-4 tar guest__links">
+	            <a className="link" href={"/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">Guest view</a>
+	            <a className="link link--edit" onClick={this.handleEditClick}><i className="material-icons">mode_edit</i></a>
+							<a className="link link--delete" onClick={this.handleDeleteClick}><i className="material-icons">delete</i></a>
 	          </div>
 	        }
 				</div>
@@ -192,7 +192,7 @@ module.exports = React.createClass({
   },
   handleDeleteClick: function() {
     var id = this.props.id;
-    this.props.handleDeleteGuest(null,null,null,id,"remove");
+    this.props.handleDeleteGuest(null,null,null,null,id,"remove");
   },
   handleChange: function() {
     var fname = this.refs.fName.getDOMNode().value;
@@ -204,7 +204,7 @@ module.exports = React.createClass({
     // logging("Fname",this.refs.fName.getDOMNode().value,false);
     // logging("Lname",this.refs.lName.getDOMNode().value,false);
     // logging("Email",this.refs.email.getDOMNode().value,false);
-    //logging(false,this.state.eventChoices,"obj");
+    // logging(false,this.state.eventChoices,"obj");
 
     this.props.handleEditGuest(fname,lname,email,choices,id);
     this.setState({ edit: ! this.state.edit });

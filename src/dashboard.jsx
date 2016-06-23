@@ -227,15 +227,15 @@ module.exports = React.createClass({
 
 		} else {
 			if(window.location.href.indexOf("events") > -1) {
-       	return <Events />
+       	return <Events user={this.props.user} handleEvent={this.handleEvent} handleEditGuest={this.handleEditEvent} handleDeleteGuest={this.handleDeleteEvent} handleAction={this.handleAction} handlePopup={this.handlePopup} />
     	}
 			if(window.location.href.indexOf("guests") > -1) {
-       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
+       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} handleAction={this.handleAction} handlePopup={this.handlePopup} />
     	}
 			if(window.location.href.indexOf("settings") > -1) {
        	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} handlePopup={this.handlePopup} />
     	}
-			return <Attending user={this.props.user} handleAction={this.handleAction} handlePopup={this.handlePopup} />
+			return <Attending user={this.props.user}  handleAction={this.handleAction} handleAction={this.handleAction} handlePopup={this.handlePopup} />
 		}
 
 	},
@@ -270,9 +270,9 @@ module.exports = React.createClass({
 		// Pass props up
 		this.props.handleGuest(fname,lname,email,choices,id,action);
 	},
-	handleGuest: function(fname,lname,choices,id,action) {
+	handleGuest: function(fname,lname,email,choices,id,action) {
 		// Pass props up
-		this.props.handleGuest(fname,lname,choices,id,action);
+		this.props.handleGuest(fname,lname,email,choices,id,action);
 	},
 	handleOnb1: function() {
 		var username = this.refs.step_1.getDOMNode().value;

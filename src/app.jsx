@@ -114,10 +114,8 @@ var Add = React.createClass({
 			alert("Please select an event");
 		}
 
-		// console.log(choices);
-
 		if(fname && lname && choices) {
-			this.props.handleGuest(fname,lname,choices,null,"add");
+			this.props.handleGuest(fname,lname,null,choices,null,"add");
 
 			// Resets
 			this.refs.fName.getDOMNode().value = "";
@@ -126,9 +124,9 @@ var Add = React.createClass({
 		}
 
 		// Dev
-		logging("Fname",this.refs.fName.getDOMNode().value,false);
-		logging("Lname",this.refs.lName.getDOMNode().value,false);
-		logging(false,this.state.eventChoices,"obj");
+		// logging("Fname",this.refs.fName.getDOMNode().value,false);
+		// logging("Lname",this.refs.lName.getDOMNode().value,false);
+		// logging(false,this.state.eventChoices,"obj");
 
 	},
 	handleChoice: function(choice,id,truth) {
@@ -322,7 +320,7 @@ var App = React.createClass({
 
 				<Alert delay={2000} type={this.state.popup.type}>{this.state.popup.text}</Alert>
 
-				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleGuest={this.handleGuest} handleOpen={this.handleOpen} open={this.state.open}/>
+				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleGuest={this.handleGuest} handleOpen={this.handleOpen} open={this.state.open} handlePopup={this.handlePopup} />
 				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction} handleEvent={this.handleEvent} handleCutoff={this.handleCutoff} handlePopup={this.handlePopup} >{this.props.children}</Dashboard></div>
             // return <div><h4>Logged in</h4></div>
     } else {
@@ -529,7 +527,7 @@ var App = React.createClass({
   handleRegister: function(){
     this.setState({register: true});
   },
-  handleGuest: function(fname,lname,choices,id,action) {
+  handleGuest: function(fname,lname,email,choices,id,action) {
 
     // Unique ID
     var timeInMs = Date.now();
@@ -543,7 +541,7 @@ var App = React.createClass({
 		// logging("Lname",lname,false);
 		// // logging("Email",email,false);
 		// logging(false,choices,"obj");
-		logging("Action",action,false);
+		// logging("Action",action,false);
 		// logging("Id",id,false);
 
     if(action == "add") {
@@ -566,6 +564,9 @@ var App = React.createClass({
 
       });
 
+			// Popup
+			this.handlePopup("success",(fname + " " + lname + " added!"));
+
       // Add to each event - loop through events and add
       var events = {};
       {Object.keys(choices).map(function(key) {
@@ -575,8 +576,6 @@ var App = React.createClass({
 
         // Add to invited
         this.fb.child("invited/" + string).update({ [key]: true });
-
-				notification("success","Added!");
 
       }.bind(this))};
       // End event loop
@@ -600,6 +599,9 @@ var App = React.createClass({
 
       });
 
+			// Popup
+			this.handlePopup("info",(fname + " " + lname + " updated!"));
+
       // Add to each event - loop through events and add
       var events = {};
 
@@ -619,30 +621,39 @@ var App = React.createClass({
 	    //   End event loop
 
     }
-		alert(action);
 
     if(action === "remove") {
 
-        this.fb.child("guests/" + id).remove();
+			var r = confirm("Are you sure?");
 
-        // Add to each event - loop through events and add
-        var events = {};
-        {Object.keys(this.state.user.events).map(function(key) {
+				if (r == true) {
 
-					console.log(key)
+					this.fb.child("guests/" + id).remove();
 
-          // Remove event
-          this.fb.child("events/" + key + "/guests/" + id).remove();
-					this.fb.child("events/" + key + "/attending/" + id).remove();
-					this.fb.child("events/" + key + "/notattending/" + id).remove();
+					// Popup
+					this.handlePopup("error",("Guest deleted"));
 
-          // Remove invited
-          this.fb.child("attending/" + id).remove();
-          this.fb.child("nattending/" + id).remove();
+					// Add to each event - loop through events and add
+					var events = {};
+
+					{Object.keys(this.state.user.events).map(function(key) {
+
+						console.log(key)
+
+						// Remove event
+						this.fb.child("events/" + key + "/guests/" + id).remove();
+						this.fb.child("events/" + key + "/attending/" + id).remove();
+						this.fb.child("events/" + key + "/notattending/" + id).remove();
+
+						// Remove invited
+						this.fb.child("attending/" + id).remove();
+						this.fb.child("nattending/" + id).remove();
 
 
-        }.bind(this))};
-        // End event loop
+					}.bind(this))};
+					// End event loop
+
+				}
 
     }
 

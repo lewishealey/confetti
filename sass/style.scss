@@ -415,6 +415,24 @@ a {
     width: 100%;
   }
 
+  &__links {
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 1;
+
+    a {
+      font-size: 16px;
+      display: inline-block;
+      line-height: 1;
+      margin-left: 10px;
+    }
+
+    i {
+      font-size: 16px;
+    }
+
+  }
+
 
   &-list {
     margin: 0;
@@ -633,15 +651,12 @@ a {
 		margin-bottom: 15px;
 	}
 
-	i {
-		font-size: 14px;
-	}
 }
 
 .badge {
 	display: inline-block;
 	min-width: 10px;
-	padding: 3px 7px;
+	padding: 4px 5px;
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 1;
@@ -649,8 +664,9 @@ a {
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: baseline;
-	background-color: $blue;
-	border-radius: 10px;
+	background-color: #36C3FF;
+	border-radius: 4px;
+  margin-left: 10px;
 
 	&:active {
 
@@ -665,13 +681,13 @@ a {
   }
 
   &--new {
-    background-color: #F2514B;
+    background-color: #FF504D;
     color: white;
   }
 
 	&--blue {
-		color: $blue;
-		border: 1px solid $blue;
+		color: #36C3FF;
+		border: 1px solid #36C3FF;
 	}
 
 	&--large {
@@ -1055,7 +1071,49 @@ label {
 
   &.success {
     background: #69F0AE;
-    color: darken(#69F0AE,30%);
+    color: darken(#69F0AE,40%);
+  }
+
+  &.error {
+    background: #FF504D;
+    color: white;
+  }
+
+  &.info {
+    background: #36C3FF;
+    color: white;
+  }
+
+  &.warning {
+    background: #FFFF00;
+    color: darken(#FFFF00,40%);
+  }
+
+  &.yay {
+    background: #7C43FF;
+    color: darken(#7C43FF,40%);
+  }
+
+}
+
+.link {
+  color: #8B9299;
+  font-size: inherit;
+
+  &--delete {
+
+    &:hover {
+      color: #FF504D;
+    }
+
+  }
+
+  &--edit {
+
+    &:hover {
+      color: #36C3FF;
+    }
+
   }
 
 }

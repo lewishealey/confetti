@@ -93,8 +93,6 @@ module.exports = React.createClass({
 			            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={false} meals={false} />
 			          }.bind(this))
 			        }
-
-						<p><a onClick={this.onToggleAddGuest} className="btn btn--default btn--outline">{this.state.addGuest ? "Hide guest add" : "Add Guest"}</a></p>
 					</div>
 
 				</div>
@@ -103,8 +101,8 @@ module.exports = React.createClass({
 
 		</div>
 	},
-	handleDeleteGuest: function(fname,lname,choices,id,action) {
-		this.props.handleGuest(fname,lname,choices,id,action);
+	handleDeleteGuest: function(fname,lname,email,choices,id,action) {
+		this.props.handleGuest(fname,lname,null,choices,id,action);
 	},
 	handleEditGuest: function(fname,lname,email,choices,id) {
 		this.props.handleEditGuest(fname,lname,email,choices,id,"edit");
