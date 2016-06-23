@@ -23,6 +23,8 @@ var Register = require('./register');
 var ref = new Firebase(rootUrl);
 var Choice = require('./choice');
 
+var Alert = require('./alert');
+
 function logging(name,object,type) {
 	if(type == "obj") {
 		console.log(object);
@@ -273,7 +275,10 @@ var App = React.createClass({
       onboard: false,
 			action: false,
 			type: false,
-			open: false
+			open: false,
+			popup: {
+				open: false, text: false, type: false, count: 0
+			}
     }
   },
   componentWillMount: function() {
@@ -298,14 +303,27 @@ var App = React.createClass({
 			open: !this.state.open
 		})
 	},
+	handlePopup: function(type,text) {
+
+		this.setState({
+			popup : {
+				type: type,
+				text: text
+			}
+		})
+
+	},
   render: function() {
     // console.log(this.state.user);
 
     // If user is logged in show dashboard
     if (this.state.loggedIn && this.state.user) {
       return <div>
+
+				<Alert delay={2000} type={this.state.popup.type}>{this.state.popup.text}</Alert>
+
 				<Add type={this.state.type} action={this.state.action} user={this.state.user} handleEvent={this.handleEvent} handleGuest={this.handleGuest} handleOpen={this.handleOpen} open={this.state.open}/>
-				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction} handleEvent={this.handleEvent} handleCutoff={this.handleCutoff}>{this.props.children}</Dashboard></div>
+				<Dashboard user={this.state.user} handleLogout={this.handleLogout} handleGuest={this.handleGuest} handleAction={this.handleAction} handleEvent={this.handleEvent} handleCutoff={this.handleCutoff} handlePopup={this.handlePopup} >{this.props.children}</Dashboard></div>
             // return <div><h4>Logged in</h4></div>
     } else {
 

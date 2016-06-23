@@ -1044,3 +1044,18 @@ label {
   border: 2px solid #ECEFF1;
   padding: 30px;
 }
+
+.alert {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  background: #ECEFF1;
+  color: #8B9299;
+  z-index: 10;
+
+  &.success {
+    background: #69F0AE;
+    color: darken(#69F0AE,30%);
+  }
+
+}

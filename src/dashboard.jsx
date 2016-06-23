@@ -208,19 +208,22 @@ module.exports = React.createClass({
 	handleAction: function(action,type) {
 		this.props.handleAction(action,type);
 	},
+	handlePopup: function(type,text) {
+		this.props.handlePopup(type,text);
+	},
 	renderComponent: function() {
 
 		if(this.state.menu) {
 			if(this.state.menu == "events") {
-       	return <Events user={this.props.user} handleEvent={this.handleEvent} handleEditGuest={this.handleEditEvent} handleDeleteGuest={this.handleDeleteEvent} handleAction={this.handleAction} />
+       	return <Events user={this.props.user} handleEvent={this.handleEvent} handleEditGuest={this.handleEditEvent} handleDeleteGuest={this.handleDeleteEvent} handleAction={this.handleAction} handlePopup={this.handlePopup} />
     	}
 			if(this.state.menu == "guests") {
-       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} handleAction={this.handleAction} />
+       	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} handleAction={this.handleAction} handlePopup={this.handlePopup} />
     	}
 			if(this.state.menu == "settings") {
-       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} />
+       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} handlePopup={this.handlePopup} />
     	}
-			return <Attending user={this.props.user}  handleAction={this.handleAction} handleAction={this.handleAction} />
+			return <Attending user={this.props.user}  handleAction={this.handleAction} handleAction={this.handleAction} handlePopup={this.handlePopup} />
 
 		} else {
 			if(window.location.href.indexOf("events") > -1) {
@@ -230,9 +233,9 @@ module.exports = React.createClass({
        	return <Guests user={this.props.user} handleGuest={this.handleGuest} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest}/>
     	}
 			if(window.location.href.indexOf("settings") > -1) {
-       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} />
+       	return <Settings user={this.props.user} handleCutoff={this.handleCutoff} handlePopup={this.handlePopup} />
     	}
-			return <Attending user={this.props.user} handleAction={this.handleAction} />
+			return <Attending user={this.props.user} handleAction={this.handleAction} handlePopup={this.handlePopup} />
 		}
 
 	},

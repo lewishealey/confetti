@@ -36,6 +36,9 @@ module.exports = React.createClass({
   toggleEvent: function(key) {
     this.setState({eventId: key});
   },
+  buttonClick: function(type,text) {
+    this.props.handlePopup(type,text);
+  },
   render: function() {
 
     if(this.props.user && this.props.user.events) {
@@ -49,6 +52,8 @@ module.exports = React.createClass({
         <div className="col-md-6">
             <h4>Whos attending</h4>
             <p>See which guests are attending <a onClick={this.onToggleAddEvent.bind(this,"add","guest")}>Add Guest</a></p>
+            <button onClick={this.buttonClick.bind(this,"success","Guest added!")}>Button</button>
+            <button onClick={this.buttonClick.bind(this,"default","Notice added!")}>Notice Button</button>
         </div>
 
     </div>
