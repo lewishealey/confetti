@@ -32,6 +32,9 @@ module.exports = React.createClass({
   },
   componentWillReceiveProps: function() {
   },
+  handleClearSearch: function() {
+    this.props.handleClear("hello");
+  },
   render: function() {
 
     if(this.props.user.invited[this.props.guestId] && this.state.loaded) {
@@ -43,7 +46,7 @@ module.exports = React.createClass({
             <div className="row">
 
               <div className="col-md-6">
-                <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below</h4>
+                <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below.</h4>
               </div>
 
               <div className="col-md-6 tar view__unique-link">

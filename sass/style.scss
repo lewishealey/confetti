@@ -796,11 +796,25 @@ label {
 		margin-right: 10px;
 
 		&:hover {
-			color: $white;
-			background-color: $dark;
-			border-color: $dark;
+			background-color: #D2DCE6;
+			border-color: #D2DCE6;
 			outline: none;
+      color: #536E7B;
 		}
+
+    &.active {
+      background-color: $dark;
+			border-color: $dark;
+      color: white;
+
+      &:hover {
+        background-color: lighten($dark,5%);
+  			border-color: lighten($dark,5%);
+        color: white;
+      }
+
+    }
+
 	}
 
   &--spotify {

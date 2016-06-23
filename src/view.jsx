@@ -11,6 +11,8 @@ var ViewGuest = require('./view-guest');
 
 var root = "http://localhost:8888/confettiapp/";
 
+var Alert = require('./alert');
+
 //https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
 
 var authid;
@@ -23,7 +25,10 @@ module.exports = React.createClass({
       loaded: false,
       spotify: false,
       emailState: false,
-      step: 1
+      step: 1,
+      popup: {
+				open: false, text: false, type: false, count: 0
+			}
     })
   },
   componentWillMount: function() {
@@ -42,6 +47,16 @@ module.exports = React.createClass({
     });
 
   },
+  handlePopup: function(type,text) {
+
+		this.setState({
+			popup : {
+				type: type,
+				text: text
+			}
+		})
+
+	},
   handleTrack: function(guestId,artistName,trackName,albumImage,trackHref,trackId,trackUri) {
     var timeInMs = Date.now();
 
@@ -72,8 +87,8 @@ module.exports = React.createClass({
 
     // If cutoff has passed
     if(this.state.user) {
-      console.info(this.state.user.settings.cutoff_date);
-      console.info(now);
+      // console.info(this.state.user.settings.cutoff_date);
+      // console.info(now);
 
       if(this.state.user.settings && this.state.user.settings.cutoff_date < now) {
 
@@ -83,9 +98,9 @@ module.exports = React.createClass({
 
           // If has data
           if((this.props.params.userId && this.props.params.guestId) || localStorage.guest_id) {
-            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={localStorage.guest_id ? localStorage.guest_id : this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} />
+            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={localStorage.guest_id ? localStorage.guest_id : this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
           } else {
-            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
+            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
           }
 
       }
@@ -95,6 +110,8 @@ module.exports = React.createClass({
 
 
   return <div className="container-fluid view">
+
+      <Alert delay={2000} type={this.state.popup.type}>{this.state.popup.text}</Alert>
 
       <div className="row flex">
 
@@ -130,7 +147,9 @@ module.exports = React.createClass({
     var timeInMs = Date.now();
 
     localStorage.setItem("guest_id", guest);
-    alert(guest)
+
+    // Popup
+    this.handlePopup("success","Updated!");
 
     if(truth) {
 
@@ -239,6 +258,8 @@ module.exports = React.createClass({
         meal_name: mealName
     });
 
+    this.handlePopup("success","Updated!");
+
   },
   handleEmail: function(value,guest) {
 
@@ -257,6 +278,8 @@ module.exports = React.createClass({
     } else {
       // Error
     }
+
+    this.handlePopup("success","Updated!");
 
 
   },

@@ -476,10 +476,18 @@ label {
     color: #536E7B;
     margin-right: 10px; }
     .btn--choice:hover {
-      color: #FFFFFF;
+      background-color: #D2DCE6;
+      border-color: #D2DCE6;
+      outline: none;
+      color: #536E7B; }
+    .btn--choice.active {
       background-color: #233332;
       border-color: #233332;
-      outline: none; }
+      color: white; }
+      .btn--choice.active:hover {
+        background-color: #2d4241;
+        border-color: #2d4241;
+        color: white; }
   .btn--spotify {
     background-color: transparent;
     border-color: #19B26B;

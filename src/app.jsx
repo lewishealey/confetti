@@ -610,10 +610,12 @@ var App = React.createClass({
 					if(choices[key]) {
 						// console.log("Attending " + key);
 						this.fb.child("events/" + key + "/guests/").update({ [id]: true });
+						this.fb.child("invited/" + id).update({ [key]: true });
 						this.fb.child("guests/" + id + "/events/").update({ [key]: true });
 					} else {
 						// console.log("Not " + key);
 						this.fb.child("events/" + key + "/guests/" + id).remove();
+						this.fb.child("invited/" + id + "/" + key).remove();
 						this.fb.child("guests/" + id + "/events/" + key).remove();
 					}
 

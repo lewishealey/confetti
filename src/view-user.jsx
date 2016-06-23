@@ -24,6 +24,15 @@ module.exports = React.createClass({
     //Pass data up
     this.props.onChange(guest, event, truth);
   },
+  handleClearSearch: function() {
+    localStorage.removeItem("guest_id");
+
+    this.setState({
+      guest: false,
+      guestId: false
+    });
+
+  },
   render: function() {
 
     if(this.state.guest) {
