@@ -471,8 +471,8 @@ label {
     font-size: 20px;
     line-height: 1; }
   .btn--choice {
-    border-color: #ECEFF1;
-    background-color: #ECEFF1;
+    border-color: #D2DCE6;
+    background-color: transparent;
     color: #536E7B;
     margin-right: 10px; }
     .btn--choice:hover {

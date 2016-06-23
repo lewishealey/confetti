@@ -118,6 +118,13 @@ module.exports = React.createClass({
                               <h4 className="event__title event--attending">You're attending</h4>
 
                             <h4>{this.props.user.events[key].name}</h4>
+                              {this.props.user.events[key].address &&
+                                <div className="column">
+                                  <p className="sub">
+                                    {this.props.user.events[key].address + ", " + this.props.user.events[key].postcode}<br />
+                                  </p>
+                                </div>
+                              }
                               {this.props.user.events[key].to &&
                                 <p>
                                   {this.props.user.events[key].to + " - " + this.props.user.events[key].from}

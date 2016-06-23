@@ -82,9 +82,8 @@ module.exports = React.createClass({
       } else {
 
           // If has data
-          if(this.props.params.userId && this.props.params.guestId) {
-
-            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} />
+          if((this.props.params.userId && this.props.params.guestId) || localStorage.guest_id) {
+            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={localStorage.guest_id ? localStorage.guest_id : this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} />
           } else {
             var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} />
           }
@@ -129,6 +128,9 @@ module.exports = React.createClass({
   handleGuest: function(guest, event, truth) {
     console.log(guest + event + truth);
     var timeInMs = Date.now();
+
+    localStorage.setItem("guest_id", guest);
+    alert(guest)
 
     if(truth) {
 
