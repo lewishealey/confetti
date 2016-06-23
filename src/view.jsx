@@ -33,11 +33,23 @@ module.exports = React.createClass({
   },
   componentWillMount: function() {
 
-      this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + this.props.params.userId);
-      this.bindAsObject(this.fb, "user");
+      this.public = new Firebase('https://boiling-fire-2669.firebaseio.com/public/');
+
+      this.bindAsObject(this.public, "public");
+
+      this.public.child("lewishealey").on("value", function(snapshot) {
+
+        this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + snapshot.val());
+        this.bindAsObject(this.fb, "user");
+
+
+      }.bind(this));
 
   },
   componentDidUpdate: function() {
+
+  },
+  componentWillUpdate: function() {
 
   },
   componentDidMount: function() {
