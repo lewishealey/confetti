@@ -201,7 +201,7 @@ foreach($users as $user_id => $userData) {
                         "TRACK" => $notice,
                         "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
                         "NOTICE" => "Amazing!",
-                        "LINK" => "http://app.cnftti.com/",
+                        "LINK" => "http://app.cnftti.com/#/page/". $userData["username"] . "/" . $key,
                         "SUBJECT" => $subject_guest,
                         "COVER_IMAGE" => $cover_image
                       )
