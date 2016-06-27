@@ -125,7 +125,7 @@ module.exports = React.createClass({
 									var meal_uni = this.props.user.attending[this.props.id].events[this.props.eventId].courses[courseId].meal_name;
 
 									return <span className="list__meal">
-										{this.props.user.courses[this.props.eventId][courseId].name}: {this.props.user.courses[this.props.eventId][courseId].meals[meal_uni].name}
+										{this.props.user.courses[this.props.eventId][courseId] ? this.props.user.courses[this.props.eventId][courseId].name : ""}: {this.props.user.courses[this.props.eventId][courseId] ? this.props.user.courses[this.props.eventId][courseId].meals[meal_uni].name : ""}
 									</span>
 
 								}.bind(this))}
@@ -175,7 +175,7 @@ module.exports = React.createClass({
 
 	        {this.props.attending == false &&
 	          <div className="col-md-4 tar guest__links">
-	            <a className="link" href={"/#/page/" + this.props.user.authid + "/" + this.props.id} target="blank">Guest view</a>
+	            <a className="link" href={"/#/page/" + this.props.user.username + "/" + this.props.id} target="blank">Guest view</a>
 	            <a className="link link--edit" onClick={this.handleEditClick}><i className="material-icons">mode_edit</i></a>
 							<a className="link link--delete" onClick={this.handleDeleteClick}><i className="material-icons">delete</i></a>
 	          </div>
