@@ -97,12 +97,25 @@ module.exports = React.createClass({
 
     var now = Date.now();
 
+    var isFromAdmin = getQueryVariable("admin");
+
+    if(isFromAdmin) {
+      var guest_id = this.props.params.guestId;
+      localStorage.removeItem("guest_id");
+    } else {
+      if(localStorage.guest_id) {
+          var guest_id = localStorage.guest_id;
+      } else {
+        var guest_id = this.props.params.guestId;
+      }
+    }
+
     // If cutoff has passed
     if(this.state.user) {
       // console.info(this.state.user.settings.cutoff_date);
       // console.info(now);
 
-      if(this.state.user.settings && this.state.user.settings.cutoff_date < now) {
+      if(this.state.user.settings && this.state.user.settings.cutoff_date && this.state.user.settings.cutoff_date < now) {
 
         var content = "Sorry, the cuttoff date has passed"
 
@@ -110,7 +123,7 @@ module.exports = React.createClass({
 
           // If has data
           if((this.props.params.userId && this.props.params.guestId) || localStorage.guest_id) {
-            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={localStorage.guest_id ? localStorage.guest_id : this.props.params.guestId} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
+            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={guest_id} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
           } else {
             var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
           }
@@ -301,6 +314,30 @@ module.exports = React.createClass({
   }
 
 });
+
+function getQueryVariable(variable)
+{
+    // This function is anonymous, is executed immediately and
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+  var pair = vars[i].split("=");
+     // If first entry with this name
+  if (typeof query_string[pair[0]] === "undefined") {
+   query_string[pair[0]] = decodeURIComponent(pair[1]);
+     // If second entry with this name
+  } else if (typeof query_string[pair[0]] === "string") {
+   var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+   query_string[pair[0]] = arr;
+     // If third or later entry with this name
+  } else {
+   query_string[pair[0]].push(decodeURIComponent(pair[1]));
+  }
+  }
+  return query_string;
+  }
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;

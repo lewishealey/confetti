@@ -175,7 +175,7 @@ module.exports = React.createClass({
 
 	        {this.props.attending == false &&
 	          <div className="col-md-4 tar guest__links">
-	            <a className="link" href={"/#/page/" + this.props.user.username + "/" + this.props.id} target="blank">Guest view</a>
+	            <a className="link" href={"/#/page/" + this.props.user.username + "/" + this.props.id + "?admin=true"} target="blank">Guest view</a>
 	            <a className="link link--edit" onClick={this.handleEditClick}><i className="material-icons">mode_edit</i></a>
 							<a className="link link--delete" onClick={this.handleDeleteClick}><i className="material-icons">delete</i></a>
 	          </div>

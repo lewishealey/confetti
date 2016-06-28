@@ -187,7 +187,7 @@ module.exports = React.createClass({
 								</div>
 
 								<div>
-									<span>Link: {"http://app.cnftti.com/#/page/" + this.props.user.authid}</span>
+									<span>Link: {"http://app.cnftti.com/#/page/" + this.props.user.username}</span>
 								</div>
 
 							</div>
