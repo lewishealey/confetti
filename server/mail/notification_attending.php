@@ -7,12 +7,12 @@ error_reporting(E_ALL);
 require('Mailin.php');
 require __DIR__ . '/../../vendor/autoload.php';
 
-const STOP_SENDING = true;
+const STOP_SENDING = false;
 
 use Firebase\Firebase;
 $fb = Firebase::initialize("https://boiling-fire-2669.firebaseio.com/", "P5Ofkmp3suKfnJWbWOtQimj5SqzC0tuWBdSz9UQh");
 
-$userData = $fb->get("users/09a57e9a-6d0d-4587-8e2e-7867111a41a2");
+// $userData = $fb->get("users/09a57e9a-6d0d-4587-8e2e-7867111a41a2");
 
 $users = $fb->get("users");
 
