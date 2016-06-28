@@ -7,6 +7,8 @@ error_reporting(E_ALL);
 require('Mailin.php');
 require __DIR__ . '/../../vendor/autoload.php';
 
+const STOP_SENDING = true;
+
 use Firebase\Firebase;
 $fb = Firebase::initialize("https://boiling-fire-2669.firebaseio.com/", "P5Ofkmp3suKfnJWbWOtQimj5SqzC0tuWBdSz9UQh");
 
@@ -97,8 +99,13 @@ foreach($users as $user_id => $userData) {
                     if($eventHasMeals) {
 
                         foreach($userData["attending"][$key]["events"][$id]["courses"] as $course_id => $meal) {
-                          $meal_id = $meal["meal_name"];
-                          $events_table .= $userData["courses"][$id][$course_id]["meals"][$meal_id]["name"] . " - ";
+
+                          // If the event exists anymore - compare to user events
+                          if(isset($userData["events"][$id]["courses"][$course_id])) {
+                            $meal_id = $meal["meal_name"];
+                            $events_table .= $userData["courses"][$id][$course_id]["meals"][$meal_id]["name"] . " - ";
+                          }
+
                         }
 
                     }
@@ -174,42 +181,49 @@ foreach($users as $user_id => $userData) {
 
           echo $events_table;
           echo $notice;
+          echo $userData["email"];
+
+          if(STOP_SENDING) {
+
+          } else {
+            $data = array(
+                      "id" => 1,
+                        "to" => $userData["email"],
+                        "attr" => array(
+                          "FNAME"=>$userData["guests"][$key]["fname"],
+                          "LNAME"=>$userData["guests"][$key]["lname"],
+                          "EVENT_LOOP"=> $events_table,
+                          "TRACK" => $notice,
+                          "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
+                          "NOTICE" => "Amazing!",
+                          "LINK" => "http://app.cnftti.com/",
+                          "SUBJECT" => $subject,
+                          "COVER_IMAGE" => $cover_image
+                        )
+            );
+
+            $data_guest = array(
+                      "id" => 6,
+                        "to" => $userData["guests"][$key]["email"],
+                        "attr" => array(
+                          "FNAME"=>$userData["guests"][$key]["fname"],
+                          "EVENT_LOOP"=> $events_table,
+                          "TRACK" => $notice,
+                          "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
+                          "NOTICE" => "Amazing!",
+                          "LINK" => "http://app.cnftti.com/#/page/". $userData["username"] . "/" . $key,
+                          "SUBJECT" => $subject_guest,
+                          "COVER_IMAGE" => $cover_image
+                        )
+            );
 
 
-          $data = array(
-                    "id" => 1,
-                      "to" => $userData["email"],
-                      "attr" => array(
-                        "FNAME"=>$userData["guests"][$key]["fname"],
-                        "LNAME"=>$userData["guests"][$key]["lname"],
-                        "EVENT_LOOP"=> $events_table,
-                        "TRACK" => $notice,
-                        "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
-                        "NOTICE" => "Amazing!",
-                        "LINK" => "http://app.cnftti.com/",
-                        "SUBJECT" => $subject,
-                        "COVER_IMAGE" => $cover_image
-                      )
-          );
+            var_dump($mailin->send_transactional_template($data));
+            var_dump($mailin->send_transactional_template($data_guest));
 
-          $data_guest = array(
-                    "id" => 6,
-                      "to" => $userData["guests"][$key]["email"],
-                      "attr" => array(
-                        "FNAME"=>$userData["guests"][$key]["fname"],
-                        "EVENT_LOOP"=> $events_table,
-                        "TRACK" => $notice,
-                        "DATE" => date('F j, Y, g:i a', ($guest["date_created"] / 1000)),
-                        "NOTICE" => "Amazing!",
-                        "LINK" => "http://app.cnftti.com/#/page/". $userData["username"] . "/" . $key,
-                        "SUBJECT" => $subject_guest,
-                        "COVER_IMAGE" => $cover_image
-                      )
-          );
+          }
 
 
-          var_dump($mailin->send_transactional_template($data));
-          var_dump($mailin->send_transactional_template($data_guest));
 
         }
 
