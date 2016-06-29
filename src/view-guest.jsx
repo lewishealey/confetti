@@ -41,7 +41,7 @@ module.exports = React.createClass({
         hasCourses[key] = false;
       }
 
-      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
+      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
         hasSubmittedCourses[key] = true;
       } else {
         hasSubmittedCourses[key] = false;
@@ -399,7 +399,7 @@ module.exports = React.createClass({
         hasCourses[key] = false;
       }
 
-      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
+      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
         hasSubmittedCourses[key] = true;
       } else {
         hasSubmittedCourses[key] = false;
