@@ -36,6 +36,9 @@ module.exports = React.createClass({
   toggleEvent: function(key) {
     this.setState({eventId: key});
   },
+  toggleAll: function() {
+    this.setState({eventId: "all"});
+  },
   buttonClick: function(type,text) {
     this.props.handlePopup(type,text);
   },
@@ -70,14 +73,23 @@ module.exports = React.createClass({
               }
             }.bind(this))
           }
-          <div className="event-bar__item event-bar__item--add"  onClick={this.onToggleAddEvent.bind(this,"add","event")}>
+          <div className={"event-bar__item event-bar__item--add " + (this.state.eventId == "all" ? "active" : "")} onClick={this.toggleAll}>
+            All
+          </div>
+          <div className="event-bar__item event-bar__item--add" onClick={this.onToggleAddEvent.bind(this,"add","event")}>
             Add a new event
           </div>
         </div>
 
-        {(this.state.eventId && this.props.user.events[this.state.eventId].attending) &&
+        {(this.state.eventId && this.state.eventId !== "all" && this.props.user.events[this.state.eventId].attending) &&
           Object.keys(this.props.user.events[this.state.eventId].attending).map(function (key) {
             return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} eventId={this.state.eventId} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true} meals={true} />
+          }.bind(this))
+        }
+
+        {(this.state.eventId == "all" && this.props.user.attending) &&
+          Object.keys(this.props.user.attending).map(function (key) {
+            return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} eventId={"all"} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true} meals={false} />
           }.bind(this))
         }
 
