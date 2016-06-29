@@ -161,7 +161,7 @@ module.exports = React.createClass({
 
               <div className="faq">
                 <h4 className="faq__title">Have a question?</h4>
-                <p><button className="btn btn-primary" onClick={this.showFAQ.bind(this)}>View FAQ</button></p>
+                <p><button className="btn btn-primary" onClick={this.showFAQ}>View FAQ</button></p>
               </div>
 
           </div>
