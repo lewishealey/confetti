@@ -760,9 +760,9 @@ label {
 	}
 
 	&:hover {
-		background-color: $blue;
-		border-color: $blue;
-		color: $dark;
+		background-color: darken($lwhite,10%);
+		border-color: darken($lwhite,10%);
+		color: white;
 	}
 
 	&:focus {
@@ -818,14 +818,14 @@ label {
 	}
 
   &--spotify {
-		background-color: transparent;
+		background-color: #19B26B;
 		border-color: #19B26B;
-		color: #19B26B;
+		color:  white;
 
 		&:hover {
-		background-color: transparent;
-			border-color: #19B26B;
-			color: #19B26B;
+		background-color: darken(#19B26B,10%);
+			border-color: darken(#19B26B,10%);
+			color: white;
 		}
 		&:focus {
 			color: $white;
@@ -994,7 +994,7 @@ label {
 
 .add {
   position: fixed;
-  background: rgba(256,256,256,0.2);
+  background: rgba(256,256,256,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1021,6 +1021,8 @@ label {
     width: 600px;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     border-radius: 5px;
+    max-height: 90%;
+    overflow: auto;
   }
 
   &__close {
@@ -1127,6 +1129,47 @@ label {
       color: #36C3FF;
     }
 
+  }
+
+}
+
+.faq {
+  width: 100%;
+  padding: 30px;
+  text-align: center;
+  background: #F2F5F5;
+  border-radius: 5px;
+  margin-top: 30px;
+
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    margin-right: 0px;
+  }
+
+}
+
+.suggest {
+  width: 100%;
+  padding: 30px;
+  text-align: center;
+  background: #232323;
+  border-radius: 5px;
+  color: #FFFFFF;
+
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  &__track {
+    text-align: left;
+    margin-top: 30px;
+  }
+
+  .btn {
+    margin-right: 0px;
   }
 
 }

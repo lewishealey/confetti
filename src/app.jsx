@@ -145,6 +145,13 @@ var Add = React.createClass({
 
 	},
 	handleOpen: function() {
+
+		this.setState({
+			eventChoices: []
+		});
+
+		console.log(this.eventChoices)
+
 		this.props.handleOpen(false);
 	},
   render: function() {
@@ -152,7 +159,7 @@ var Add = React.createClass({
 		if(this.props.user.events) {
 			// Loop through event choices object for simple toggle
 			var eventOptions = Object.keys(this.props.user.events).map(function (key, i) {
-				return <Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} />
+				return <Choice key={key} id={key} value={i} name={this.props.user.events[key].name} handleChoice={this.handleChoice} open={this.props.open} />
 			}.bind(this));
 		} else {
 			var eventOptions = "Not set";

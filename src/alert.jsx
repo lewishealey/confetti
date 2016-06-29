@@ -11,7 +11,7 @@ module.exports = React.createClass({
 
     this.setTimer();
     this.setState({visible: true});
-    
+
     // reset the timer if children are changed
     if (nextProps.children !== this.props.children) {
       this.setTimer();
@@ -35,9 +35,8 @@ module.exports = React.createClass({
     clearTimeout(this._timer);
   },
   render: function() {
-    console.log(this.props.type)
-    if(this.state.visible) {
-      return <div className={"alert " + this.props.type} >{this.props.children}fwe</div>
+    if(this.state.visible && this.props.children) {
+      return <div className={"alert " + this.props.type} >{this.props.children}</div>
     } else {
       return false
     }
