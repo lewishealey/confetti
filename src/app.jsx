@@ -11,8 +11,7 @@ var Link = require('react-router').Link
 var browserHistory = require('react-router').browserHistory
 
 var View = require('./view');
-var ViewMain = require('./view-main');
-var ViewGuest = require('./view-new');
+var ViewGuest = require('./view-guest');
 var ViewUser = require('./view-user');
 var Dashboard = require('./dashboard');
 var Guests = require('./guests');

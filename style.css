@@ -181,9 +181,11 @@ a:hover {
   .view .tar {
     text-align: left; } }
 
-@media (min-width: 320px) and (max-width: 767px) {
-  .view__unique-link {
-    display: none; } }
+.view__unique-link {
+  line-height: 1; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .view__unique-link {
+      display: none; } }
 
 @media (min-width: 320px) and (max-width: 767px) {
   .view__chosen-track {
@@ -204,12 +206,20 @@ a:hover {
     .view__header {
       display: block;
       height: 200px; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .view__header {
+      display: block;
+      height: 200px; } }
   .view__header-column {
     width: 50%;
     float: left;
     position: relative;
     height: 100%;
     background: white; }
+    @media (min-width: 320px) and (max-width: 767px) {
+      .view__header-column {
+        height: 50%;
+        width: 100%; } }
     @media (min-width: 320px) and (max-width: 767px) {
       .view__header-column {
         height: 50%;
@@ -229,6 +239,9 @@ a:hover {
 .flex {
   display: flex; }
   @media (min-width: 320px) and (max-width: 767px) {
+    .flex {
+      display: block; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
     .flex {
       display: block; } }
 
@@ -662,6 +675,10 @@ label {
   background: #ECEFF1;
   color: #8B9299;
   z-index: 10; }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .alert {
+      top: 20px;
+      right: 20px; } }
   .alert.success {
     background: #69F0AE;
     color: #0d8048; }
