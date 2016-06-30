@@ -142,10 +142,6 @@ module.exports = React.createClass({
                 <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below.</h4>
               </div>
 
-              <div className="col-sm-6 col-md-6 tar view__unique-link">
-                {"http://jephwed.co.uk/" + this.props.guestId}
-              </div>
-
             </div>
 
 
