@@ -28,7 +28,8 @@ module.exports = React.createClass({
       step: 1,
       popup: {
 				open: false, text: false, type: false, count: 0
-			}
+			},
+      showFAQ: false
     })
   },
   componentWillMount: function() {
@@ -97,9 +98,7 @@ module.exports = React.createClass({
 
     var now = Date.now();
 
-    var isFromAdmin = getQueryVariable("admin");
-
-    if(isFromAdmin) {
+    if(window.location.href.indexOf("admin") > -1) {
       var guest_id = this.props.params.guestId;
       localStorage.removeItem("guest_id");
     } else {
@@ -123,9 +122,9 @@ module.exports = React.createClass({
 
           // If has data
           if((this.props.params.userId && this.props.params.guestId) || localStorage.guest_id) {
-            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={guest_id} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
+            var content = <ViewGuest user={this.state.user} guest={this.state.guest} guestId={guest_id} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} handlePopup={this.handlePopup} />
           } else {
-            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} />
+            var content =  <ViewUser user={this.state.user} onChange={this.handleGuest} onCourseMealChange={this.handleMeal} userId={this.props.params.userId} handleEmail={this.handleEmail} step={this.state.step} onStep={this.handleStep} handleTrack={this.handleTrack} handleClearSearch={this.handleClearSearch} handlePopup={this.handlePopup} />
           }
 
       }
@@ -136,15 +135,15 @@ module.exports = React.createClass({
 
   return <div className="container-fluid view">
 
-      <Alert delay={2000} type={this.state.popup.type}>{this.state.popup.text}</Alert>
+      <Alert delay={2000} type={this.state.popup.type} >{this.state.popup.text}</Alert>
 
       <div className="row flex">
 
-        <div className="col-md-4 view__header no-margin" style={{background : 'url("https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/jeffwed_port.jpg?alt=media&token=695b079e-3936-4c3e-a289-7ef90a8289b7") center center',backgroundSize: "cover"}}>
+        <div className="col-md-5 view__header no-margin" style={{background : 'url("https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/jeffwed_port.jpg?alt=media&token=695b079e-3936-4c3e-a289-7ef90a8289b7") center center',backgroundSize: "cover"}}>
 
         </div>
 
-        <div className="col-md-8 no-margin">
+        <div className="col-md-7 no-margin">
           <div className="block">
               <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/title.png?alt=media&token=cad8d380-4b02-4629-8618-d8b304f8935e" className="view__title"/>
               <span className="line"></span>
@@ -159,13 +158,103 @@ module.exports = React.createClass({
               </div>
               <span className="line"></span>
               {content}
+
+              <div className="faq">
+                <h4 className="faq__title">Have a question?</h4>
+                <p><button className="btn btn-primary" onClick={this.showFAQ}>View FAQ</button></p>
+              </div>
+
           </div>
         </div>
 
       </div>
 
+
+      <div className={"add " + (this.state.showFAQ ? "active" : "not")}>
+  			<div className="add__main">
+
+          <div className="row">
+
+  					<div className="col-md-6">
+  						<h2 className="add__title">FAQ</h2>
+  					</div>
+  						<img className="add__close" src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" onClick={this.showFAQ} />
+  				</div>
+
+          <div className="row">
+
+            <div className="col-md-12">
+
+                <h4>Where is this happening?</h4>
+                <p>The ceremony is at Islington Town Hall near Angel from 3pm. The reception and evening will be at The Prince Albert, a pub in Camden. </p>
+
+                <hr />
+
+                <h4>When do I need to RSVP by?</h4>
+                <p>31st August (please and thank you).</p>
+
+                <hr />
+
+                <h4>Are you changing your name?</h4>
+                <p>We are both keeping our names. Can you imagine the paperwork?</p>
+
+                <hr />
+
+                <h4>Should I bring a gift?</h4>
+                <p>Anyone who has visited our 'cosy' East London flat can attest to the fact that our space is somewhat limited. We would rather you come and have a few drinks with us in the evening. But if you do feel you would like to get us something, a contribution we can put towards our future would be more helpful than 'stuff'. </p>
+
+                <hr />
+
+                <h4>How do I get to Islington Town Hall?</h4>
+                <p>Here's a handy link to help you find a route. Otherwise, the nearest tube stations are Angel (Northern line) and Highbury & Islington (Victoria line, Overground).</p>
+
+                <hr />
+
+                <h4>What time should I arrive?</h4>
+                <p>Guests can enter the town hall from 2.45pm. If you're early, there's a pub across the road.</p>
+                <p>If you're joining us in the evening, feel free to head to the Prince Albert from 7.45pm.</p>
+
+                <hr />
+
+                <h4>How do I get between the town hall and the pub?</h4>
+                <p>No need for an Oyster, there will be a classic Routemaster to transport you to the reception.</p>
+
+                <hr />
+
+                <h4>If I'm coming in the evening how do I get to the pub?</h4>
+                <p>For those arriving later, here's another handy routefinder. The nearest tube stations are Camden Town (Northern line) and Camden Road (Overground).</p>
+
+                <hr />
+
+                <h4>Will I need cash?</h4>
+                <p>Not to worry, the bar at The Prince Albert takes cards.</p>
+
+                <hr />
+
+                <h4>Is there anywhere nearby I can stay?</h4>
+                <p>There are plenty of hotels close by. Try the Premier Inn or the Hilton for starters.</p>
+
+                <hr />
+
+                <h4>I have another question!</h4>
+                <p>Email us - questions@jephwed.co.uk </p>
+
+              </div>
+
+            </div>
+
+        </div>
+      </div>
+
+
+
     </div>
 
+  },
+  showFAQ: function() {
+    this.setState({
+      showFAQ: !this.state.showFAQ
+    })
   },
   handleGuest: function(guest, event, truth) {
     console.log(guest + event + truth);
@@ -315,29 +404,6 @@ module.exports = React.createClass({
 
 });
 
-function getQueryVariable(variable)
-{
-    // This function is anonymous, is executed immediately and
-  // the return value is assigned to QueryString!
-  var query_string = {};
-  var query = window.location.search.substring(1);
-  var vars = query.split("&");
-  for (var i=0;i<vars.length;i++) {
-  var pair = vars[i].split("=");
-     // If first entry with this name
-  if (typeof query_string[pair[0]] === "undefined") {
-   query_string[pair[0]] = decodeURIComponent(pair[1]);
-     // If second entry with this name
-  } else if (typeof query_string[pair[0]] === "string") {
-   var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-   query_string[pair[0]] = arr;
-     // If third or later entry with this name
-  } else {
-   query_string[pair[0]].push(decodeURIComponent(pair[1]));
-  }
-  }
-  return query_string;
-  }
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;

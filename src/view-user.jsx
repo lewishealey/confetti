@@ -33,15 +33,19 @@ module.exports = React.createClass({
     });
 
   },
+  handlePopup: function(type,text) {
+    this.props.handlePopup(type,text);
+  },
   render: function() {
 
     if(this.state.guest) {
-      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} />
+      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} handlePopup={this.handlePopup} />
     } else {
       var content = "Choose your guest";
     }
 
     return <div className="guest-select">
+
 
     <div className="row">
 
@@ -96,6 +100,7 @@ module.exports = React.createClass({
           </div>
 
         }
+
 
     </div>
   },

@@ -4,6 +4,7 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ref = new Firebase(rootUrl);
 
+
 function toTimestamp(strDate){
  var datum = Date.parse(strDate);
  return datum;
@@ -13,7 +14,6 @@ module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
   return {
-
     }
   },
   componentWillMount: function() {
@@ -46,7 +46,7 @@ module.exports = React.createClass({
       <input type="text" ref="cutoffDate" defaultValue={date ? date : "MM/DD/YYYY"} placeholder="MM/DD/YYYY"/>
       <button onClick={this.handleCutoff}>Save</button>
 
-
+    <h4>FAQ page</h4>
 
       {Object.keys(this.props.user.playlist).map(function (track, i) {
 

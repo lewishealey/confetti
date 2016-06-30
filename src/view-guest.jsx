@@ -20,28 +20,121 @@ module.exports = React.createClass({
     return({
       loaded: false,
       editTrack: false,
-      addSpotify: false
+      addSpotify: false,
+      edit: [],
+      courses: [],
+      hasCourses: [],
+      hasSubmittedCourses: []
     })
   },
   componentWillMount: function() {
+
+    var hasCourses = this.state.hasCourses;
+    var hasSubmittedCourses = this.state.hasSubmittedCourses;
+    var edit = this.state.edit;
+
+    {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
+
+      if(this.props.user.courses && this.props.user.courses[key]) {
+        hasCourses[key] = true;
+      } else {
+        hasCourses[key] = false;
+      }
+
+      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
+        hasSubmittedCourses[key] = true;
+      } else {
+        hasSubmittedCourses[key] = false;
+
+        // Trigger edit
+        edit[key] = true;
+      }
+
+    }.bind(this))};
+
+
+    this.setState({
+      loaded: true,
+      hasCourses: hasCourses,
+      hasSubmittedCourses: hasSubmittedCourses,
+      edit: edit
+    });
+
+
   },
   componentDidMount: function() {
-    this.setState({
-      loaded: true
-    })
+
+
   },
-  componentWillReceiveProps: function() {
+  componentWillReceiveProps: function(nextprops) {
+
+
+
   },
   handleClearSearch: function() {
     this.props.handleClear("hello");
   },
+  handlePopup: function(type,text) {
+    this.props.handlePopup(type,text);
+  },
   render: function() {
-
+    console.log(this.state);
     if(this.props.user.invited[this.props.guestId] && this.state.loaded) {
 
       var eventClass = {};
 
       return <div>
+
+        {this.state.addSpotify &&
+
+          <div className={"add " + (this.state.addSpotify ? "active" : "not")}>
+
+              <div className="add__main">
+
+                <img className="add__close" src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" onClick={this.addSpotify} />
+
+                <div className="row">
+
+                  <div className="col-md-8">
+                    <h4 class="add__title">Search for a track</h4>
+                    <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
+
+                    {(this.state.tracks && this.props.guestId) &&
+
+                      <div className="guest-list">
+
+                        {Object.keys(this.state.tracks).map(function (key, i) {
+
+                          if(i < 10) {
+                          return <div className="guest-list__item" onClick={this.handleTrack.bind(null,this.state.tracks[key])}>
+                                {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
+                                <a> select</a>
+                            </div>
+                          }
+
+                        }.bind(this))}
+
+                      </div>
+
+                    }
+
+                  </div>
+                </div>
+
+                <div className="row">
+
+                    <div className="col-md-12 add__cta">
+                      Search for anything you want!
+                    </div>
+
+                </div>
+
+              </div>
+
+          </div>
+
+        }
+
 
             <div className="row">
 
@@ -50,7 +143,7 @@ module.exports = React.createClass({
               </div>
 
               <div className="col-md-6 tar view__unique-link">
-                Unique link: {"http://jephwed.co.uk/" + this.props.guestId}
+                {"http://jephwed.co.uk/" + this.props.guestId}
               </div>
 
             </div>
@@ -103,8 +196,8 @@ module.exports = React.createClass({
                         }
 
                         <div className="column">
-                          <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(this,this.props.guestId,key,true)}>Attending</a>
-                          <a className="btn btn--outline btn--icon btn--icon-cross btn--m-b" onClick={this.handleAttending.bind(this,this.props.guestId,key,false)}>Not Attending</a>
+                          <a className="btn btn--outline btn--gold-o btn--icon btn--icon-tick btn--m-b" onClick={this.handleAttending.bind(null,this.props.guestId,key,true)}>Attending</a>
+                          <a className="btn btn--outline btn--icon btn--icon-cross btn--m-b" onClick={this.handleAttending.bind(null,this.props.guestId,key,false)}>Not Attending</a>
                         </div>
 
                       </div>
@@ -143,7 +236,7 @@ module.exports = React.createClass({
 
                         </div>
 
-                      {this.props.user.courses && this.props.user.courses[key] &&
+                      {this.state.edit[eventKey] && this.state.hasCourses[eventKey] &&
                         <div>
 
                           <h4>Select your meals for {this.props.user.events[key].name}</h4>
@@ -166,16 +259,39 @@ module.exports = React.createClass({
 
                             }
 
-
                             </div>
 
 
                           }.bind(this))}
 
+                          <p><a className={"btn btn--gold"} onClick={this.handleSave.bind(null,key)}>Save</a></p>
+
                         </div>
                     }
 
-                    <p><a onClick={this.handleAttending.bind(this,this.props.guestId,key,false)}>I cannot attend</a></p>
+                    {!this.state.edit[eventKey] && this.state.hasCourses[eventKey] &&
+                      <div>
+                            {Object.keys(this.props.user.courses[key]).map(function (course, i) {
+
+                              return <div>
+
+                                <label key={i}>{this.props.user.courses[key][course].name}</label>
+                                  {(this.props.user.courses[key][course] && this.props.user.courses[key][course].meals) &&
+
+                                    <p>
+                                      {(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course]) ? this.props.user.courses[key][course].meals[this.props.user.attending[this.props.guestId].events[key].courses[course].meal_name].name  : "Select a meal option"}
+                                    </p>
+
+                                  }
+                              </div>
+
+
+                            }.bind(this))}
+                            <p><a className={"btn"} onClick={this.handleEdit.bind(null,key)}>Edit</a></p>
+                    </div>
+                    }
+
+                    <p><a onClick={this.handleAttending.bind(null,this.props.guestId,key,false)}>I cannot attend</a></p>
 
                   </div>
                 </div>
@@ -198,7 +314,7 @@ module.exports = React.createClass({
 
                         <h4>{this.props.user.events[key].name}</h4>
                         <p>Oh no! you can't attend :(</p>
-                        <a onClick={this.handleAttending.bind(this,this.props.guestId,key,true)}>I can attend now</a>
+                        <a onClick={this.handleAttending.bind(null,this.props.guestId,key,true)}>I can attend now</a>
                       </div>
                   </div>
                   }
@@ -211,83 +327,34 @@ module.exports = React.createClass({
 
         <span className="line"></span>
 
-        <div className="row">
+        <div>
 
-          <div className="col-md-6">
-            <h4 className="title title--no-margin">Suggest a song <img src="http://res.cloudinary.com/dtavhihxu/image/upload/v1466015803/play-with_hmyqe6.png" width="110" /></h4>
+          <div className="suggest">
+            <h4 className="suggest__title">Suggest a song <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/powered_by.png?alt=media&token=7e25b8a6-07a0-4829-b8c7-386e52c5d826" width="140" /></h4>
             <button className="btn btn--spotify" onClick={this.addSpotify}>Add song to wedding playlist</button>
 
-          {this.state.addSpotify &&
+              {(this.props.user.playlist && this.props.guestId && this.props.user.playlist[this.props.guestId]) &&
+                <div className="row">
+                <div className="col-md-6 col-md-offset-4">
 
-            <div className={"add " + (this.state.addSpotify ? "active" : "not")}>
-
-                <div className="add__main">
-
-                  <img className="add__close" src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/close.png?alt=media&token=a2250bd0-d07a-4ffc-b10b-cf9c08566932" onClick={this.addSpotify} />
-
-                  <div className="row">
-
-                    <div className="col-md-8">
-                      <h4>Search for a track</h4>
-                      <input type="text" className="form-control" placeholder="Type a track or artist name" onChange={this.searchTrack}/>
-
-                      {(this.state.tracks && this.props.guestId) &&
-
-                        <div className="guest-list">
-
-                          {Object.keys(this.state.tracks).map(function (key, i) {
-
-                            if(i < 10) {
-                            return <div className="guest-list__item" onClick={this.handleTrack.bind(this,this.state.tracks[key])}>
-                                  {this.state.tracks[key].artists[0].name + " - " + this.state.tracks[key].name}
-                                  <a> select</a>
-                              </div>
-                            }
-
-                          }.bind(this))}
-
-                        </div>
-
-                      }
-
+                  <div className="row suggest__track">
+                    <div className="col-xs-6 col-md-3">
+                      <img src={this.props.user.playlist[this.props.guestId].album_image} style={{width: "100%"}}/>
+                    </div>
+                    <div className="col-xs-6 col-md-9">
+                      <span className="sub">Your track</span>
+                        <h4>{this.props.user.playlist[this.props.guestId].artist_name} - {this.props.user.playlist[this.props.guestId].track_name}</h4>
+                        <p><a onClick={this.addSpotify}>Change track</a></p>
                     </div>
                   </div>
 
-                  <div className="row">
-
-                      <div className="col-md-12 add__cta">
-                        Search for anything you want!
-                      </div>
-
-                  </div>
 
                 </div>
-
-            </div>
-
-          }
+                </div>
+              }
 
           </div>
 
-          <div className="col-md-6 view__chosen-track">
-            {(this.props.user.playlist && this.props.guestId && this.props.user.playlist[this.props.guestId]) &&
-              <div>
-                <div className="row">
-                  <div className="col-xs-6 col-md-3">
-                    <img src={this.props.user.playlist[this.props.guestId].album_image} style={{width: "100%"}}/>
-                  </div>
-                  <div className="col-xs-6 col-md-9">
-                    <span className="sub">Your track</span>
-                      <h4>{this.props.user.playlist[this.props.guestId].artist_name} - {this.props.user.playlist[this.props.guestId].track_name}</h4>
-                      <p><a onClick={this.addSpotify}>Change track</a></p>
-                  </div>
-                </div>
-
-
-
-              </div>
-            }
-          </div>
 
 
         </div>
@@ -304,10 +371,79 @@ module.exports = React.createClass({
   addSpotify: function() {
     this.setState({ addSpotify: !this.state.addSpotify });
   },
+  handleSave: function(id) {
+    var edit = this.state.edit;
+
+    var courses = this.state.courses;
+    var hasCourses = this.state.hasCourses;
+    var hasSubmittedCourses = this.state.hasSubmittedCourses;
+
+    var edit = this.state.edit;
+
+    if(edit[id]) {
+      delete edit[id];
+      this.handlePopup("success","Saved!");
+    } else {
+      edit[id] = true;
+    }
+
+    {Object.keys(this.state.courses).map(function (course, i) {
+      this.props.onCourseMealChange(this.state.courses[course].mealName, this.state.courses[course].courseName, this.state.courses[course].eventName, this.state.courses[course].guestName);
+    }.bind(this))};
+
+    {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
+
+      if(this.props.user.courses && this.props.user.courses[key]) {
+        hasCourses[key] = true;
+      } else {
+        hasCourses[key] = false;
+      }
+
+      if((this.props.user.attending[this.props.guestId] && this.props.user.attending[this.props.guestId].events && this.props.user.attending[this.props.guestId].events[key] && this.props.user.attending[this.props.guestId].events[key].courses) || (this.props.user.notattending[this.props.guestId] && this.props.user.notattending[this.props.guestId].events && this.props.user.notattending[this.props.guestId].events[key] && this.props.user.notattending[this.props.guestId].events[key].courses)) {
+        hasSubmittedCourses[key] = true;
+      } else {
+        hasSubmittedCourses[key] = false;
+      }
+
+    }.bind(this))};
+
+    this.setState({
+      edit: edit,
+      hasCourses: hasCourses,
+      hasSubmittedCourses: hasSubmittedCourses
+    });
+
+  },
+  handleEdit: function(id) {
+    var edit = this.state.edit;
+
+    if(edit[id]) {
+      delete edit[id];
+    } else {
+      edit[id] = true;
+    }
+
+    this.setState({
+      edit: edit
+    });
+
+  },
   handleCourseMeal: function(courseName, eventName, guestName , event) {
     var mealName = event.target.value;
 
-    this.props.onCourseMealChange(mealName, courseName, eventName, guestName);
+    var courses = this.state.courses;
+
+    courses[courseName] = {
+      eventName: eventName,
+      courseName: courseName,
+      guestName: guestName,
+      mealName: mealName
+    }
+
+    this.setState({
+      courses: courses
+    });
+
   },
   handleAttending: function(guest, event, truth) {
       this.props.onChange(guest, event, truth);
