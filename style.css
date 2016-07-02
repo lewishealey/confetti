@@ -16,7 +16,10 @@ body {
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased; }
 
-a:hover {
+a {
+  cursor: pointer; }
+
+button {
   cursor: pointer; }
 
 .no-margin {
