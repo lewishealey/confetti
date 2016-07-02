@@ -318,6 +318,7 @@ button {
   }
 
   &__unique-link {
+    line-height: 1;
 
     @include phone {
       display: none;
@@ -351,12 +352,22 @@ button {
       height: 200px;
     }
 
+    @include tablet {
+      display: block;
+      height: 200px;
+    }
+
     &-column {
       width: 50%;
       float: left;
       position: relative;
       height: 100%;
       background: white;
+
+      @include phone {
+        height: 50%;
+        width: 100%;
+      }
 
       @include phone {
         height: 50%;
@@ -388,6 +399,10 @@ button {
   display: flex;
 
   @include phone {
+    display: block;
+  }
+
+  @include tablet {
     display: block;
   }
 
@@ -1085,6 +1100,11 @@ label {
   background: #ECEFF1;
   color: #8B9299;
   z-index: 10;
+
+  @include phone {
+    top: 20px;
+    right: 20px;
+  }
 
   &.success {
     background: #69F0AE;

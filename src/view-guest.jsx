@@ -138,12 +138,8 @@ module.exports = React.createClass({
 
             <div className="row">
 
-              <div className="col-md-6">
+              <div className="col-sm-6 col-md-6">
                 <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below.</h4>
-              </div>
-
-              <div className="col-md-6 tar view__unique-link">
-                {"http://jephwed.co.uk/" + this.props.guestId}
               </div>
 
             </div>
@@ -166,7 +162,7 @@ module.exports = React.createClass({
 
           // console.log(eventClass);
 
-            return <div className={"col-md-6 event__single flex " + eventClass[key]} key={i}>
+            return <div className={"col-sm-6 col-md-6 event__single flex " + eventClass[key]} key={i}>
 
               {! eventClass[eventKey] &&
 
@@ -335,13 +331,13 @@ module.exports = React.createClass({
 
               {(this.props.user.playlist && this.props.guestId && this.props.user.playlist[this.props.guestId]) &&
                 <div className="row">
-                <div className="col-md-6 col-md-offset-4">
+                <div className="col-sm-offset-2 col-sm-8 col-md-8 col-md-offset-2">
 
                   <div className="row suggest__track">
-                    <div className="col-xs-6 col-md-3">
+                    <div className="col-xs-4 col-md-4">
                       <img src={this.props.user.playlist[this.props.guestId].album_image} style={{width: "100%"}}/>
                     </div>
-                    <div className="col-xs-6 col-md-9">
+                    <div className="col-xs-8 col-md-8">
                       <span className="sub">Your track</span>
                         <h4>{this.props.user.playlist[this.props.guestId].artist_name} - {this.props.user.playlist[this.props.guestId].track_name}</h4>
                         <p><a onClick={this.addSpotify}>Change track</a></p>
