@@ -270,9 +270,27 @@ module.exports = React.createClass({
                                 <option>{(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course.id]) ? this.props.user.courses[key][course.id].meals[this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name].name  : "Select a meal option"}</option>
                                 {Object.keys(this.props.user.courses[key][course.id].meals).map(function (meal, i) {
 
-                                  if(meal !== this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name) {
+                                  var hasMeals;
+
+                                  // If the attending guest to event has meals
+                                  if(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course.id]) {
+                                    hasMeals = true;
+                                  } else {
+                                    hasMeals = false;
+                                  }
+
+                                  if(hasMeals) {
+
+                                    if(meal !== this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name) {
+                                      return <option key={meal} value={meal}>{this.props.user.courses[key][course.id].meals[meal].name}</option>
+                                    }
+
+                                  } else {
                                     return <option key={meal} value={meal}>{this.props.user.courses[key][course.id].meals[meal].name}</option>
                                   }
+
+
+
 
                                 }.bind(this))}
 

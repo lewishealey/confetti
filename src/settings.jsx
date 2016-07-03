@@ -6,6 +6,11 @@ var ref = new Firebase(rootUrl);
 
 var Alert = require('./alert');
 
+var DatePicker = require('react-datepicker');
+var moment = require('moment');
+
+// require('react-datepicker/dist/react-datepicker.css');
+
 
 function toTimestamp(strDate){
  var datum = Date.parse(strDate);
@@ -13,9 +18,12 @@ function toTimestamp(strDate){
 }
 
 module.exports = React.createClass({
+  displayName: 'Example',
   mixins: [ReactFire],
   getInitialState: function() {
   return {
+    startDate: moment(),
+    edit: false,
       popup: {
         open: false, text: false, type: false, count: 0
       }
@@ -38,16 +46,24 @@ module.exports = React.createClass({
 		})
 
 	},
+  handleEdit: function() {
+    this.setState({
+      edit: !this.state.edit
+    });
+  },
+  onChange: function(date) {
+
+    this.setState({
+      startDate: date
+    });
+
+  },
   handleCutoff: function() {
-  // toTimestamp('02/13/2009' + '23:59:59');
 
-    var date = toTimestamp(this.refs.cutoffDate.getDOMNode().value + " 00:00:01");
-    // console.info(date);
-
-    this.props.handleCutoff(date);
+    this.props.handleCutoff(moment(this.state.startDate._d).toString());
 
     // Popup
-    this.handlePopup("success",(date + " set!"));
+    this.handlePopup("success",("Date set!"));
 
   },
   render: function() {
@@ -61,41 +77,56 @@ module.exports = React.createClass({
 
 
     if(this.props.user.settings.cutoff_date ) {
-      var date = new Date(this.props.user.settings.cutoff_date);
-      var day = date.getDate();
-      var monthIndex = date.getMonth();
-      var year = date.getFullYear();
 
-      var fullDate = day + ' ' + monthNames[monthIndex] + ' ' + year;
+      var fullDate = moment(this.props.user.settings.cutoff_date).format('MMMM Do YYYY, h:mm:ss a');
 
     } else {
-      var date = "Not set"
+      var fullDate = false;
     }
 
     return <div>
 
       <Alert delay={2000} type={this.state.popup.type}>{this.state.popup.text}</Alert>
 
-      <h4>When do you want your cutoff? (MM/DD/YYYY)</h4>
-      <input type="text" ref="cutoffDate" defaultValue={fullDate ? fullDate : "MM/DD/YYYY"} placeholder="MM/DD/YYYY"/>
-      <p>{fullDate ? fullDate : "Date not set"}</p>
-      <button onClick={this.handleCutoff}>Save</button>
+      <h2>When do you want your cutoff?</h2>
 
-    <h4>FAQ page</h4>
+      {!this.state.edit &&
+        <div>
+          <h4>{moment(this.props.user.settings.cutoff_date).format('MMMM Do YYYY, h:mm:ss a')}</h4>
+          <button className="btn" onClick={this.handleEdit}>Edit</button>
+        </div>
+      }
 
-      {Object.keys(this.props.user.playlist).map(function (track, i) {
+    {this.state.edit &&
+      <div>
+          <p><DatePicker selected={this.state.startDate} className="form-control" onChange={this.onChange} /></p>
+          <button className="btn btn--gold" onClick={this.handleCutoff}>Save</button> <button className="btn" onClick={this.handleEdit}>Cancel</button>
+      </div>
+    }
 
-        return <div className="row">
+    <h2>Recommended tracks</h2>
+    <p>Export to CSV and Spotify coming shortly</p>
 
-          <div className="col-md-4">
-            <h4>{this.props.user.playlist[track].artist_name} - {this.props.user.playlist[track].track_name} - {track} </h4>
-          </div>
+      {Object.keys(this.props.user.playlist).map(function (guest, i) {
 
-          <div className="col-md-2">
-            <img src={this.props.user.playlist[track].album_image} className="list-track__image"/>
+        if(this.props.user.guests[guest]) {
+          return <div className="row">
+            <div className="guest">
+
+              <div className="col-md-1">
+                <img src={this.props.user.playlist[guest].album_image} className="list-track__image"/>
+              </div>
+
+              <div className="col-md-4">
+                <span className="badge badge--added badge--first">Added by {this.props.user.guests[guest].fname + " " + this.props.user.guests[guest].lname}</span>
+                <h4>{this.props.user.playlist[guest].artist_name} - {this.props.user.playlist[guest].track_name}</h4>
+              </div>
+
           </div>
 
         </div>
+
+        }
 
 
       }.bind(this))}

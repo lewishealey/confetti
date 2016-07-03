@@ -8,8 +8,7 @@ var axios = require('axios');
 
 var ViewUser = require('./view-user');
 var ViewGuest = require('./view-guest');
-
-var root = "http://localhost:8888/confettiapp/";
+var moment = require('moment');
 
 var Alert = require('./alert');
 
