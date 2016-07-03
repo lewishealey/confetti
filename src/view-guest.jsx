@@ -14,6 +14,22 @@ var spotifyApi = new SpotifyWebApi({
   redirectUri : 'http://localhost/confetti_app/#/page/'
 });
 
+function sortEvents(data) {
+
+  var array = [];
+
+  Object.keys(data).map(function (key, i) {
+    array.push({id: key, date_created: data[key].date_created });
+  });
+
+  array.sort(function(a, b) {
+    return a.date_created - b.date_created;
+  });
+
+  return array;
+
+}
+
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
@@ -64,7 +80,6 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-
   },
   componentWillReceiveProps: function(nextprops) {
 
@@ -77,8 +92,12 @@ module.exports = React.createClass({
   handlePopup: function(type,text) {
     this.props.handlePopup(type,text);
   },
+  sortCourse: function() {
+
+
+
+  },
   render: function() {
-    console.log(this.state);
     if(this.props.user.invited[this.props.guestId] && this.state.loaded) {
 
       var eventClass = {};
@@ -148,6 +167,8 @@ module.exports = React.createClass({
         <div className="row flex">
 
         {Object.keys(this.props.user.invited[this.props.guestId]).map(function (key, i) {
+
+          this.props.user.courses[key] ? sortEvents(this.props.user.courses[key]) : "";
 
           var eventKey = key;
           eventClass[eventKey] = false;
@@ -237,18 +258,18 @@ module.exports = React.createClass({
 
                           <h4>Select your meals for {this.props.user.events[key].name}</h4>
 
-                          {Object.keys(this.props.user.courses[key]).map(function (course, i) {
+                          {sortEvents(this.props.user.courses[key]).map(function(course, i) {
 
                             return <div>
 
-                              <label key={i}>{this.props.user.courses[key][course].name}</label>
-                            {(this.props.user.courses[key][course] && this.props.user.courses[key][course].meals) &&
+                              <label key={i}>{this.props.user.courses[key][course.id].name}</label>
+                            {(this.props.user.courses[key][course.id] && this.props.user.courses[key][course.id].meals) &&
 
                               <p>
                                 <select className="form-control" onChange={this.handleCourseMeal.bind(this,course,key,this.props.guestId )}>
-                                <option>{(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course]) ? this.props.user.courses[key][course].meals[this.props.user.attending[this.props.guestId].events[key].courses[course].meal_name].name  : "Select a meal option"}</option>
-                                {Object.keys(this.props.user.courses[key][course].meals).map(function (meal, i) {
-                                  return <option key={meal} value={meal}>{this.props.user.courses[key][course].meals[meal].name}</option>
+                                <option>{(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course.id]) ? this.props.user.courses[key][course.id].meals[this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name].name  : "Select a meal option"}</option>
+                                {Object.keys(this.props.user.courses[key][course.id].meals).map(function (meal, i) {
+                                  return <option key={meal} value={meal}>{this.props.user.courses[key][course.id].meals[meal].name}</option>
                                 }.bind(this))}
                               </select>
                             </p>
@@ -267,15 +288,15 @@ module.exports = React.createClass({
 
                     {!this.state.edit[eventKey] && this.state.hasCourses[eventKey] &&
                       <div>
-                            {Object.keys(this.props.user.courses[key]).map(function (course, i) {
+                            {sortEvents(this.props.user.courses[key]).map(function(course, i) {
 
                               return <div>
 
-                                <label key={i}>{this.props.user.courses[key][course].name}</label>
-                                  {(this.props.user.courses[key][course] && this.props.user.courses[key][course].meals) &&
+                                <label key={i}>{this.props.user.courses[key][course.id].name}</label>
+                                  {(this.props.user.courses[key][course.id] && this.props.user.courses[key][course.id].meals) &&
 
                                     <p>
-                                      {(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course]) ? this.props.user.courses[key][course].meals[this.props.user.attending[this.props.guestId].events[key].courses[course].meal_name].name  : "Select a meal option"}
+                                      {(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course.id]) ? this.props.user.courses[key][course.id].meals[this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name].name  : "Select a meal option"}
                                     </p>
 
                                   }

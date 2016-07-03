@@ -148,10 +148,10 @@ module.exports = React.createClass({
               <img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/title.png?alt=media&token=cad8d380-4b02-4629-8618-d8b304f8935e" className="view__title"/>
               <span className="line"></span>
               <div className="row">
-                <div className="col-sm-6 col-md-6 futura tar">
+                <div className="col-md-6 futura tar">
                   You're invited to<br /> celebrate the wedding of<br />persephone and james
                 </div>
-                <div className="col-sm-6 col-md-6 futura">
+                <div className="col-md-6 futura">
                   5.11.2016<br /><br />
                   #Jephwed
                 </div>
