@@ -95,7 +95,7 @@ module.exports = React.createClass({
   render: function() {
     // console.log(this.state.user);
 
-    var now = Date.now();
+    var now = moment().toString();
 
     if(window.location.href.indexOf("admin") > -1) {
       var guest_id = this.props.params.guestId;
@@ -111,9 +111,8 @@ module.exports = React.createClass({
     // If cutoff has passed
     if(this.state.user) {
       // console.info(this.state.user.settings.cutoff_date);
-      // console.info(now);
 
-      if(this.state.user.settings && this.state.user.settings.cutoff_date && this.state.user.settings.cutoff_date < now) {
+      if(this.state.user.settings && this.state.user.settings.cutoff_date && moment(this.state.user.settings.cutoff_date).isBefore(now)) {
 
         var content = "Sorry, the cuttoff date has passed"
 
