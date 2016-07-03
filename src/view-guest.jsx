@@ -266,11 +266,16 @@ module.exports = React.createClass({
                             {(this.props.user.courses[key][course.id] && this.props.user.courses[key][course.id].meals) &&
 
                               <p>
-                                <select className="form-control" onChange={this.handleCourseMeal.bind(this,course,key,this.props.guestId )}>
+                                <select className="form-control" onChange={this.handleCourseMeal.bind(this,course.id,key,this.props.guestId )}>
                                 <option>{(this.props.user.attending[this.props.guestId].events[key].courses && this.props.user.attending[this.props.guestId].events[key].courses[course.id]) ? this.props.user.courses[key][course.id].meals[this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name].name  : "Select a meal option"}</option>
                                 {Object.keys(this.props.user.courses[key][course.id].meals).map(function (meal, i) {
-                                  return <option key={meal} value={meal}>{this.props.user.courses[key][course.id].meals[meal].name}</option>
+
+                                  if(meal !== this.props.user.attending[this.props.guestId].events[key].courses[course.id].meal_name) {
+                                    return <option key={meal} value={meal}>{this.props.user.courses[key][course.id].meals[meal].name}</option>
+                                  }
+
                                 }.bind(this))}
+
                               </select>
                             </p>
 
@@ -460,6 +465,8 @@ module.exports = React.createClass({
     this.setState({
       courses: courses
     });
+
+    console.log(this.state.courses)
 
   },
   handleAttending: function(guest, event, truth) {
