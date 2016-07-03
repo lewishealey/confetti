@@ -219,7 +219,7 @@ module.exports = React.createClass({
                               }
                               {this.props.user.events[key].to &&
                                 <p>
-                                  {this.props.user.events[key].to + " - " + this.props.user.events[key].from}
+                                  {this.props.user.events[key].from + " - " + this.props.user.events[key].to}
                                 </p>
                                 }
                               <p>How exciting! We've sent you and the couple an email to clarify everything.</p>
