@@ -6,6 +6,9 @@ var ref = new Firebase(rootUrl);
 
 var ListGuest = require('./list-guest');
 
+var re = new RegExp(/^.*\//);
+var ROOT = re.exec(window.location.href);
+
 module.exports = React.createClass({
   mixins: [ReactFire],
   getInitialState: function() {
@@ -55,6 +58,11 @@ module.exports = React.createClass({
         <div className="col-md-6">
             <h4>Whos attending</h4>
             <p>See which guests are attending <a onClick={this.onToggleAddEvent.bind(this,"add","guest")}>Add Guest</a></p>
+        </div>
+
+        <div className="col-md-6 tar">
+            <h4>Export</h4>
+            <p><a href={"server/csv_guests.php?user=" + this.props.user.authid} target="blank">Export as CSV</a></p>
         </div>
 
     </div>
