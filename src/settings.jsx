@@ -9,13 +9,55 @@ var Alert = require('./alert');
 var DatePicker = require('react-datepicker');
 var moment = require('moment');
 
-// require('react-datepicker/dist/react-datepicker.css');
+var re = new RegExp(/^.*\//);
+var ROOT = re.exec(window.location.href);
+
+var axios = require('axios');
+
+var Spotify = require('spotify-web-api-js');
+var s = new Spotify();
+
+
+var client_id = 'CLIENT_ID'; // Your client id
+var client_secret = 'CLIENT_SECRET'; // Your secret
+var redirect_uri = 'REDIRECT_URI'; // Your redirect uri
+
+var generateRandomString = function(length) {
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
 
 
 function toTimestamp(strDate){
  var datum = Date.parse(strDate);
  return datum;
 }
+
+axios.get('https://accounts.spotify.com/authorize', {
+  params: {
+      client_id: '2888525482b94ccb86ae7ee9469bab07',
+      response_type: 'code',
+      redirect_uri: ROOT
+    }
+})
+.then(function(response){
+    console.log(response.headers);
+    console.log(response); // ex.: { user: 'Your User'}
+    console.log(response.status); // ex.: 200
+  })
+  .catch(function(res) {
+    if(res instanceof Error) {
+      console.log(res.message);
+    } else {
+      console.log(res.data);
+    }
+  });
+
 
 module.exports = React.createClass({
   displayName: 'Example',

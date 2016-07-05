@@ -4,16 +4,11 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/users/';
 var JQuery = require('jquery');
 
-var axios = require('axios');
-
 var ViewUser = require('./view-user');
 var ViewGuest = require('./view-guest');
 var moment = require('moment');
 
 var Alert = require('./alert');
-
-//https://api.spotify.com/v1/users/1113560298/playlists/7Fyg5tJ0oQdIRxLwOJ2T1g/tracks?uris=spotify%3Atrack%3A396QaHZq5gGIUS2ZicB5t1
-
 var authid;
 
 module.exports = React.createClass({
