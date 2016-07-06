@@ -38,25 +38,25 @@ function toTimestamp(strDate){
  return datum;
 }
 
-// axios.get('https://accounts.spotify.com/authorize', {
-//   params: {
-//       client_id: '2888525482b94ccb86ae7ee9469bab07',
-//       response_type: 'code',
-//       redirect_uri: ROOT
-//     }
-// })
-// .then(function(response){
-//     console.log(response.headers);
-//     console.log(response); // ex.: { user: 'Your User'}
-//     console.log(response.status); // ex.: 200
-//   })
-//   .catch(function(res) {
-//     if(res instanceof Error) {
-//       console.log(res.message);
-//     } else {
-//       console.log(res.data);
-//     }
-//   });
+axios.get('https://accounts.spotify.com/authorize', {
+  params: {
+      client_id: '2888525482b94ccb86ae7ee9469bab07',
+      response_type: 'code',
+      redirect_uri: ROOT
+    }
+})
+.then(function(response){
+    console.log(response.headers);
+    console.log(response); // ex.: { user: 'Your User'}
+    console.log(response.status); // ex.: 200
+  })
+  .catch(function(res) {
+    if(res instanceof Error) {
+      console.log(res.message);
+    } else {
+      console.log(res.data);
+    }
+  });
 
 
 module.exports = React.createClass({
