@@ -89,7 +89,7 @@ module.exports = React.createClass({
           </div>
         </div>
 
-        {(this.state.eventId && this.state.eventId !== "all" && this.props.user.events[this.state.eventId].attending) &&
+        {(this.state.eventId && this.state.eventId !== "all" && this.props.user && this.props.user.events[this.state.eventId].attending) &&
           Object.keys(this.props.user.events[this.state.eventId].attending).map(function (key) {
             return <ListGuest guest={this.props.user.guests[key]} key={key} user={this.props.user} id={key} eventId={this.state.eventId} handleEditGuest={this.handleEditGuest} handleDeleteGuest={this.handleDeleteGuest} attending={true} meals={true} />
           }.bind(this))

@@ -704,6 +704,28 @@ label {
     background: #7C43FF;
     color: #240076; }
 
+.status {
+  position: relative;
+  background: #ECEFF1;
+  color: #8B9299;
+  z-index: 10;
+  padding: 10px 20px; }
+  .status.success {
+    background: #c6f9e0;
+    color: #0d8048; }
+  .status.error {
+    background: #ffb4b3;
+    color: white; }
+  .status.info {
+    background: #9ce1ff;
+    color: white; }
+  .status.warning {
+    background: #ffff66;
+    color: #333300; }
+  .status.yay {
+    background: #c3a9ff;
+    color: #240076; }
+
 .link {
   color: #8B9299;
   font-size: inherit; }

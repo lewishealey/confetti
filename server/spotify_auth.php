@@ -10,18 +10,19 @@ $fb = Firebase::initialize("https://boiling-fire-2669.firebaseio.com/", "P5Ofkmp
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 
-$session = new SpotifyWebAPI\Session('5bc1d4f975214ebb9be4698594970a18', 'ee1b5a43af9942b2adcf8f69532ae001', 'http://localhost:8888/confetti/server/spotify_auth.php');
+$session = new SpotifyWebAPI\Session('5bc1d4f975214ebb9be4698594970a18', 'ee1b5a43af9942b2adcf8f69532ae001', 'http://localhost:8888/confettiapp/server/spotify_auth.php');
 
 $api = new SpotifyWebAPI\SpotifyWebAPI();
 
 session_start();
 
-if (isset($_GET['authid'])) {
-  $authid = $_GET['authid'];
+if (isset($_POST['authid'])) {
+  $authid = $_POST['authid'];
   $_SESSION["authid"] = $authid;
 }
 
   if (isset($_GET['code'])) {
+
       $session->requestAccessToken($_GET['code']);
       $api->setAccessToken($session->getAccessToken());
 
@@ -38,6 +39,14 @@ if (isset($_GET['authid'])) {
 
         $fb_accesstoken = $fb->set("users/" . $authid_session . "/access_token", $accessToken);
         $fb_refreshtoken = $fb->set("users/" . $authid_session . "/refresh_token", $refreshToken);
+
+        $user = $api->me();
+        $json = json_encode($user, true);
+        $result = json_decode($json, true);
+
+        $fb_username = $fb->set("users/" . $authid_session . "/sp_user", $result["id"]);
+
+        echo "<script>window.close();</script>";
 
       }
 

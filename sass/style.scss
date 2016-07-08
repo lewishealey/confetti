@@ -1143,6 +1143,40 @@ label {
 
 }
 
+.status {
+  position: relative;
+  background: #ECEFF1;
+  color: #8B9299;
+  z-index: 10;
+  padding: 10px 20px;
+
+  &.success {
+    background: lighten(#69F0AE,20%);
+    color: darken(#69F0AE,40%);
+  }
+
+  &.error {
+    background: lighten(#FF504D,20%);
+    color: white;
+  }
+
+  &.info {
+    background: lighten(#36C3FF,20%);
+    color: white;
+  }
+
+  &.warning {
+    background: lighten(#FFFF00,20%);
+    color: darken(#FFFF00,40%);
+  }
+
+  &.yay {
+    background: lighten(#7C43FF,20%);
+    color: darken(#7C43FF,40%);
+  }
+
+}
+
 .link {
   color: #8B9299;
   font-size: inherit;
