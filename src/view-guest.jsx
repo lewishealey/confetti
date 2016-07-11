@@ -86,15 +86,13 @@ module.exports = React.createClass({
 
 
   },
-  handleClearSearch: function() {
-    this.props.handleClear("hello");
+  handleClearSearch: function(data) {
+    this.props.handleClearSearch(data);
   },
   handlePopup: function(type,text) {
     this.props.handlePopup(type,text);
   },
   sortCourse: function() {
-
-
 
   },
   render: function() {
@@ -157,8 +155,8 @@ module.exports = React.createClass({
 
             <div className="row">
 
-              <div className="col-sm-6 col-md-6">
-                <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below.</h4>
+              <div className="col-sm-6 col-md-8">
+                <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below. <a onClick={this.handleClearSearch.bind(this,"hello")}>Not you?</a></h4>
               </div>
 
             </div>

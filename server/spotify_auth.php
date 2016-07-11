@@ -14,13 +14,16 @@ $session = new SpotifyWebAPI\Session('5bc1d4f975214ebb9be4698594970a18', 'ee1b5a
 
 $api = new SpotifyWebAPI\SpotifyWebAPI();
 
-session_start();
+if (!isset($_SESSION)) {
+      session_start();
+    }
 
-if (isset($_POST['authid'])) {
-  $authid = $_POST['authid'];
+if (isset($_GET['authid'])) {
+  $authid = $_GET['authid'];
   $_SESSION["authid"] = $authid;
 }
 
+  
   if (isset($_GET['code'])) {
 
       $session->requestAccessToken($_GET['code']);

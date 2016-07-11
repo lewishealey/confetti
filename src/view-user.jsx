@@ -24,14 +24,8 @@ module.exports = React.createClass({
     //Pass data up
     this.props.onChange(guest, event, truth);
   },
-  handleClearSearch: function() {
-    localStorage.removeItem("guest_id");
-
-    this.setState({
-      guest: false,
-      guestId: false
-    });
-
+  handleClearSearch: function(data) {
+    this.props.handleClearSearch(data);
   },
   handlePopup: function(type,text) {
     this.props.handlePopup(type,text);
@@ -39,7 +33,7 @@ module.exports = React.createClass({
   render: function() {
 
     if(this.state.guest) {
-      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} handlePopup={this.handlePopup} />
+      var content = <ViewGuest user={this.props.user} onCourseMealChange={this.onCourseMealChange} guest={this.state.guest} guestId={this.state.guest_id} onChange={this.handleGuest} handleTrack={this.handleTrack} handlePopup={this.handlePopup} handleClearSearch={this.handleClearSearch} />
     } else {
       var content = "Choose your guest";
     }

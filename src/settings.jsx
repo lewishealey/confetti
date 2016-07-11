@@ -114,7 +114,7 @@ module.exports = React.createClass({
 
   },
   handleSpotify: function() {
-
+    
     if(this.props.user) {
       window.open(URL + "server/spotify_auth.php?authid=" + this.props.user.authid, '_blank', 'location=yes,height=570,width=520,scrollbars=no,status=yes');
     }

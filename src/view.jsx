@@ -87,6 +87,16 @@ module.exports = React.createClass({
     }.bind(this));
 
   },
+  handleClearSearch: function() {
+    localStorage.removeItem("guest_id");
+
+    this.setState({
+      guest: false,
+      guestId: false,
+      step: 1
+    });
+
+  },
   render: function() {
     // console.log(this.state.user);
 
