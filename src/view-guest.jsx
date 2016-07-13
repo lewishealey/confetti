@@ -205,7 +205,6 @@ module.exports = React.createClass({
                           <div className="column">
                             <p className="sub">
                               {this.props.user.events[key].address + ", " + this.props.user.events[key].postcode}<br />
-                            <a href="#">View on map</a>
                             </p>
                           </div>
                         }

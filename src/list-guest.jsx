@@ -3,9 +3,8 @@ var Firebase = require('firebase');
 var rootUrl = 'https://boiling-fire-2669.firebaseio.com/';
 var ReactFire = require('reactfire');
 var Choice = require('./choice');
-
 var re = new RegExp(/^.*\//);
-var ROOT = re.exec(window.location.href);
+var ROOT;
 
 function logging(name,object,type) {
 	if(type == "obj") {
@@ -47,6 +46,8 @@ module.exports = React.createClass({
     if(this.props.user && this.props.id && this.props.user.guests[this.props.id] && this.props.user.guests[this.props.id].events) {
       this.setState({ eventChoices: this.props.user.guests[this.props.id].events });
     }
+
+		ROOT = re.exec(window.location.href);
 
   },
 	handleEditDelete: function() {

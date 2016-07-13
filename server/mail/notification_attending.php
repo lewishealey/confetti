@@ -94,7 +94,7 @@ foreach($users as $user_id => $userData) {
 
                     $eventHasMeals = isset($userData["attending"][$key]["events"][$id]["courses"]);
 
-                    $events_table .= '<td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;">';
+                    $events_table .= '<td cellspacing="0" cellpadding="0" style="border-bottom: 2px solid #ECEFF1; text-align: left; padding: 20px 20px 20px 20px; font-size: 16px; color: #8B9299;" width="200">';
 
                     if($eventHasMeals) {
 
