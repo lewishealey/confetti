@@ -259,8 +259,8 @@ module.exports = React.createClass({
 		this.setState({
 			course : course
 		});
-
-    console.log(this.state.course);
+    //
+    // console.log(this.state.course);
 
 	},
 	handleMeal: function() {
@@ -287,12 +287,13 @@ module.exports = React.createClass({
   handleInputChange: function(string, event) {
     var value = event.target.value;
 
-    this.fb.update({
-          [string]: value
-        }, function(error) { if (error) {
+    inputString = {};
+    inputString[string] = value;
+
+    this.fb.update(inputString, function(error) { if (error) {
           console.log("Could not " + value + error);
         } else {
-          console.log("Set " + value + " to " + string);
+          // console.log("Set " + value + " to " + string);
         }
     });
 

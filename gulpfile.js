@@ -49,6 +49,7 @@ function bundle() {
     .pipe(source('app.js'))
     .pipe(gulp.dest('./'))
 }
+
 bundler.on('update', bundle)
 
 gulp.task('build', function() {

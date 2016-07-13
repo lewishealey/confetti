@@ -149,9 +149,7 @@ module.exports = React.createClass({
 							</div>
 
 							<div className="col-md-4 tac">
-								<Link to={`/dashboard`}>
 									<img src="https://firebasestorage.googleapis.com/v0/b/boiling-fire-2669.appspot.com/o/confetti_logo.png?alt=media&token=694ca44e-28d4-40ad-9aaf-2ed3800f7c49" alt="Confetti - A new digital tradition" width="200" />
-								</Link>
 							</div>
 
 							<div className="col-md-4 dashboard__welcome">

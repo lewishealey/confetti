@@ -24,6 +24,8 @@ var Choice = require('./choice');
 
 var Alert = require('./alert');
 
+if (!window.console) console = {log: function() {}};
+
 function logging(name,object,type) {
 	if(type == "obj") {
 		console.log(object);
@@ -31,6 +33,23 @@ function logging(name,object,type) {
 		console.log(name + ": " + object);
 	}
 }
+
+function log(status,data,user,guest) {
+  this.log = new Firebase('https://boiling-fire-2669.firebaseio.com/log/');
+  var id = guid();
+  var date = moment().toString();
+
+  this.log.child("log/" + id).update({
+    agent : JSON.stringify(navigator.userAgent),
+    status : status,
+    authid:  user,
+    guest: guest,
+    data : JSON.stringify(data),
+    date_created : date
+  });
+
+}
+
 
 function notification(status,text) {
 	alert(status + " " + text);
@@ -149,7 +168,7 @@ var Add = React.createClass({
 			eventChoices: []
 		});
 
-		console.log(this.eventChoices)
+		// console.log(this.eventChoices);
 
 		this.props.handleOpen(false);
 	},
@@ -355,8 +374,8 @@ var App = React.createClass({
 
 	},
 	handleCutoff: function(cutoff) {
-
-    console.log(cutoff)
+		//
+    // console.log(cutoff)
 
 		this.fb.child("settings/").update({
 			cutoff_date: cutoff
@@ -386,9 +405,10 @@ var App = React.createClass({
 				courses: courseData
 			});
 
-			this.fb.child("courses").update({
-				[id]: courseData
-			});
+			idName = {};
+			idName[id] = courseData;
+
+			this.fb.child("courses").update(idName);
 
 		}
 
@@ -418,9 +438,10 @@ var App = React.createClass({
 
 				});
 
-				this.fb.child("courses").update({
-					[string]: courseData
-				});
+				stringId = {};
+				stringId[string] = courseData;
+
+				this.fb.child("courses").update(stringId);
 
 				this.setState({
 					type: false
@@ -459,10 +480,11 @@ var App = React.createClass({
     var timeInMs = Date.now();
     var randomNo = Math.floor(Math.random() * 1000) + 1;
 
-    var initialEvents = {
-      ["ceremony" + randomNo] : { name : "Ceremony", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false },
-      ["reception" + randomNo] : { name : "Reception", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false }
-    }
+		initialEvents = {};
+		event1 = "ceremony" + randomNo;
+		event2 = "reception" + randomNo;
+		initialEvents[event1] = { name : "Ceremony", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false };
+		initialEvents[event2] = { name : "Reception", date_created : timeInMs, guests : false, meals : false, from: false, to: false, address: false, postcode : false };
 
     var onBoarding = {
 
@@ -577,11 +599,17 @@ var App = React.createClass({
       var events = {};
       {Object.keys(choices).map(function(key) {
 
+				choiceString = {};
+				choiceString[string] = true;
+
+				choiceKey = {};
+				choiceKey[key] = true;
+
         // Update event
-        this.fb.child("events/" + key + "/guests/").update({ [string]: true });
+        this.fb.child("events/" + key + "/guests/").update(choiceString);
 
         // Add to invited
-        this.fb.child("invited/" + string).update({ [key]: true });
+        this.fb.child("invited/" + string).update(choiceKey);
 
       }.bind(this))};
       // End event loop
@@ -614,10 +642,16 @@ var App = React.createClass({
 				{Object.keys(this.state.user.events).map(function(key) {
 
 					if(choices[key]) {
+						eventGuestId = {};
+						eventInvitedId = {};
+						eventGuestsEventsId = {};
+						eventGuestId[id] = true;
+						eventInvitedId[key] = true;
+						eventGuestsEventsId[key] = true;
 						// console.log("Attending " + key);
-						this.fb.child("events/" + key + "/guests/").update({ [id]: true });
-						this.fb.child("invited/" + id).update({ [key]: true });
-						this.fb.child("guests/" + id + "/events/").update({ [key]: true });
+						this.fb.child("events/" + key + "/guests/").update(eventGuestId);
+						this.fb.child("invited/" + id).update(eventInvitedId);
+						this.fb.child("guests/" + id + "/events/").update(eventGuestsEventsId);
 					} else {
 						// console.log("Not " + key);
 						this.fb.child("events/" + key + "/guests/" + id).remove();
@@ -686,3 +720,14 @@ var routes = (
 var element = React.createElement(App, {});
 
 React.render(routes, document.getElementById("app"));
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+}

@@ -484,7 +484,7 @@ module.exports = React.createClass({
       courses: courses
     });
 
-    console.log(this.state.courses)
+    // console.log(this.state.courses)
 
   },
   handleAttending: function(guest, event, truth) {

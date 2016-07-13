@@ -9,7 +9,26 @@ var ViewGuest = require('./view-guest');
 var moment = require('moment');
 
 var Alert = require('./alert');
+
 var authid;
+
+function log(status,data,user,guest,type) {
+  this.log = new Firebase('https://boiling-fire-2669.firebaseio.com/');
+  var id = guid();
+  var date = moment().toString();
+
+  this.log.child("log/" + id).update({
+    agent : JSON.stringify(navigator.userAgent),
+    status : status,
+    authid:  user,
+    guest: guest,
+    data : JSON.stringify(data),
+    date_created : date
+  });
+
+}
+
+if (!window.console) console = {log: function() {}};
 
 module.exports = React.createClass({
   mixins: [ReactFire],
@@ -36,7 +55,6 @@ module.exports = React.createClass({
 
         this.fb = new Firebase('https://boiling-fire-2669.firebaseio.com/users/' + snapshot.val());
         this.bindAsObject(this.fb, "user");
-
 
       }.bind(this));
 
@@ -79,8 +97,8 @@ module.exports = React.createClass({
 
     }, function(error) { if (error) { console.log("Nope to add track" + error);  } else {
 
-        // Success
-        console.log("Added track " + trackId + " " + guestId + " " + artistName);
+        var data = "Added track " + trackId + " " + guestId + " " + artistName;
+        log("success",data,this.state.user.authid,guestId,"track"); //state,data,user,guest,type
 
       } //userRef.child("playlist/")
 
@@ -260,7 +278,7 @@ module.exports = React.createClass({
     })
   },
   handleGuest: function(guest, event, truth) {
-    console.log(guest + event + truth);
+    // console.log(guest + event + truth);
     var timeInMs = Date.now();
 
     localStorage.setItem("guest_id", guest);
@@ -274,37 +292,21 @@ module.exports = React.createClass({
       this.fb.child("attending/" + guest).update({
         date_created: timeInMs,
 
-        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
-
-          // Success
-          console.log("Attending " + guest + " " + event + " " + truth);
-
-        } //userRef.child("attending/")
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else { } //userRef.child("attending/")
 
       }.bind(this));
 
-      this.fb.child("attending/" + guest + "/events/").update({
-        [event]: true
+      eventStatus = {};
+      guestStatus = {};
 
-        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
+      eventStatus[event] = true;
+      guestStatus[guest] = true;
 
-          // Success
-          console.log("Attending " + guest + " " + event + " " + truth);
-
-        } //userRef.child("attending/")
+      this.fb.child("attending/" + guest + "/events/").update(eventStatus, function(error) { if (error) { console.log("Nope to update event" + error);  } else { } //userRef.child("attending/")
 
       }.bind(this));
 
-      this.fb.child("events/" + event + "/attending/").update({
-
-          [guest]: true
-
-          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
-
-            // Success
-            console.log("Event " + event + " " + guest + " " + truth);
-
-          }
+      this.fb.child("events/" + event + "/attending/").update(guestStatus, function(error) { if (error) { console.log("Nope to update event" + error); } else { }
 
       }.bind(this));
 
@@ -315,21 +317,22 @@ module.exports = React.createClass({
       // Set state for new view
       this.setState({ responded: "attending" });
 
+      var data = "Attending " + guest + " " + event + " " + truth;
+      log("success",data,this.state.user.authid,guest,"attending"); //state,data,user,guest,type
+
     } else {
       this.fb.child("events/" + event + "/attending/" + guest).remove();
       this.fb.child("attending/" + guest + "/events/" + event).remove();
       this.fb.child("events/" + event + "/attending/" + guest).remove();
 
+      eventStatus = {};
+      guestStatus = {};
+
+      eventStatus[event] = true;
+      guestStatus[guest] = true;
+
       // Add attending object to event
-      this.fb.child("notattending/" + guest + "/events/").update({
-        [event]: true
-
-        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
-
-          // Success
-          console.log("fafsfsa " + guest + " " + event + " " + truth);
-
-        } //userRef.child("attending/")
+      this.fb.child("notattending/" + guest + "/events/").update(eventStatus, function(error) { if (error) { console.log("Nope to update event" + error);  } else { } //userRef.child("attending/")
 
       }.bind(this));
 
@@ -338,42 +341,34 @@ module.exports = React.createClass({
       this.fb.child("notattending/" + guest).update({
         date_created: timeInMs,
 
-        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else {
-
-          // Success
-          console.log("Not attending " + guest + " " + event + " " + truth);
-
-        } //userRef.child("attending/")
+        }, function(error) { if (error) { console.log("Nope to update event" + error);  } else { }
 
       }.bind(this));
 
 
-      this.fb.child("events/" + event + "/notattending/").update({
-
-          [guest]: true
-
-          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
-
-            // Success
-            console.log("N Event " + event + " " + guest + " " + truth);
-
-          }
+      this.fb.child("events/" + event + "/notattending/").update(guestStatus, function(error) { if (error) { console.log("Nope to update event" + error); } else { }
 
       }.bind(this));
 
       // Set state for new view
       this.setState({ responded: "notattending" });
 
+      var data = "Not attending " + guest + " " + event + " " + truth;
+      log("success",data,this.state.user.authid,guest,"nattending"); //state,data,user,guest,type
+
     }
   },
   handleMeal: function(mealName, courseName, eventName, guestName) {
-    // console.info(mealName + "/" + courseName + "/" + eventName + "/" + guestName)
+
     var timeInMs = Date.now();
 
     this.fb.child("attending/" + guestName + "/events/" + eventName + "/courses/" + courseName).update({
         date_created: timeInMs,
         meal_name: mealName
     });
+
+    var data = mealName + "/" + courseName + "/" + eventName + "/" + guestName;
+    log("success",data,this.state.user.authid,guestName,"meal"); //state,data,user,guest,type
 
     this.handlePopup("success","Updated!");
 
@@ -384,8 +379,12 @@ module.exports = React.createClass({
 
       this.fb.child("guests/" + guest).update({
           "email": value
-          }, function(error) { if (error) { console.log("Nope to update event" + error); } else {
-            console.log("updated" + guest + "email with " + value);
+          }, function(error) { if (error) {
+            // console.log("Nope to update event" + error);
+            log("error",error,this.state.user.authid,guest,"guest_email"); //state,data,user,guest,type
+          } else {
+            var data = "updated" + guest + "email with " + value;
+            log("success",data,this.state.user.authid,guest,"guest_email"); //state,data,user,guest,type
           }
 
       }.bind(this));
@@ -411,4 +410,15 @@ module.exports = React.createClass({
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(email);
+}
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
 }
