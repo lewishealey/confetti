@@ -1,6 +1,10 @@
 @import 'https://fonts.googleapis.com/css?family=Oswald';
 html {
+  height: 100%;
   box-sizing: border-box; }
+
+body {
+  min-height: 100%; }
 
 *, *:before, *:after {
   box-sizing: inherit; }
@@ -166,78 +170,76 @@ button {
     display: inline-block;
     margin-right: 30px; }
 
-.view .futura {
-  font-family: 'FuturaStd-Light';
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 4px;
-  line-height: 1.8; }
-
-.view .block {
-  padding: 60px;
-  min-height: 100%; }
+.view {
+  padding: 30px;
+  max-width: 1280px; }
   @media (min-width: 320px) and (max-width: 767px) {
-    .view .block {
-      padding: 40px; } }
-
-@media (min-width: 320px) and (max-width: 767px) {
-  .view .tar {
-    text-align: left; } }
-
-.view__unique-link {
-  line-height: 1; }
-  @media (min-width: 320px) and (max-width: 767px) {
-    .view__unique-link {
-      display: none; } }
-
-@media (min-width: 320px) and (max-width: 767px) {
-  .view__chosen-track {
-    margin-top: 30px; } }
-
-.view .line {
-  width: 100%;
-  display: inline-block;
-  margin: 30px 0;
-  border: 1px #233332 dashed; }
-  @media (min-width: 320px) and (max-width: 767px) {
-    .view .line {
-      margin: 20px 0; } }
-
-.view__header {
-  position: relative; }
-  @media (min-width: 320px) and (max-width: 767px) {
-    .view__header {
-      display: block;
-      height: 200px; } }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .view__header {
-      display: block;
-      height: 200px; } }
-  .view__header-column {
-    width: 50%;
-    float: left;
-    position: relative;
-    height: 100%;
-    background: white; }
+    .view {
+      padding-top: 15px; } }
+  .view .futura {
+    font-family: 'FuturaStd-Light';
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 4px;
+    line-height: 1.8; }
+  .view .block {
+    padding: 60px;
+    min-height: 100%; }
     @media (min-width: 320px) and (max-width: 767px) {
-      .view__header-column {
-        height: 50%;
-        width: 100%; } }
-    @media (min-width: 320px) and (max-width: 767px) {
-      .view__header-column {
-        height: 50%;
-        width: 100%; } }
-
-.view__title {
-  width: 350px;
-  display: block;
-  margin: 0 auto 30px auto; }
+      .view .block {
+        padding: 40px; } }
   @media (min-width: 320px) and (max-width: 767px) {
-    .view__title {
-      width: 200px; } }
-
-.view--white {
-  background-color: #FFFFFF; }
+    .view .tar {
+      text-align: left; } }
+  .view__unique-link {
+    line-height: 1; }
+    @media (min-width: 320px) and (max-width: 767px) {
+      .view__unique-link {
+        display: none; } }
+  @media (min-width: 320px) and (max-width: 767px) {
+    .view__chosen-track {
+      margin-top: 30px; } }
+  .view .line {
+    width: 100%;
+    display: inline-block;
+    margin: 30px 0;
+    border: 1px #233332 dashed; }
+    @media (min-width: 320px) and (max-width: 767px) {
+      .view .line {
+        margin: 20px 0; } }
+  .view__header {
+    position: relative; }
+    @media (min-width: 320px) and (max-width: 767px) {
+      .view__header {
+        display: block;
+        height: 200px; } }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .view__header {
+        display: block;
+        height: 200px; } }
+    .view__header-column {
+      width: 50%;
+      float: left;
+      position: relative;
+      height: 100%;
+      background: white; }
+      @media (min-width: 320px) and (max-width: 767px) {
+        .view__header-column {
+          height: 50%;
+          width: 100%; } }
+      @media (min-width: 320px) and (max-width: 767px) {
+        .view__header-column {
+          height: 50%;
+          width: 100%; } }
+  .view__title {
+    width: 350px;
+    display: block;
+    margin: 0 auto 30px auto; }
+    @media (min-width: 320px) and (max-width: 767px) {
+      .view__title {
+        width: 200px; } }
+  .view--white {
+    background-color: #FFFFFF; }
 
 .flex {
   display: flex; }
