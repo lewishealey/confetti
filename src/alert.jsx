@@ -8,10 +8,6 @@ module.exports = React.createClass({
     return {visible: false};
   },
   componentWillReceiveProps: function(nextProps) {
-
-    this.setTimer();
-    this.setState({visible: true});
-
     // reset the timer if children are changed
     if (nextProps.children !== this.props.children) {
       this.setTimer();
@@ -30,6 +26,7 @@ module.exports = React.createClass({
       this.setState({visible: false});
       this._timer = null;
     }.bind(this), this.props.delay);
+    this.setState({visible: false});
   },
   componentWillUnmount: function() {
     clearTimeout(this._timer);

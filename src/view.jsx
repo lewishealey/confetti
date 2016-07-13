@@ -156,7 +156,7 @@ module.exports = React.createClass({
                 </div>
                 <div className="col-md-6 futura">
                   5.11.2016<br /><br />
-                  #Jephwed
+                <a href="https://www.instagram.com/explore/tags/jephwed/" target="blank">#Jephwed</a>
                 </div>
               </div>
               <span className="line"></span>

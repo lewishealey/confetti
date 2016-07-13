@@ -636,7 +636,8 @@ label {
   z-index: 5;
   display: none;
   left: 0;
-  top: 0; }
+  top: 0;
+  padding: 30px; }
   .add.active {
     display: flex; }
   .add__title {

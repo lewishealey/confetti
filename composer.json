@@ -4,6 +4,7 @@
         "facebook/php-sdk-v4": "^5.1",
         "mailin-api/mailin-api-php": "^1.0",
         "php-amqplib/php-amqplib": "^2.6",
-        "eelkevdbos/firebase-php": "dev-master"
+        "eelkevdbos/firebase-php": "dev-master",
+        "cosenary/instagram": "^2.3"
     }
 }

@@ -5,7 +5,7 @@ var ReactFire = require('reactfire');
 
 // Spotify
 var SpotifyWebApi = require('spotify-web-api-js');
-
+var moment = require('moment');
 
 // credentials are optional
 var spotifyApi = new SpotifyWebApi({
@@ -157,6 +157,9 @@ module.exports = React.createClass({
 
               <div className="col-sm-6 col-md-8">
                 <h4 className="title title--no-margin">Hello {this.props.user.guests[this.props.guestId].fname + " " + this.props.user.guests[this.props.guestId].lname}, RSVP below. <a onClick={this.handleClearSearch.bind(this,"hello")}>Not you?</a></h4>
+                {this.props.user && this.props.user.settings && this.props.user.settings.cutoff_date &&
+                  <h5>Please RSVP by: {moment(this.props.user.settings.cutoff_date).format('MMMM Do YYYY')}</h5>
+                }
               </div>
 
             </div>
@@ -503,6 +506,7 @@ module.exports = React.createClass({
 
     //Pass props up
     this.props.handleTrack(this.props.guestId,trackData.artists[0].name,trackData.name,trackData.album.images[0].url,trackData.external_urls.spotify,trackData.id,trackData.uri);
+    this.handlePopup("success","Track saved!");
   },
   searchTrack: function(event) {
 

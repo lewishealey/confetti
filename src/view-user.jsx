@@ -72,7 +72,7 @@ module.exports = React.createClass({
             <div>
               <h4>James & Seph would like to contact you via email</h4>
               <p>This is so they can make announcements about anything important with the wedding.</p>
-                <p><input onChange={this.onInputEmail} className={"form-control form-control--xl " + (this.state.emailState && this.state.emailState == true ? 'success' : '')}  placeholder={this.props.user.guests[this.state.guest_id].email ? this.props.user.guests[this.state.guest_id].email : "Enter your email address to proceed"} ref="guestEmail" name="email" /></p>
+                <p><input type="email" onChange={this.onInputEmail} className={"form-control form-control--xl " + (this.state.emailState && this.state.emailState == true ? 'success' : '')}  placeholder={this.props.user.guests[this.state.guest_id].email ? this.props.user.guests[this.state.guest_id].email : "Enter your email address to proceed"} ref="guestEmail" name="email" /></p>
                 <p><small>This email will not be used for spam, we promise.</small></p>
                 <p><button className="btn btn--dark" onClick={this.onHandleEmail}>Proceed</button></p>
                 {this.props.handleEmailState ? this.props.handleEmailState : ''}
